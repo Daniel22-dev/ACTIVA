@@ -1,3 +1,10 @@
+## 0.5.13 — CI hotfix browserového reporter testu (2026-08-27)
+
+- Opraven GitHub Actions `certify`: před browserovou regresí error reporteru se nyní instaluje připnutý Playwright Chromium 1.61.1 a nastavuje `CHROMIUM_PATH`.
+- Odstraněna závislost testu na systémovém Chrome GitHub runneru, který v běhu 89572799978 neotevřel DevTools endpoint a způsobil timeout.
+- Release gate není změkčena; browserová část zůstává blokující.
+- Patch verze synchronizována na 0.5.13.
+
 ## 0.5.12 — GARP opravný kandidát po Claude kole 1 (2026-08-27)
 
 - Opraveno pravidlo privacy brány pro označená česká jména: prefixy jako `Žák:`, `Jméno:`, `Student:` a `Matka:` jsou nyní vyhodnocovány bez ohledu na velikost prvního písmene.

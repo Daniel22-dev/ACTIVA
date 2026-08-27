@@ -21,6 +21,14 @@ jobs:
           cache: npm
       - run: npm ci --no-fund
 
+      - name: Verify pinned Playwright version
+        run: node -e "const p=require('./node_modules/playwright/package.json'); if(p.version!=='1.61.1') process.exit(1)"
+      - name: Install pinned Playwright Chromium
+        shell: bash
+        run: |
+          npx playwright install --with-deps chromium
+          node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
+
       - name: Run unified error reporter regression
         run: npm run test:reporter
       - run: node scripts/doc-import-test.mjs

@@ -1,10 +1,10 @@
 # ACTIVA – Sestavovač aktivit
 
-**Aktuální verze:** 0.5.12  
+**Aktuální verze:** 0.5.13  
 **Platforma:** GHRAB Platform 1.1.0 · etapa P3
 
 
-**Verze: 0.5.12 · platformně sjednocený produkční kandidát**
+**Verze: 0.5.13 · platformně sjednocený produkční kandidát**
 
 ACTIVA je originální prémiové redakční studio v ekosystému AI Studio GHRAB. Z učiva připraví tisknutelné pracovní listy, řešení, varianty A/B/C, tři úrovně diferenciace, skupinové sady, projekci bez telefonů a přenosné interaktivní HTML.
 

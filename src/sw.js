@@ -1,6 +1,6 @@
 const GHRAB_SW_CONTRACT='ghrab-service-worker-v1';
 /* GHRAB service-worker contract v1 · update activation is user-controlled. */
-const CACHE = "ghrab-activity-builder-v0.5.12";
+const CACHE = "ghrab-activity-builder-v0.5.13";
 const CACHE_PREFIXES = ["ghrab-activity-builder-v", "activa-v"];
 const REQUIRED = [
   "./",

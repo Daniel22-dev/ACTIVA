@@ -1,7 +1,7 @@
 {
   "schema": "ghrab-security-headers-v1",
   "appId": "activity-builder",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "staticProfile": {
     "contentSecurityPolicy": "default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' https://cdnjs.cloudflare.com; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com https://cdnjs.cloudflare.com; media-src 'self' data: blob:; worker-src 'self' blob:; frame-src 'self'; manifest-src 'self'",
     "note": "Executable inline JavaScript is forbidden. style-src keeps unsafe-inline only because the current editor/print UI uses generated inline style attributes; this is a documented non-script compatibility exception. CDN DOCX/PDF helpers are version-pinned and SRI-checked; the PDF worker is SHA-512 verified before execution as a blob worker."
