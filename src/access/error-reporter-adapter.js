@@ -8,7 +8,7 @@ const reporterGuideUrl = deployment?.access?.guideUrl || new URL('manualy/error-
 const reporter = setupErrorReporter({
   appId: 'activity-builder',
   appName: 'ACTIVA',
-  appVersion: '0.5.13',
+  appVersion: '0.5.14',
   studioUrl: reporterStudioUrl,
   supportEmail: 'balaz@ghrabuvka.cz',
   guideUrl: reporterGuideUrl,

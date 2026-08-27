@@ -1,7 +1,7 @@
 {
   "schema": "ghrab-data-manifest-v1",
   "appId": "activity-builder",
-  "appVersion": "0.5.13",
+  "appVersion": "0.5.14",
   "manifestVersion": 3,
   "dataCategories": [
     "settings",

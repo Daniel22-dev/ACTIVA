@@ -1,3 +1,8 @@
+## 0.5.14 — 2026-08-27
+
+- Hotfix synchronizuje `sharedAccessVersion` s aktuální podepsanou konfigurací AI Studia, aby se aplikace po bezpečnostní rotaci nezamykala kvůli `configuration-version-mismatch`.
+- Pedagogické funkce a datové formáty se nemění.
+
 ## 0.5.13 — CI hotfix browserového reporter testu (2026-08-27)
 
 - Opraven GitHub Actions `certify`: před browserovou regresí error reporteru se nyní instaluje připnutý Playwright Chromium 1.61.1 a nastavuje `CHROMIUM_PATH`.

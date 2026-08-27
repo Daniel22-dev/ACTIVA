@@ -1,6 +1,6 @@
 {
   "name": "sestavovac-aktivit",
-  "version": "0.5.13",
+  "version": "0.5.14",
   "private": true,
   "description": "ACTIVA – prémiové redakční studio pro tisknutelné, projekční a sdílené výukové aktivity v ekosystému AI Studio GHRAB",
   "type": "module",
