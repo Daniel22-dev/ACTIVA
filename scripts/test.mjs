@@ -36,8 +36,10 @@ if (!joined.includes('gemini-3.6-flash')) errors.push('Chybí doporučený model
 if (!joined.includes('expandPackage3Activity')) errors.push('Chybí automatické dělení skupinových sad na stránky.');
 if (!joined.includes('visualAssetPanel') && !readFileSync(join(ROOT, 'src/body.html'), 'utf8').includes('visualAssetPanel')) errors.push('Chybí mediální panel pro obrazové aktivity.');
 const tpl = readFileSync(join(ROOT, 'src/index.template.html'), 'utf8');
-if (!/const APP_ID\s*=\s*['\"]activity-builder['\"]/.test(tpl)) errors.push('Access Guard nemá správné ID.');
-if (!tpl.includes('deployment-config.js') || !tpl.includes('urls.guardUrl')) errors.push('Chybí konfigurovatelný centrální Access Guard.');
+const accessBootstrap = readFileSync(join(ROOT, 'src/access/access-bootstrap.js'), 'utf8');
+if (!/const APP_ID\s*=\s*['\"]activity-builder['\"]/.test(accessBootstrap)) errors.push('Access Guard nemá správné ID.');
+if (!accessBootstrap.includes('deployment-config.js') || !accessBootstrap.includes('urls.guardUrl') || !accessBootstrap.includes('currentLocationMatchesApp')) errors.push('Chybí konfigurovatelný fail-closed centrální Access Guard.');
+if (!tpl.includes('application/ghrab-protected') || !tpl.includes('./access/access-bootstrap.js')) errors.push('Hlavní aplikace není chráněna externím bootstrapem.');
 const manifest = JSON.parse(readFileSync(join(ROOT, 'src/studio-manifest.template.json'), 'utf8').replaceAll('__APP_VERSION__', pkg.version).replaceAll('__BUILD_TIME__', new Date().toISOString()));
 if (manifest.id !== 'activity-builder') errors.push('Manifest má chybné ID.');
 if (manifest.version !== pkg.version) errors.push('Verze manifestu nesedí.');

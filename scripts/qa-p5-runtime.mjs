@@ -177,7 +177,7 @@ try {
         await client.call('Page.navigate',{url});
         let ready=false;
         for(let i=0;i<240;i++){ready=Boolean(await client.eval("document.readyState==='complete'&&window.__GHRAB_QA_RUNTIME__===true"));if(ready)break;await sleep(50);}
-        if(!ready)throw new Error(`Runtime page timeout: ${rel}`);
+        if(!ready){const debug=await client.eval("({readyState:document.readyState,qa:window.__GHRAB_QA_RUNTIME__,access:document.documentElement?.dataset?.ghrabAccess,href:location.href,scripts:[...document.scripts].map(s=>({src:s.src,type:s.type,qa:s.hasAttribute('data-ghrab-runtime-audit-prelude')})),body:document.body?.textContent?.slice(0,200)})");throw new Error(`Runtime page timeout: ${rel} · ${JSON.stringify(debug)}`);}
         pageLoaded=true;
       } else {
         await client.eval("dispatchEvent(new Event('resize'));document.dispatchEvent(new Event('ghrab:qa-viewport-change'))");

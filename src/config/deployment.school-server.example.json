@@ -42,22 +42,22 @@
     "aiHealth": "ai/health"
   },
   "features": {
-    "schoolServerReady": true,
+    "schoolServerReady": false,
     "allowLocalProviderKeys": false,
-    "serverSessionReady": true,
-    "schoolGatewayReady": true,
+    "serverSessionReady": false,
+    "schoolGatewayReady": false,
     "sharedDeviceControls": true,
     "dataDeletion": true,
     "schoolServerConnected": false,
-    "liveServerValidationRequired": false
+    "liveServerValidationRequired": true
   },
   "appId": "activity-builder",
   "appBaseUrl": "/apps/activa/",
   "releaseAcceptance": {
     "stage": "P5",
-    "primaryMode": "standalone-github-pages",
+    "primaryMode": "school-server-profile-prepared",
     "serverConnection": "prepared-not-connected",
-    "serverRequired": false,
+    "serverRequired": true,
     "githubUpload": "pending",
     "postUploadValidationRequired": true
   }

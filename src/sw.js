@@ -1,16 +1,21 @@
 const GHRAB_SW_CONTRACT='ghrab-service-worker-v1';
 /* GHRAB service-worker contract v1 · update activation is user-controlled. */
-const CACHE = "ghrab-activity-builder-v0.5.10";
+const CACHE = "ghrab-activity-builder-v0.5.12";
 const CACHE_PREFIXES = ["ghrab-activity-builder-v", "activa-v"];
 const REQUIRED = [
   "./",
   "./index.html",
+  "./app.js",
+  "./access/access-bootstrap.js",
   "./manifest.webmanifest",
   "./access/deployment-config.js",
   "./access/reporter-bootstrap.js",
   "./access/error-reporter.js",
   "./access/error-reporter.css",
   "./access/error-reporter-adapter.js",
+  "./access/protected-page-bootstrap.js",
+  "./manual/manual.js",
+  "./tests/tests.js",
   "./config/brand-manifest.json",
   "./config/platform-manifest.json",
   "./assets/brand/school-logo.png",
@@ -18,9 +23,6 @@ const REQUIRED = [
 ];
 const OPTIONAL = [
   "./access/access-gate.css",
-  "./config/deployment.json",
-  "./config/deployment.school-server-p0.json",
-  "./config/deployment.school-server.example.json",
   "./assets/activity-builder-icon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

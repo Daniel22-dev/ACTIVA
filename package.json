@@ -1,12 +1,12 @@
 {
   "name": "sestavovac-aktivit",
-  "version": "0.5.10",
+  "version": "0.5.12",
   "private": true,
   "description": "ACTIVA – prémiové redakční studio pro tisknutelné, projekční a sdílené výukové aktivity v ekosystému AI Studio GHRAB",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node scripts/test.mjs && node scripts/package3-test.mjs && node scripts/package4-test.mjs && node scripts/package5-test.mjs && npm run build",
+    "test": "node scripts/test.mjs && node scripts/package3-test.mjs && node scripts/package4-test.mjs && node scripts/package5-test.mjs && npm run build && npm run qa:garp",
     "test:headless": "node scripts/headless-check.mjs",
     "qa:technical": "node scripts/qa-technical.mjs",
     "qa:security": "node scripts/qa-security.mjs",
@@ -33,13 +33,14 @@
     "qa:a11y": "node scripts/qa-p5-runtime.mjs",
     "qa:p4": "npm run qa:p5",
     "qa:p4:ci": "npm run qa:p5:ci",
-    "qa:p5": "npm run qa:lock && npm run build && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
-    "qa:p5:ci": "npm run qa:lock && npm run build && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
+    "qa:p5": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
+    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
     "test:p5": "npm run qa:p5",
     "qa:runtime": "node scripts/qa-p5-runtime.mjs",
     "qa:xss": "node scripts/qa-p5-xss-sinks.mjs",
     "qa:lock": "node scripts/qa-p5-lock.mjs",
-    "pretest:reporter": "npm run build"
+    "pretest:reporter": "npm run build",
+    "qa:garp": "node scripts/qa-garp-security.mjs && node scripts/qa-round2-adversarial.mjs"
   },
   "engines": {
     "node": ">=18"

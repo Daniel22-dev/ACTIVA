@@ -43,14 +43,14 @@
     "aiHealth": "ai/health"
   },
   "features": {
-    "schoolServerReady": true,
+    "schoolServerReady": false,
     "allowLocalProviderKeys": true,
-    "serverSessionReady": true,
-    "schoolGatewayReady": true,
+    "serverSessionReady": false,
+    "schoolGatewayReady": false,
     "sharedDeviceControls": true,
     "dataDeletion": true,
     "schoolServerConnected": false,
-    "liveServerValidationRequired": false
+    "liveServerValidationRequired": true
   },
   "appId": "activity-builder",
   "appBaseUrl": "/Sestavovac-aktivit/",

@@ -53,8 +53,6 @@ function addMarkerFromPreview(event){const activity=selectedActivity(),preview=$
 wireEditor=function(){package3OriginalWireEditor();$('#visualAssetInput')?.addEventListener('change',event=>{const file=event.target.files?.[0];if(file)handleVisualAssetFile(file);event.target.value=''});$('#removeVisualAssetBtn')?.addEventListener('click',()=>{const activity=selectedActivity();if(!activity||!p3IsVisualType(activity.type))return;activity.data.imageDataUrl='';activity.data.imageName='';renderPropertyPanel();renderPagePreview('student');scheduleSave();toast('Obrazový podklad byl odebrán.','info')});$('#clearVisualMarkersBtn')?.addEventListener('click',()=>{const activity=selectedActivity();if(!activity||!p3IsVisualType(activity.type))return;activity.data.markers=[];renderPropertyPanel();renderPagePreview('student');scheduleSave();toast('Všechny body byly odebrány.','info')});$('#visualEditorPreview')?.addEventListener('click',addMarkerFromPreview)};
 
 
-// Projekty s vloženými obrázky mohou narazit na limit localStorage. Uložení proto
-// potvrzujeme pouze tehdy, když safeSet opravdu uspěje; JSON export zůstává vždy k dispozici.
 saveProject=function(){
   try{
     App.project.updatedAt=nowIso();

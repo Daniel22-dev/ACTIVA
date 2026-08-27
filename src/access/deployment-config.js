@@ -73,6 +73,10 @@ function validate(raw) {
   if (!Array.isArray(raw.allowedOrigins) || !raw.allowedOrigins.length) {
     throw new TypeError("Deployment konfigurace neobsahuje allowedOrigins.");
   }
+  if (!["github-pages", "school-server"].includes(raw.profile)) throw new TypeError("Nepodporovaný deployment profil.");
+  if (raw.profile === "github-pages" && (raw.authMode !== "signed-permit" || !["direct-gemini", "direct-provider"].includes(raw.aiTransport))) throw new TypeError("GitHub profil má neplatný bezpečnostní režim.");
+  if (raw.profile === "school-server" && (raw.authMode !== "server-session" || raw.aiTransport !== "school-gateway" || raw.features?.allowLocalProviderKeys !== false)) throw new TypeError("Školní profil musí používat server session, školní AI bránu a zakázat lokální klíče.");
+  if (raw.features?.schoolServerConnected !== true && (raw.features?.serverSessionReady === true || raw.features?.schoolGatewayReady === true)) throw new TypeError("Nepřipojený školní server nesmí být deklarován jako runtime-ready.");
   return raw;
 }
 
@@ -89,10 +93,10 @@ function fallbackConfig() {
     allowedOrigins: ["self", "https://daniel22-dev.github.io"],
     sharedAccessVersion: "p0-fallback",
     authMode: "signed-permit",
-    aiTransport: "direct-provider",
+    aiTransport: "direct-gemini",
     telemetryMode: "local",
     features: {
-      schoolServerReady: true,
+      schoolServerReady: false,
       allowLocalProviderKeys: true,
       serverSessionReady: false,
       schoolGatewayReady: false,

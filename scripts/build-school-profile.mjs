@@ -49,7 +49,7 @@ if (!appBaseUrl.startsWith("/")) throw new Error("School-server appBaseUrl musí
 for (const manifestPath of files.filter((file) => file.endsWith(`${path.sep}studio-manifest.json`))) {
   const manifest = readJson(manifestPath);
   manifest.deploymentProfile = "school-server";
-  manifest.serverReadyPhase = "P3";
+  manifest.serverReadyPhase = "prepared-not-connected";
   manifest.launchUrl = appBaseUrl;
   manifest.manualUrl = `${appBaseUrl}manual/`;
   if (manifest.aiCore?.status === "integrated-p1" || manifest.aiCore?.coreVersion) {
@@ -70,7 +70,7 @@ writeJson(path.join(targetDist, "server-ready-build-info.json"), {
   app: pkg.name,
   appId: deployment.appId,
   version: pkg.version,
-  phase: "P3",
+  phase: "prepared-not-connected",
   profile: "school-server",
   builtAt: new Date().toISOString(),
   activeAuthMode: deployment.authMode,
@@ -79,10 +79,12 @@ writeJson(path.join(targetDist, "server-ready-build-info.json"), {
   appBaseUrl,
   apiBaseUrl: deployment.apiBaseUrl,
   containsSecrets: false,
+  serverConnected: deployment.features?.schoolServerConnected === true,
+  liveServerValidationRequired: deployment.features?.liveServerValidationRequired === true,
   localProviderKeysAllowed: false,
   serverSessionReady: deployment.features?.serverSessionReady === true,
   schoolGatewayReady: deployment.aiTransport === "school-gateway" ? deployment.features?.schoolGatewayReady === true : null,
   aiCoreVersion: deployment.aiTransport === "school-gateway" ? "1.0.0" : null,
   contractVersion: deployment.aiTransport === "school-gateway" ? "1" : null,
 });
-console.log(`${pkg.name} ${pkg.version}: dist-school-server/ sestaven jako same-origin P3 school-server profil.`);
+console.log(`${pkg.name} ${pkg.version}: dist-school-server/ sestaven jako připravený same-origin school-server profil; živý server není tímto buildem potvrzen.`);

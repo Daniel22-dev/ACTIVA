@@ -29,12 +29,12 @@
   "targetTelemetryMode": "server",
   "requiresPhase": "P1",
   "features": {
-    "schoolServerReady": true,
+    "schoolServerReady": false,
     "allowLocalProviderKeys": true,
     "serverSessionReady": false,
     "schoolGatewayReady": false,
     "schoolServerConnected": false,
-    "liveServerValidationRequired": false
+    "liveServerValidationRequired": true
   },
   "appId": "activity-builder",
   "appBaseUrl": "/apps/activa/",

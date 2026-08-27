@@ -1,3 +1,18 @@
+## 0.5.12 — GARP opravný kandidát po Claude kole 1 (2026-08-27)
+
+- Opraveno pravidlo privacy brány pro označená česká jména: prefixy jako `Žák:`, `Jméno:`, `Student:` a `Matka:` jsou nyní vyhodnocovány bez ohledu na velikost prvního písmene.
+- Doplněna regresní sada přímo nad produkčním regulárním výrazem včetně případů s velkým počátečním písmenem.
+- Doplněny adversariální protipříklady pro projektovou a knihovní importní normalizaci (schema, whitelist typů, limity, prototype pollution a vynucení osobní viditelnosti).
+- Opraven whitelist importovaných typů aktivit a předmětových balíčků tak, aby zděděné klíče objektu (`__proto__`, `constructor`, `toString`) nebyly považovány za povolené hodnoty.
+
+## 0.5.11 — GARP bezpečnostní kandidát (2026-08-27)
+
+- Opraveno fail-closed rozlišení školního AI profilu a zákaz lokálního AI klíče v nepřipojeném school-server režimu.
+- Z produkční CSP odstraněno `unsafe-inline` pro spustitelný JavaScript; hlavní aplikace i access bootstrap jsou externí skripty.
+- Zpřísněny importy, integrita externích DOCX/PDF parserů, diagnostika, PWA runtime konfigurace a GitHub Actions.
+- School-server profil nyní pravdivě hlásí „prepared-not-connected“.
+- Doplněna regresní GARP bezpečnostní release brána.
+
 ## 0.5.10 — sjednocení reportéru (2026-08-13)
 
 - Reportér používá dvoukrokové vytvoření a skutečné stažení diagnostického ZIPu; Gmail je dostupný až po kliknutí na stažení.

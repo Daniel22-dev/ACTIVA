@@ -32,24 +32,30 @@ function libraryProjectSnapshot(project, { includeSource = false } = {}) {
 }
 
 function normalizeLibraryProject(raw) {
-  if (!raw || raw.schema !== 'activa-project-v1' || !Array.isArray(raw.activities)) {
-    throw new Error('Materiál neobsahuje platný projekt ACTIVA.');
-  }
+  return normalizeProjectData(raw);
+}
+
+function normalizeLibraryEntry(raw, { freshId = false, forcePersonal = false } = {}) {
+  if (!raw || raw.schema !== 'activa-library-entry-v1' || !raw.project) throw new Error('Materiál nemá platné schéma ACTIVA.');
+  const project = normalizeLibraryProject(raw.project);
+  const rawTags = Array.isArray(raw.tags) ? raw.tags : String(raw.tags || '').split(',');
   return {
-    ...clone(App.project),
-    ...raw,
-    id: raw.id || uid('project'),
-    version: ACTIVA_VERSION,
-    activities: raw.activities.map((a, i) => normalizeActivity(a, a.type, i)),
-    selectedTypes: Array.isArray(raw.selectedTypes)
-      ? raw.selectedTypes.filter((type) => ACTIVITY_REGISTRY[type])
-      : [],
-    activeLevel: ['support', 'standard', 'challenge'].includes(raw.activeLevel)
-      ? raw.activeLevel
-      : 'standard',
-    subjectPack: SUBJECT_PACKS[raw.subjectPack] ? raw.subjectPack : 'auto',
-    differentiation: { ...App.project.differentiation, ...(raw.differentiation || {}) },
-    print: { ...App.project.print, ...(raw.print || {}) }
+    schema: 'activa-library-entry-v1',
+    id: freshId ? uid('material') : (boundedText(raw.id, 180) || uid('material')),
+    title: boundedText(raw.title || project.title || project.topic || 'Materiál', 160).trim(),
+    subject: boundedText(raw.subject || project.subject || 'Jiný předmět', 100),
+    grade: boundedText(raw.grade || project.grade, 100),
+    topic: boundedText(raw.topic || project.topic, 160),
+    tags: rawTags.map((tag) => boundedText(tag, 80).trim()).filter(Boolean).slice(0, 12),
+    note: boundedText(raw.note, 1200).trim(),
+    author: boundedText(raw.author || 'Učitel školy', 120).trim(),
+    visibility: forcePersonal ? 'personal' : (raw.visibility === 'school-candidate' ? 'school-candidate' : 'personal'),
+    favorite: forcePersonal ? false : !!raw.favorite,
+    createdAt: freshId ? nowIso() : (boundedText(raw.createdAt, 40) || nowIso()),
+    updatedAt: freshId ? nowIso() : (boundedText(raw.updatedAt, 40) || nowIso()),
+    appVersion: ACTIVA_VERSION,
+    activityCount: project.activities.length,
+    project
   };
 }
 
@@ -179,8 +185,10 @@ function libraryEntryFromProject(meta = {}) {
 
 async function refreshPersonalLibrary() {
   try {
-    App.library.personal = (await libraryDbAll())
+    App.library.personal = (await libraryDbAll()).slice(0, LIBRARY_ENTRY_LIMIT)
       .filter((entry) => entry?.schema === 'activa-library-entry-v1')
+      .map((entry) => { try { return normalizeLibraryEntry(entry); } catch (_) { return null; } })
+      .filter(Boolean)
       .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
     App.library.loaded = true;
     return App.library.personal;
@@ -196,14 +204,18 @@ async function refreshSchoolLibrary() {
   try {
     const response = await fetch('./school-library/library.json', { cache: 'no-store' });
     if (!response.ok) throw new Error(`Katalog odpověděl ${response.status}.`);
-    const data = await response.json();
+    const declared = Number(response.headers.get('content-length') || 0);
+    if (declared > LIBRARY_FILE_LIMIT) throw new Error('Školní katalog je příliš velký.');
+    const text = await response.text();
+    if (text.length > LIBRARY_FILE_LIMIT) throw new Error('Školní katalog je příliš velký.');
+    const data = JSON.parse(text);
     App.library.school = Array.isArray(data.materials)
-      ? data.materials.filter((entry) => entry?.schema === 'activa-library-entry-v1')
+      ? data.materials.slice(0, LIBRARY_ENTRY_LIMIT).map((entry) => { try { return normalizeLibraryEntry(entry); } catch (_) { return null; } }).filter(Boolean)
       : [];
     App.library.schoolLoaded = true;
     return App.library.school;
   } catch (error) {
-    console.warn('ACTIVA school library', error);
+    console.warn('ACTIVA school library unavailable');
     App.library.school = [];
     App.library.schoolLoaded = true;
     return [];
@@ -328,25 +340,16 @@ async function importLibraryBundle(data) {
       : data?.schema === 'activa-share-v1'
         ? [data.material]
         : [];
-  if (!Array.isArray(entries) || !entries.length) {
-    throw new Error('Soubor neobsahuje materiály ACTIVA.');
-  }
+  if (!Array.isArray(entries) || !entries.length) throw new Error('Soubor neobsahuje materiály ACTIVA.');
+  if (entries.length > LIBRARY_ENTRY_LIMIT) throw new Error(`Balíček obsahuje více než ${LIBRARY_ENTRY_LIMIT} materiálů.`);
   let count = 0;
   for (const raw of entries) {
     if (raw?.schema !== 'activa-library-entry-v1') continue;
-    const entry = {
-      ...raw,
-      id: uid('material'),
-      visibility: 'personal',
-      favorite: false,
-      createdAt: nowIso(),
-      updatedAt: nowIso(),
-      appVersion: ACTIVA_VERSION,
-      project: normalizeLibraryProject(raw.project)
-    };
+    const entry = normalizeLibraryEntry(raw, { freshId: true, forcePersonal: true });
     await libraryDbPut(entry);
     count++;
   }
+  if (!count) throw new Error('Balíček neobsahuje žádný platný materiál ACTIVA.');
   await refreshPersonalLibrary();
   return count;
 }
