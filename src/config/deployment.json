@@ -10,7 +10,7 @@
     "correspondence": "/korespondencni-asistent/",
     "lesson-hub": "/lesson-hub/",
     "ludus": "/Ludus/",
-    "activity-builder": "/Sestavovac-aktivit/",
+    "activity-builder": "/ACTIVA/",
     "sortio": "/SORTIO/"
   },
   "assetBaseUrl": "./",
@@ -53,7 +53,7 @@
     "liveServerValidationRequired": true
   },
   "appId": "activity-builder",
-  "appBaseUrl": "/Sestavovac-aktivit/",
+  "appBaseUrl": "/ACTIVA/",
   "releaseAcceptance": {
     "stage": "P5",
     "primaryMode": "standalone-github-pages",
