@@ -14,9 +14,9 @@
     "cs": "Originální prémiové redakční studio pro tvorbu pracovních listů a výukových aktivit ve všech předmětech. Nabízí 39 formátů, diferenciaci, varianty A/B/C, tiskové PDF, projekci bez telefonů, lokální knihovnu, přenosné sdílení, úplný manuál, interní testovací centrum a architekturu připravenou na budoucí školní server.",
     "en": "Original premium editorial studio for creating worksheets and learning activities across all subjects. It offers 39 formats, differentiation, A/B/C variants, print-ready PDF, phone-free projection, a local library, portable sharing, a complete manual, an internal test centre and architecture ready for a future school server."
   },
-  "launchUrl": "https://daniel22-dev.github.io/Sestavovac-aktivit/",
-  "manualUrl": "https://daniel22-dev.github.io/Sestavovac-aktivit/manual/",
-  "repository": "daniel22-dev/Sestavovac-aktivit",
+  "launchUrl": "https://daniel22-dev.github.io/ACTIVA/",
+  "manualUrl": "https://daniel22-dev.github.io/ACTIVA/manual/",
+  "repository": "daniel22-dev/ACTIVA",
   "icon": "assets/apps/activity-builder.png",
   "accent": "#3157FF",
   "tags": [
@@ -102,7 +102,7 @@
     "contractVersion": "1",
     "serverReady": false,
     "conformancePassed": true,
-    "operationsManifestUrl": "https://daniel22-dev.github.io/Sestavovac-aktivit/ai-operations.json",
+    "operationsManifestUrl": "https://daniel22-dev.github.io/ACTIVA/ai-operations.json",
     "runtimeSchema": "ghrab-runtime-config-v1",
     "gatewayContract": "ghrab-ai-request-v1",
     "certificationStatus": "certified-p1",
@@ -111,9 +111,9 @@
   },
   "slug": "activa",
   "paths": {
-    "app": "https://daniel22-dev.github.io/Sestavovac-aktivit/",
-    "manual": "https://daniel22-dev.github.io/Sestavovac-aktivit/manual/",
-    "manifest": "https://daniel22-dev.github.io/Sestavovac-aktivit/studio-manifest.json"
+    "app": "https://daniel22-dev.github.io/ACTIVA/",
+    "manual": "https://daniel22-dev.github.io/ACTIVA/manual/",
+    "manifest": "https://daniel22-dev.github.io/ACTIVA/studio-manifest.json"
   },
   "platform": {
     "schema": "ghrab-platform-app-integration-v1",
