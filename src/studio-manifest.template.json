@@ -2,8 +2,8 @@
   "schema": "ai-studio-app-manifest-v1",
   "id": "activity-builder",
   "name": {
-    "cs": "Sestavovač aktivit",
-    "en": "Activity Builder"
+    "cs": "ACTIVA",
+    "en": "ACTIVA"
   },
   "version": "__APP_VERSION__",
   "status": {
