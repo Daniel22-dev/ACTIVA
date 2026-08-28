@@ -11,7 +11,7 @@ const DEFAULT_APP_BASE_URLS = Object.freeze({
   correspondence: "/korespondencni-asistent/",
   "lesson-hub": "/lesson-hub/",
   ludus: "/Ludus/",
-  "activity-builder": "/Sestavovac-aktivit/",
+  "activity-builder": "/ACTIVA/",
   sortio: "/SORTIO/",
 });
 const promiseCache = new Map();
