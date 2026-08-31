@@ -64,7 +64,7 @@ const school = json('src/config/deployment.school-server.json');
 note('school-profile-no-local-key', school.profile==='school-server'&&school.authMode==='server-session'&&school.aiTransport==='school-gateway'&&school.features?.allowLocalProviderKeys===false);
 note('school-profile-truthful-not-connected', school.features?.schoolServerConnected===false&&school.features?.schoolServerReady===false&&school.features?.serverSessionReady===false&&school.features?.schoolGatewayReady===false&&school.features?.liveServerValidationRequired===true);
 const studio = json('dist/studio-manifest.json');
-note('studio-ai-server-ready-false', studio.aiCore?.serverReady===false);
+note('studio-ai-server-ready-capability', studio.aiCore?.serverReady===true);
 note('studio-no-backend-ready-capability', !studio.capabilities?.includes('backend-ready'));
 
 const sw = text('dist/sw.js');

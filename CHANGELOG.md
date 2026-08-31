@@ -1,3 +1,10 @@
+## 0.5.15 — 2026-08-31
+
+- Opraveno AI Core metadata `serverReady`: živý manifest nyní správně deklaruje technickou server-ready kompatibilitu aplikace.
+- Stav fyzického školního serveru zůstává oddělený a pravdivě nepřipojený (`prepared-not-connected`).
+- Aktualizována buildová a GARP regresní brána proti návratu chybné hodnoty.
+- Pedagogické funkce a datové formáty se nemění.
+
 ## 0.5.14 — 2026-08-27
 
 - Hotfix synchronizuje `sharedAccessVersion` s aktuální podepsanou konfigurací AI Studia, aby se aplikace po bezpečnostní rotaci nezamykala kvůli `configuration-version-mismatch`.

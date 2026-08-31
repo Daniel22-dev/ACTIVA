@@ -100,7 +100,7 @@
     "status": "integrated-p1",
     "coreVersion": "1.0.0",
     "contractVersion": "1",
-    "serverReady": false,
+    "serverReady": true,
     "conformancePassed": true,
     "operationsManifestUrl": "https://daniel22-dev.github.io/ACTIVA/ai-operations.json",
     "runtimeSchema": "ghrab-runtime-config-v1",
@@ -126,6 +126,6 @@
     "studioBridge": 2,
     "artifactEnvelope": 1,
     "storagePrefix": "ghrab.activity-builder.",
-    "cacheName": "ghrab-activity-builder-v0.5.14"
+    "cacheName": "ghrab-activity-builder-v0.5.15"
   }
 }
