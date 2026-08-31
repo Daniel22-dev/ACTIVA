@@ -7,3 +7,6 @@ Datum: 31. 8. 2026
 - Skutečné připojení školního serveru se nadále vykazuje odděleně a zůstává pravdivě `prepared-not-connected` / `schoolServerConnected: false`.
 - Build a GARP regresní kontrola nově vyžadují správnou server-ready deklaraci, aby se chyba nevrátila.
 - Bez změny pedagogických funkcí, ukládání dat a současného direct-gemini provozu.
+## CI hotfix R2
+- Zkrácena pouze dokumentační poznámka v offline manuálu, aby P5 performance gate znovu splnil limit `precacheBytes` (749897 / 750000 B).
+
