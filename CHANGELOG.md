@@ -1,3 +1,31 @@
+## 0.5.19 – 2026-09-03
+
+- Opraveny HIGH regrese N-11 a N-12 z mimořádné kontroly 0.5.18.
+- Privacy používá dvouúrovňový model: kontextové PII = `danger` a blokace; holé 9–10místné číselné hodnoty = `warn` s výslovným potvrzením učitele před AI egress.
+- Obnovena detekce holého RČ bez lomítka a českých pevných/mobilních čísel alespoň jako varování; diagnostika je vždy rediguje.
+- Doplněny varianty labelů bez diakritiky a hranice krátkých označení `id`/`rc`, aby nevznikaly falešné zásahy ve slovech typu Pyramid/Covid/Madrid/Marc.
+- `endActivaWork` maže vlastní data nezávisle na stavu sdílených platformních klíčů; neparsovatelný cizí handoff zůstane zachován a je oznámen, ale neblokuje smazání projektu, knihovny, historie ani API klíče.
+- Property korpusy byly převedeny z konkrétních auditních příkladů na třídy vstupů a doplněny nové negative controls.
+
+## 0.5.18 – 2026-09-02
+
+- Zúžena číselná privacy heuristika tak, aby legitimní matematické/fyzikální hodnoty nebyly blokovány bez PII kontextu; přidána pozitivní i negativní regresní sada.
+- Property evidence je svázána s verzí a SHA-256 tree snapshotem relevantních zdrojů/build artefaktů; samostatný běh security gate odmítne stale report.
+- Ukončení práce nyní validuje sdílené handoff/event záznamy před první mutací a u poškozených dat selže atomicky a fail-closed.
+- Diagnostická redakce sjednocena s novými kontextovými numerickými pravidly.
+- Performance budget vědomě upraven na distBytes 855000 / precacheBytes 765000 kvůli explicitně přidanému security/evidence kódu a minimální rezervě 0.5.17.
+
+## 0.5.17
+
+- GARP 2.3 opravné kolo po nezávislé Claude kontrole.
+- AI trust boundary nyní uzavírá všechna uživatelsky/importem ovládaná textová pole do jednoho nedůvěryhodného JSON bloku a odstraňuje podvržené boundary markery.
+- Privacy preflight a diagnostická redakce sdílejí jednu sadu detektorů a pokrývají metadata projektu včetně rodného čísla / dlouhého identifikátoru.
+- „Ukončit práci“ maže cílené handoff packety a události ACTIVA, zachovává cizí aplikace a při blokované IndexedDB končí fail-closed před částečným mazáním.
+- Data manifest, CSP/HSTS, service-worker bypass a workflow permissions byly srovnány se skutečnou implementací.
+- Produkční legacy-AI test switch byl odstraněn; privacy attestation se odvozuje od skutečného preflightu.
+- Doplněny property-based GARP kontroly nad sestaveným promptem, privacy preflightem, retention cestou, CSP a distribuovaným buildem včetně skutečných negative controls v disposable kopiích.
+- Samostatný HTML export dostal restriktivní nonce CSP jako defense-in-depth.
+
 ## 0.5.15 — 2026-08-31
 
 - Opraveno AI Core metadata `serverReady`: živý manifest nyní správně deklaruje technickou server-ready kompatibilitu aplikace.
@@ -88,3 +116,8 @@
 - aplikační adaptér odpovídá skutečnému světlému redakčnímu vzhledu;
 - doplněny workflow konceptu, screenshotů, ZIP/Gmail, PWA cache a centrální návod;
 - hlavní funkce sestavování aktivit ani uživatelská data nebyly změněny.
+
+## 0.5.16
+- GARP 2.3 security hardening: end-work deletion + AI prompt trust boundary.
+
+- Performance budget: `precacheBytes` byl po bezpečnostním hardeningu vědomě upraven z 755 000 na 760 000 B; skutečný build zůstává pod limitem.

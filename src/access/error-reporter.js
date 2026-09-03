@@ -330,6 +330,11 @@ function sanitizeTechnicalText(value, max = 420) {
   let text = clipText(value, max * 2);
   text = text
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[e-mail odstraněn]")
+    .replace(/(?:\b\d{6}\/\d{3,4}\b|(?:\b(?:rodn[eé]\s+(?:číslo|cislo)|rc|identifikátor|identifikator|id)\b|\brč)\s*[:=-]?\s*\d{9,20}\b)/gi, "[ID odstraněno]")
+    .replace(/(?:(?:\+420|00420)\s?(?:\d[\s-]?){9}\b|\b(?:telefon(?:ní|ni)?(?:\s+(?:číslo|cislo))?|mobil|kontakt|tel)\b\.?\s*[:=-]?\s*(?:\d[\s-]?){9}\b)/gi, "[telefon odstraněn]")
+    .replace(/\b(?:\d[\s-]?){9,10}\b/g, "[číselný údaj odstraněn]")
+    .replace(/(?:jméno|žák|student|studentka|rodič|matka|otec)\s*[:=-]\s*[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+\s+[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+/gi, "[jméno odstraněno]")
+    .replace(/(?:ulice|adresa|bydliště)\s*[:=-]\s*[^\n]{5,80}/gi, "[adresa odstraněna]")
     .replace(/(?:bearer\s+)[A-Z0-9._~+\/-]+/gi, "Bearer [token odstraněn]")
     .replace(/((?:api[_ -]?key|authorization|access[_ -]?token|refresh[_ -]?token|password|heslo)\s*[:=]\s*)[^,;\s]+/gi, "$1[odstraněno]")
     .replace(/((?:prompt|puvodni text|původní text|original text|working text|pracovni text|pracovní text|model response|odpoved modelu|odpověď modelu|document content|obsah dokumentu|student data|data zaka|data žáka)\s*[:=]\s*)(?:["'`][^"'`\n]*["'`]|[^,;\n]+)/gi, "$1[obsah odstraněn]")
@@ -360,6 +365,8 @@ function browserLabel() {
 function safeUrlPath(value) {
   return String(value || "")
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[e-mail-odstranen]")
+    .replace(/\b\d{6}\/?\d{3,4}\b/g, "[id-odstranen]")
+    .replace(/(?:\+420\s?)?(?:\d[\s-]?){9}\b/g, "[telefon-odstranen]")
     .replace(/(?:%40|@)/gi, "[at]")
     .replace(/\b[A-Za-z0-9_-]{32,}\b/g, "[dlouhy-identifikator-odstranen]");
 }

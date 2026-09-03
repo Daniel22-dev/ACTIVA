@@ -1,8 +1,8 @@
 {
   "schema": "ghrab-data-manifest-v1",
   "appId": "activity-builder",
-  "appVersion": "0.5.15",
-  "manifestVersion": 3,
+  "appVersion": "0.5.19",
+  "manifestVersion": 6,
   "dataCategories": [
     "settings",
     "application-content",
@@ -30,8 +30,7 @@
       "kind": "sessionStorage",
       "category": "session-data",
       "patterns": [
-        "ghrab.activity-builder.gemini.key.session",
-        "ghrab.activity-builder.presentation.history.v1"
+        "ghrab.activity-builder.gemini.key.session"
       ],
       "sensitivity": "confidential",
       "authority": "client",
@@ -79,12 +78,28 @@
       "sensitivity": "non-content-cache",
       "authority": "client",
       "clearOnEndWork": false
+    },
+    {
+      "kind": "localStorage",
+      "category": "shared-platform-handoff",
+      "patterns": [
+        "ghrab.platform.handoff.v2",
+        "ghrab.handoff.v1",
+        "ghrab.pilot.events.v2"
+      ],
+      "sensitivity": "potentially-personal",
+      "authority": "shared-platform",
+      "clearOnEndWork": true,
+      "clearScope": "only valid packets/events targeted to activity-builder; other application data is preserved",
+      "malformedDataPolicy": "application-owned data is deleted independently; malformed or targetless shared records are preserved and reported to the user"
     }
   ],
   "retention": {
-    "defaultDays": 30,
-    "sessionEndsOnLogout": true,
-    "serverLogsDays": 30
+    "mode": "user-controlled",
+    "automaticClientExpiryDays": null,
+    "serverLogsDays": null,
+    "note": "Serverless klient neprovádí automatické časové mazání. Lokální data se mažou výslovnou akcí Ukončit práci; sessionStorage končí s relací prohlížeče.",
+    "sessionStorageEndsWithBrowserSession": true
   },
   "export": {
     "supported": true,
@@ -107,13 +122,17 @@
   },
   "deletion": {
     "supported": true,
-    "clientVerified": true,
-    "serverEndpoint": "data/activity-builder"
+    "clientVerified": false,
+    "clientControl": "window.ACTIVA_END_WORK()",
+    "serverEndpoint": null,
+    "note": "Produkční profil je serverless; serverové mazání není připojeno. Vlastní data ACTIVA se mažou nezávisle na sdílených platformních klíčích. Neparsovatelný nebo bezcílový cizí handoff/event zůstane zachován a uživatel dostane pravdivé upozornění na částečný úklid sdílené vrstvy.",
+    "clientPropertyTested": true,
+    "browserLifecycleVerified": false
   },
   "sharedDevice": {
     "supported": true,
     "defaultInSchoolProfile": true,
-    "control": "GHRABPlatform.endWork()"
+    "control": "window.ACTIVA_END_WORK()"
   },
   "storageNamespace": {
     "schema": "ghrab-storage-namespace-v1",

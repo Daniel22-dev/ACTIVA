@@ -32,7 +32,7 @@
   },
   "privacy": {
     "sharedDeviceDefault": false,
-    "retentionDays": 30
+    "retentionDays": null
   },
   "endpoints": {
     "session": "session",

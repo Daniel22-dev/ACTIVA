@@ -10,7 +10,18 @@ const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const nowIso=()=>new Date().toISOString();
 function deploymentConfig(){return globalThis.__GHRAB_DEPLOYMENT_CONFIG__||null}
 function isSchoolProfile(){const config=deploymentConfig();return config?.profile==='school-server'||config?.aiTransport==='school-gateway'}
-function safeDiagnosticText(value,max=600){let text=String(value??'');text=text.replace(/AIza[0-9A-Za-z_-]{20,}/g,'[REDACTED_API_KEY]').replace(/Bearer\s+[A-Za-z0-9._~+\/-]+=*/gi,'Bearer [REDACTED]').replace(/\b[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g,'[REDACTED_TOKEN]').replace(/((?:api[_-]?key|token|authorization)\s*[:=]\s*)[^\s,;]+/gi,'$1[REDACTED]').replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g,'[REDACTED_EMAIL]').replace(/\b(?:\+?420\s*)?(?:\d[\s-]*){9}\b/g,'[REDACTED_PHONE]');return text.slice(0,max)}
+const ACTIVA_PRIVACY_RULES=Object.freeze([
+  Object.freeze({id:'email',label:'e-mailová adresa',source:'\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b',flags:'gi',level:'danger',replacement:'[REDACTED_EMAIL]'}),
+  Object.freeze({id:'birth-id',label:'rodné číslo nebo označený dlouhý identifikátor',source:'(?:\\b\\d{6}\\/\\d{3,4}\\b|(?:\\b(?:rodn[eé]\\s+(?:číslo|cislo)|rc|identifikátor|identifikator|id)\\b|\\brč)\\s*[:=-]?\\s*\\d{9,20}\\b)',flags:'gi',level:'danger',replacement:'[REDACTED_ID]'}),
+  Object.freeze({id:'phone',label:'telefonní číslo',source:'(?:(?:\\+420|00420)\\s?(?:\\d[\\s-]?){9}\\b|\\b(?:telefon(?:ní|ni)?(?:\\s+(?:číslo|cislo))?|mobil|kontakt|tel)\\b\\.?\\s*[:=-]?\\s*(?:\\d[\\s-]?){9}\\b)',flags:'gi',level:'danger',replacement:'[REDACTED_PHONE]'}),
+  Object.freeze({id:'numeric-id-warning',label:'možný telefon, rodné číslo nebo číselný identifikátor',source:'\\b(?:\\d[\\s-]?){9,10}\\b',flags:'g',level:'warn',replacement:'[REDACTED_NUMERIC_ID]'}),
+  Object.freeze({id:'labeled-name',label:'pravděpodobné celé jméno po označení',source:'(?:jméno|žák|student|studentka|rodič|matka|otec)\\s*[:=-]\\s*[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+\\s+[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+',flags:'gi',level:'danger',replacement:'[REDACTED_NAME]'}),
+  Object.freeze({id:'address',label:'adresa bydliště',source:'(?:ulice|adresa|bydliště)\\s*[:=-]\\s*[^\\n]{5,80}',flags:'gi',level:'danger',replacement:'[REDACTED_ADDRESS]'})
+]);
+function privacyRegex(rule){return new RegExp(rule.source,rule.flags)}
+function findPrivacySignalsInText(value){const text=String(value??''),findings=[];for(const rule of ACTIVA_PRIVACY_RULES){const matches=text.match(privacyRegex(rule))||[];if(matches.length)findings.push({id:rule.id,label:rule.label,count:matches.length,level:rule.level,samples:matches.slice(0,3).map((x)=>x.slice(0,80))})}return findings}
+function redactPrivacyText(value){let text=String(value??'');for(const rule of ACTIVA_PRIVACY_RULES)text=text.replace(privacyRegex(rule),rule.replacement);return text}
+function safeDiagnosticText(value,max=600){let text=String(value??'');text=text.replace(/AIza[0-9A-Za-z_-]{20,}/g,'[REDACTED_API_KEY]').replace(/Bearer\s+[A-Za-z0-9._~+\/-]+=*/gi,'Bearer [REDACTED]').replace(/\b[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g,'[REDACTED_TOKEN]').replace(/((?:api[_-]?key|token|authorization)\s*[:=]\s*)[^\s,;]+/gi,'$1[REDACTED]');return redactPrivacyText(text).slice(0,max)}
 function safeDiagnosticError(error){const raw=error instanceof Error?error:new Error(String(error));return{name:safeDiagnosticText(raw.name||'Error',80),message:safeDiagnosticText(raw.message||raw,600),stack:safeDiagnosticText(raw.stack||'',1800)}}
 function safeDiagnosticUrl(){try{const url=new URL(location.href);url.search='';url.hash='';return url.href}catch{return String(location.origin||'')}}
 const downloadText=(name,text,type='application/json')=>{const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)};
@@ -24,6 +35,7 @@ const App={
   lastOperation:'start',
   lastError:null,
   privacyFindings:[],
+  privacyPreflight:{passed:false,warningAcknowledged:false,checkedAt:'',fields:[]},
   recommendedTypes:[],
   api:{key:'',model:'gemini-3.6-flash',storage:'none'},
   project:{

@@ -1,6 +1,6 @@
 {
   "name": "sestavovac-aktivit",
-  "version": "0.5.15",
+  "version": "0.5.19",
   "private": true,
   "description": "ACTIVA – prémiové redakční studio pro tisknutelné, projekční a sdílené výukové aktivity v ekosystému AI Studio GHRAB",
   "type": "module",
@@ -40,7 +40,7 @@
     "qa:xss": "node scripts/qa-p5-xss-sinks.mjs",
     "qa:lock": "node scripts/qa-p5-lock.mjs",
     "pretest:reporter": "npm run build",
-    "qa:garp": "node scripts/qa-garp-security.mjs && node scripts/qa-round2-adversarial.mjs"
+    "qa:garp": "node scripts/qa-garp-properties.mjs && node scripts/qa-garp-security.mjs && node scripts/qa-round2-adversarial.mjs"
   },
   "engines": {
     "node": ">=18"

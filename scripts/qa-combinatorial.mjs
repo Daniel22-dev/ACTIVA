@@ -187,7 +187,9 @@ const result = gateResult("combinatorial", findings, {
   parameters: names.length,
   parameterValues: plan.parameters,
   theoreticalCombinations: theoretical,
-  executedScenarios: matrix.length,
+  validatedConfigurations: matrix.length,
+  runtimeExecuted: false,
+  evidenceSemantics: "configuration-validator-only; not browser/runtime execution evidence",
   pairwisePairs: pairUniverse.length,
   coveredPairs,
   pairwiseCoveragePercent: pairUniverse.length
@@ -204,7 +206,7 @@ await writeFile(
   JSON.stringify(result, null, 2) + "\n",
 );
 console.log(
-  `COMBINATORIAL ${result.status}: ${matrix.length}/${theoretical} scénářů, pairwise ${result.details.pairwiseCoveragePercent}%`,
+  `COMBINATORIAL ${result.status}: ${matrix.length}/${theoretical} konfigurací validováno (nikoli browser/runtime execution), pairwise ${result.details.pairwiseCoveragePercent}%`,
 );
 if (result.status === "FAIL") process.exitCode = 1;
 

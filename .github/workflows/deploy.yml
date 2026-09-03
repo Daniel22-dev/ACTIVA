@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --no-fund
+      - run: npm ci --ignore-scripts --no-fund
 
       - name: Verify pinned Playwright version
         run: node -e "const p=require('./node_modules/playwright/package.json'); if(p.version!=='1.61.1') process.exit(1)"

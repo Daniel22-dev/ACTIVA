@@ -1,6 +1,6 @@
 const GHRAB_SW_CONTRACT='ghrab-service-worker-v1';
 /* GHRAB service-worker contract v1 · update activation is user-controlled. */
-const CACHE = "ghrab-activity-builder-v0.5.15";
+const CACHE = "ghrab-activity-builder-v0.5.19";
 const CACHE_PREFIXES = ["ghrab-activity-builder-v", "activa-v"];
 const REQUIRED = [
   "./",
@@ -89,6 +89,7 @@ function isRuntimeRequest(url, scopePath) {
   const relative = url.pathname.slice(scopePath.length);
   return relative === 'runtime-config.js' ||
     relative === 'config/deployment.json' ||
+    relative === 'config/deployment.school-server.json' ||
     relative === 'config/deployment.school-server-p0.json' ||
     relative === 'config/deployment.school-server.example.json' ||
     /^(?:api|auth|session|health)(?:\/|$)/.test(relative);

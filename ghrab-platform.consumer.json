@@ -2,7 +2,7 @@
   "schema": "ghrab-platform-consumer-v1",
   "appId": "activity-builder",
   "appName": "Sestavovač aktivit · ACTIVA",
-  "appVersion": "0.5.15",
+  "appVersion": "0.5.19",
   "platform": {
     "version": "1.1.0",
     "contract": "ghrab-platform-v1",
@@ -63,7 +63,7 @@
     ]
   },
   "cache": {
-    "name": "ghrab-activity-builder-v0.5.15",
+    "name": "ghrab-activity-builder-v0.5.19",
     "updateMessage": "GHRAB_SKIP_WAITING"
   },
   "html": {
@@ -81,11 +81,11 @@
     "moduleContract": "ghrab-lazy-modules-v1",
     "requireBudget": true,
     "performanceBudget": {
-      "distBytes": 840000,
+      "distBytes": 855000,
       "entryHtmlBytes": 430000,
       "entryCriticalBytes": 580000,
       "largestInlineScriptBytes": 320000,
-      "precacheBytes": 750000,
+      "precacheBytes": 765000,
       "largestFileBytes": 430000,
       "duplicateLargeBytes": 50000
     },

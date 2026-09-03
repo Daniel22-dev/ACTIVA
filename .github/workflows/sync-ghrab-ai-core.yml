@@ -5,8 +5,7 @@ on:
     types: [ghrab-ai-core-released]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 env:
   TRUSTED_STUDIO_ORIGIN: https://daniel22-dev.github.io
@@ -14,6 +13,9 @@ env:
 
 jobs:
   sync-core:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -51,7 +53,7 @@ jobs:
             "$MANIFEST_URL" -o /tmp/core-manifest.json
 
       - name: Install dependencies from lockfile
-        run: npm ci --registry=https://registry.npmjs.org
+        run: npm ci --ignore-scripts --registry=https://registry.npmjs.org
 
       - name: Synchronize signed artifacts
         env:

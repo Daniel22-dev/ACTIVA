@@ -13,6 +13,21 @@ const text = (p) => fs.readFileSync(path.join(ROOT,p),'utf8');
 const json = (p) => JSON.parse(text(p));
 const exists = (p) => fs.existsSync(path.join(ROOT,p));
 const sha256 = (p) => crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT,p))).digest('hex');
+const PROPERTY_SNAPSHOT_ROOTS=Object.freeze([
+  'src', '.github/workflows', 'scripts/qa-garp-properties.mjs', 'package.json',
+  'ghrab-platform.consumer.json', 'reporter-test.config.json',
+  'dist/app.js', 'dist/index.html', 'dist/sw.js',
+  'dist/access/error-reporter.js', 'dist/config/data-manifest.json',
+  'dist/config/security-headers.json'
+]);
+function currentPropertySourceSnapshot(){
+  const files=[];
+  const add=(rel)=>{const full=path.join(ROOT,rel);if(!fs.existsSync(full))return;if(fs.statSync(full).isDirectory()){for(const name of fs.readdirSync(full).sort())add(path.posix.join(rel.replace(/\\/g,'/'),name))}else files.push(rel.replace(/\\/g,'/'))};
+  for(const rel of PROPERTY_SNAPSHOT_ROOTS)add(rel);
+  const unique=[...new Set(files)].sort(),hash=crypto.createHash('sha256');
+  for(const rel of unique){hash.update(rel);hash.update('\0');hash.update(fs.readFileSync(path.join(ROOT,rel)));hash.update('\0')}
+  return{algorithm:'sha256-tree-v1',digest:hash.digest('hex'),fileCount:unique.length,roots:[...PROPERTY_SNAPSHOT_ROOTS]};
+}
 
 const pkg = json('package.json');
 const versionPaths = [
@@ -73,16 +88,15 @@ const swOptional=sw.match(/const OPTIONAL\s*=\s*\[([\s\S]*?)\];/)?.[1]||'';
 note('sw-no-runtime-deployment-precache', !/deployment(?:\.school-server[^"']*)?\.json/.test(swOptional));
 note('sw-protected-app-assets', ['./app.js','./access/access-bootstrap.js','./access/protected-page-bootstrap.js','./manual/manual.js','./tests/tests.js'].every(x=>sw.includes(x)));
 note('protected-page-awaits-script-load', text('src/access/protected-page-bootstrap.js').includes('await activateProtectedScripts()') && text('src/access/protected-page-bootstrap.js').includes("executable.addEventListener('load'"));
-note('privacy-all-findings-block-ai', text('src/js/30-storage-api.js').includes('function hasBlockingPrivacy(){return App.privacyFindings.length>0}') && text('src/js/40-ai-generation.js').includes('celé jméno nebo adresu'));
-const storageSource=text('src/js/30-storage-api.js');
-const labeledNameMatch=storageSource.match(/label:'pravděpodobné celé jméno po označení',re:\/([^/]+)\/([a-z]+)/i);
-let labeledNameRegex=null;
-try{if(labeledNameMatch)labeledNameRegex=new RegExp(labeledNameMatch[1],labeledNameMatch[2])}catch{}
-const labeledNameCases=['Žák: Petr Svoboda','Jméno: Petr Svoboda','Student: Petr Svoboda','Matka: Jana Nováková','žák: Petr Svoboda'];
-note('privacy-labeled-name-rule-parses', !!labeledNameRegex, labeledNameMatch?.[0]||'nenalezeno');
-for(const sample of labeledNameCases){if(labeledNameRegex)labeledNameRegex.lastIndex=0;note(`privacy-labeled-name:${sample.split(':')[0]}`, !!labeledNameRegex?.test(sample), sample)}
-if(labeledNameRegex)labeledNameRegex.lastIndex=0;
-note('privacy-unlabeled-name-not-overclaimed', !labeledNameRegex?.test('Petr Svoboda odevzdal práci pozdě.'), 'neoznačená jména zůstávají mimo tuto heuristiku a vyžadují lidské potvrzení');
+const propertyReport=exists('qa-results/garp-properties.json')?json('qa-results/garp-properties.json'):null;
+const propertySnapshot=currentPropertySourceSnapshot();
+const propertyRootsOk=JSON.stringify(propertyReport?.sourceSnapshot?.roots||[])===JSON.stringify(PROPERTY_SNAPSHOT_ROOTS);
+const propertyFresh=propertyReport?.status==='passed'&&propertyReport?.version===pkg.version&&propertyReport?.sourceSnapshot?.algorithm===propertySnapshot.algorithm&&propertyReport?.sourceSnapshot?.digest===propertySnapshot.digest&&propertyReport?.sourceSnapshot?.fileCount===propertySnapshot.fileCount&&propertyRootsOk;
+note('garp-security-property-gate', propertyFresh, propertyReport?`status=${propertyReport.status}; version=${propertyReport.version}; snapshot=${propertyReport.sourceSnapshot?.digest===propertySnapshot.digest?'fresh':'STALE'}; files=${propertyReport.sourceSnapshot?.fileCount}/${propertySnapshot.fileCount}`:'missing');
+const retentionSource=text('src/js/30-storage-api.js');
+note('retention-end-work-control-declared', json('src/config/data-manifest.json').sharedDevice?.control==='window.ACTIVA_END_WORK()' && retentionSource.includes('window.ACTIVA_END_WORK=endActivaWork') && text('src/body.html').includes('id="endWorkBtn"'));
+const aiSource=text('src/js/40-ai-generation.js'), aiCore=text('src/js/41-ai-core-integration.js');
+note('ai-boundary-policy-shared-with-core', aiSource.includes('AI_TRUST_BOUNDARY_POLICY') && aiCore.includes('AI_TRUST_BOUNDARY_POLICY'));
 
 const headers = json('src/config/security-headers.json');
 for (const [name,csp] of [['static',headers.staticProfile?.contentSecurityPolicy||''],['school',headers.schoolServerProfile?.headers?.['Content-Security-Policy']||'']]) {
@@ -98,12 +112,20 @@ for(const name of fs.readdirSync(workflowsDir).filter(x=>/\.ya?ml$/i.test(x))){
     const value=match[1]; if(value.startsWith('actions/')) note(`action-pin:${name}:${value.split('@')[0]}`, /@[0-9a-f]{40}$/i.test(value), value);
   }
 }
+for(const name of fs.readdirSync(workflowsDir).filter(x=>/\.ya?ml$/i.test(x))){
+  const content=fs.readFileSync(path.join(workflowsDir,name),'utf8');
+  const npmCiLines=content.split(/\r?\n/).filter(line=>/\bnpm ci\b/.test(line));
+  for(const line of npmCiLines) note(`workflow-npm-ci-ignore-scripts:${name}`, line.includes('--ignore-scripts'), line.trim());
+}
+const syncWorkflow=text('.github/workflows/sync-ghrab-ai-core.yml');
+const syncTop=syncWorkflow.slice(0,syncWorkflow.indexOf('jobs:'));
+note('sync-workflow-top-permissions-readonly', /permissions:\s*\n\s+contents:\s*read\s*$/m.test(syncTop) && !/contents:\s*write|pull-requests:\s*write/.test(syncTop));
 const deploy=text('.github/workflows/deploy.yml');
 note('deploy-top-permissions-readonly', /^permissions:\s*\n\s+contents:\s*read\s*$/m.test(deploy));
 note('deploy-job-scoped-pages-permission', /deploy:\s*\n\s+permissions:\s*\n\s+pages:\s*write\s*\n\s+id-token:\s*write/m.test(deploy));
 
 const secretFiles=[];
-function walk(dir){for(const ent of fs.readdirSync(dir,{withFileTypes:true})){if(['dist','dist-school-server','node_modules','.git','qa-results'].includes(ent.name))continue;const full=path.join(dir,ent.name);if(ent.isDirectory())walk(full);else if(ent.isFile())secretFiles.push(full);}}
+function walk(dir){for(const ent of fs.readdirSync(dir,{withFileTypes:true})){if(['node_modules','.git'].includes(ent.name))continue;const full=path.join(dir,ent.name);if(ent.isDirectory())walk(full);else if(ent.isFile())secretFiles.push(full);}}
 walk(ROOT);
 const secretPatterns=[
   ['private-key',/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],
