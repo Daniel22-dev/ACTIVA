@@ -2,8 +2,8 @@
   "schema": "ghrab-error-reporter-test-v1",
   "appId": "activity-builder",
   "appName": "ACTIVA",
-  "version": "0.5.19",
-  "createdAt": "2026-09-03T05:55:38.275Z",
+  "version": "0.5.20",
+  "createdAt": "2026-09-05T20:43:54.747Z",
   "browser": {
     "status": "not-ready",
     "reason": "Spravovaná politika URLBlocklist blokuje všechny testovací stránky (/etc/chromium/policies/managed/000_policy_merge.json)."
@@ -14,7 +14,7 @@
     {
       "name": "Patch verze v package.json",
       "ok": true,
-      "detail": "0.5.19"
+      "detail": "0.5.20"
     },
     {
       "name": "Existuje src/access/error-reporter.js",
@@ -247,22 +247,22 @@
       "detail": ""
     },
     {
-      "name": "src/styles.css: obsahuje verzi 0.5.19",
+      "name": "src/styles.css: obsahuje verzi 0.5.20",
       "ok": true,
       "detail": ""
     },
     {
-      "name": "src/manual/index.html: obsahuje verzi 0.5.19",
+      "name": "src/manual/index.html: obsahuje verzi 0.5.20",
       "ok": true,
       "detail": ""
     },
     {
-      "name": "README.md: obsahuje verzi 0.5.19",
+      "name": "README.md: obsahuje verzi 0.5.20",
       "ok": true,
       "detail": ""
     },
     {
-      "name": "RELEASE-NOTES-0.5.19.md: obsahuje verzi 0.5.19",
+      "name": "RELEASE-NOTES-0.5.20.md: obsahuje verzi 0.5.20",
       "ok": true,
       "detail": ""
     },

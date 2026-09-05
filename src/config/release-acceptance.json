@@ -2,8 +2,8 @@
   "schema": "ghrab-release-acceptance-v1",
   "stage": "P5",
   "appId": "activity-builder",
-  "appVersion": "0.5.19",
-  "releaseStatus": "pre-production-accepted",
+  "appVersion": "0.5.20",
+  "releaseStatus": "ecosystem-wave-candidate",
   "primaryRuntime": {
     "mode": "standalone-github-pages",
     "serverRequired": false,

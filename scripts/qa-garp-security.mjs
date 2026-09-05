@@ -94,7 +94,7 @@ const propertyRootsOk=JSON.stringify(propertyReport?.sourceSnapshot?.roots||[])=
 const propertyFresh=propertyReport?.status==='passed'&&propertyReport?.version===pkg.version&&propertyReport?.sourceSnapshot?.algorithm===propertySnapshot.algorithm&&propertyReport?.sourceSnapshot?.digest===propertySnapshot.digest&&propertyReport?.sourceSnapshot?.fileCount===propertySnapshot.fileCount&&propertyRootsOk;
 note('garp-security-property-gate', propertyFresh, propertyReport?`status=${propertyReport.status}; version=${propertyReport.version}; snapshot=${propertyReport.sourceSnapshot?.digest===propertySnapshot.digest?'fresh':'STALE'}; files=${propertyReport.sourceSnapshot?.fileCount}/${propertySnapshot.fileCount}`:'missing');
 const retentionSource=text('src/js/30-storage-api.js');
-note('retention-end-work-control-declared', json('src/config/data-manifest.json').sharedDevice?.control==='window.ACTIVA_END_WORK()' && retentionSource.includes('window.ACTIVA_END_WORK=endActivaWork') && text('src/body.html').includes('id="endWorkBtn"'));
+note('retention-end-work-control-declared', String(json('src/config/data-manifest.json').sharedDevice?.control||'').includes('window.ACTIVA_END_WORK()') && retentionSource.includes('window.ACTIVA_END_WORK=endActivaWork') && text('src/body.html').includes('id="endWorkBtn"'));
 const aiSource=text('src/js/40-ai-generation.js'), aiCore=text('src/js/41-ai-core-integration.js');
 note('ai-boundary-policy-shared-with-core', aiSource.includes('AI_TRUST_BOUNDARY_POLICY') && aiCore.includes('AI_TRUST_BOUNDARY_POLICY'));
 

@@ -54,6 +54,7 @@ wireEditor=function(){package3OriginalWireEditor();$('#visualAssetInput')?.addEv
 
 
 saveProject=function(){
+  if(!activaPersistenceAllowed()) return false;
   try{
     App.project.updatedAt=nowIso();
     const ok=safeSet(localStore,PROJECT_KEY,JSON.stringify(App.project));

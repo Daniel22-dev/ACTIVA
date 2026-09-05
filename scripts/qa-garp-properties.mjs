@@ -217,26 +217,62 @@ function retentionProperty(){
   const validOther=ctx.__R.validateSharedPlatformDataBeforeDeletion(new FakeStorage({'ghrab.platform.handoff.v2':other}));
   note('property:retention-malformed-shared-data-detected-without-ownership-claim',malformedChecks.every(x=>x.ok===false)&&validOther.ok===true,`malformed=${malformedChecks.map(x=>x.ok).join(',')}; otherValid=${validOther.ok}`);
 
-  const endFn=between(src,'async function endActivaWork','window.ACTIVA_END_WORK=endActivaWork')+`\n;globalThis.__END=endActivaWork;`;
+  const endFn=`const localStore=globalThis.localStore;const sessionStore=globalThis.sessionStore;let saveTimer=0;\n`+between(src,'function safeGet','window.ACTIVA_END_WORK=endActivaWork')+`\n;globalThis.__END=endActivaWork;globalThis.__CLEAN=cleanupActivaOwnedData;globalThis.__BLOCKED=()=>ACTIVA_PERSISTENCE_BLOCKED;`;
   async function runEndCase({sharedOk=true,idbBlocked=false}){
-    const mutations=[],toasts=[];
-    const endCtx={saveTimer:0,clearTimeout:()=>{},window:{confirm:()=>true},validateSharedPlatformDataBeforeDeletion:()=>sharedOk?{ok:true,issues:[]}:{ok:false,issues:['shared:synthetic-malformed']},deleteActivaLibraryDatabase:async()=>{if(idbBlocked)throw new Error('blocked');mutations.push('idb')},clearOwnedStorage:(store)=>mutations.push(store===endCtx.localStore?'clear-local':'clear-session'),removeTargetedSharedPlatformData:()=>mutations.push('shared-cleanup'),safeRemove:(_store,key)=>mutations.push(`remove:${key}`),localStore:{},sessionStore:{},PROJECT_KEY:'p',ACTIVA_LIBRARY_FALLBACK_KEY:'l',ACTIVA_SESSION_HISTORY_KEY:'h',MODEL_KEY:'m',PERMANENT_KEY:'pk',SESSION_KEY:'sk',ACTIVA_MEMORY_LIBRARY:[],App:{library:{personal:['x']},api:{key:'synthetic',storage:'session'},privacyFindings:[{x:1}],privacyPreflight:{passed:true},lastOperation:''},captureError:()=>{},toast:(msg,type)=>toasts.push({msg,type}),location:{reload:()=>mutations.push('reload')}};
+    const toasts=[],mutations=[];
+    const localStore=new FakeStorage({
+      'ghrab.activity-builder.project.v1':'SYNTH-PROJECT',
+      'ghrab.activity-builder.library.fallback.v1':'SYNTH-LIBRARY',
+      'ghrab.activity-builder.presentation.history.v1':'SYNTH-HISTORY',
+      'ghrab.activity-builder.gemini.key.permanent':'SYNTH-KEY',
+      'ghrab.activity-builder.migration.p2-storage-namespace-v1.backup':'SYNTH-BACKUP',
+      'ghrab.activity-builder.gemini.model':'model-sentinel',
+      'ghrab.activity-builder.theme.v1':'light',
+      'ghrab.activity-builder.migration.p2-storage-namespace-v1.done':'marker-sentinel',
+      'ghrab.other-app.noncontent':'OTHER-SENTINEL',
+      ...(sharedOk?{
+        'ghrab.platform.handoff.v2':JSON.stringify({target:'activity-builder',material:{content:{sourceText:'SYNTH-OWN'}}}),
+        'ghrab.pilot.events.v2':JSON.stringify([{appId:'activity-builder',detail:'SYNTH-OWN-EVENT'},{appId:'other-app',detail:'SYNTH-OTHER-EVENT'}])
+      }:{
+        'ghrab.platform.handoff.v2':'{broken',
+        'ghrab.pilot.events.v2':JSON.stringify([{appId:'activity-builder',detail:'SYNTH-OWN-EVENT'},{appId:'other-app',detail:'SYNTH-OTHER-EVENT'}])
+      })
+    });
+    const sessionStore=new FakeStorage({'activa.gemini.key.session':'SYNTH-SESSION-KEY'});
+    let idbPresent=true;
+    const indexedDB={
+      deleteDatabase:()=>{const request={onsuccess:null,onerror:null,onblocked:null,error:null};queueMicrotask(()=>{if(idbBlocked){request.onblocked?.();return}idbPresent=false;mutations.push('idb-delete');request.onsuccess?.()});return request},
+      databases:async()=>idbPresent?[{name:'activa-library-v1'}]:[]
+    };
+    const endCtx={
+      APP_ID:'activity-builder',ACTIVA_VERSION:'0.5.20',localStore,sessionStore,clearTimeout:()=>{},queueMicrotask,
+      window:{confirm:()=>true,indexedDB},document:{dispatchEvent:()=>{}},CustomEvent:class{constructor(type,options={}){this.type=type;this.detail=options.detail}},
+      createBlankProject:()=>({schema:'activa-project-v1',sourceText:'',activities:[]}),isSchoolProfile:()=>false,nowIso:()=> '2026-09-05T00:00:00Z',
+      App:{project:{sourceText:'SYNTH-MEMORY'},selectedActivityIndex:3,activeStep:'editor',library:{personal:['x'],search:'x',subject:'x'},api:{key:'synthetic',storage:'session'},privacyFindings:[{x:1}],privacyPreflight:{passed:true},lastOperation:''},
+      captureError:()=>{},toast:(msg,type)=>toasts.push({msg,type}),location:{reload:()=>mutations.push('reload')},
+      safeDiagnosticText:(v,m=500)=>String(v).slice(0,m),clone:(v)=>structuredClone(v),uid:()=> 'synthetic-id',clamp:(v)=>v,
+      $:()=>null,$$:()=>[],deploymentConfig:()=>({features:{}}),updateApiUi:()=>{},closeModal:()=>{},downloadText:()=>{},syncProjectFromForms:()=>{},syncFormsFromProject:()=>{},renderActivityCards:()=>{},setStep:()=>{},updateSourceCounter:()=>{},scanPrivacy:()=>{},openModal:()=>{}
+    };
+    endCtx.window.localStorage=localStore;endCtx.window.sessionStorage=sessionStore;
     vm.createContext(endCtx);vm.runInContext(endFn,endCtx,{filename:'30-storage-endwork-matrix.js'});
     const result=await endCtx.__END({confirmUser:false,reload:false});
-    return{result,mutations,toasts,App:endCtx.App};
+    const events=(()=>{try{return JSON.parse(localStore.getItem('ghrab.pilot.events.v2')||'null')}catch{return null}})();
+    return{result,mutations,toasts,App:endCtx.App,blocked:endCtx.__BLOCKED(),idbPresent,localStore,sessionStore,events};
   }
   return Promise.all([
     runEndCase({sharedOk:true,idbBlocked:true}),
     runEndCase({sharedOk:true,idbBlocked:false}),
     runEndCase({sharedOk:false,idbBlocked:false}),
   ]).then(([blocked,clean,corrupt])=>{
-    const blockedOk=blocked.result===false&&blocked.mutations.length===0;
-    note('property:end-work-idb-block-is-atomic-fail-closed',blockedOk,`result=${blocked.result}; mutations=${blocked.mutations.join(',')}`);
-    const ownMarkers=['idb','clear-local','clear-session','remove:p','remove:l','remove:h','remove:m','remove:pk','remove:sk'];
-    const cleanOwn=clean.result===true&&ownMarkers.every(x=>clean.mutations.includes(x))&&clean.mutations.includes('shared-cleanup');
-    const corruptOwn=corrupt.result===true&&ownMarkers.every(x=>corrupt.mutations.includes(x))&&corrupt.mutations.includes('shared-cleanup')&&corrupt.toasts.some(x=>x.type==='info'&&/data ACTIVA byla smazána/i.test(x.msg));
-    note('property:end-work-owned-data-independent-of-shared-data',cleanOwn&&corruptOwn,`clean=${cleanOwn}; corrupt=${corruptOwn}; corruptMutations=${corrupt.mutations.join(',')}`);
-    note('property:end-work-corrupt-shared-data-reported-not-blocking',corruptOwn&&corrupt.App.lastOperation==='end-work-shared-warning',`result=${corrupt.result}; lastOperation=${corrupt.App.lastOperation}; toasts=${corrupt.toasts.length}`);
+    const ownedKeys=['ghrab.activity-builder.project.v1','ghrab.activity-builder.library.fallback.v1','ghrab.activity-builder.presentation.history.v1','ghrab.activity-builder.gemini.key.permanent','ghrab.activity-builder.migration.p2-storage-namespace-v1.backup'];
+    const ownedGone=(x)=>ownedKeys.every(k=>x.localStore.getItem(k)===null)&&x.sessionStore.getItem('activa.gemini.key.session')===null&&!x.idbPresent;
+    const settingsPreserved=(x)=>x.localStore.getItem('ghrab.activity-builder.gemini.model')==='model-sentinel'&&x.localStore.getItem('ghrab.activity-builder.theme.v1')==='light'&&x.localStore.getItem('ghrab.activity-builder.migration.p2-storage-namespace-v1.done')==='marker-sentinel'&&x.localStore.getItem('ghrab.other-app.noncontent')==='OTHER-SENTINEL';
+    const blockedOk=blocked.result===false&&blocked.idbPresent&&blocked.localStore.getItem('ghrab.activity-builder.project.v1')==='SYNTH-PROJECT'&&blocked.sessionStore.getItem('activa.gemini.key.session')==='SYNTH-SESSION-KEY'&&blocked.blocked===true;
+    note('property:end-work-idb-block-is-atomic-fail-closed',blockedOk,`result=${blocked.result}; idbPresent=${blocked.idbPresent}; blocked=${blocked.blocked}`);
+    const cleanOwn=clean.result===true&&ownedGone(clean)&&settingsPreserved(clean)&&clean.localStore.getItem('ghrab.platform.handoff.v2')===null&&Array.isArray(clean.events)&&clean.events.length===1&&clean.events[0].appId==='other-app';
+    const corruptOwn=corrupt.result===true&&ownedGone(corrupt)&&settingsPreserved(corrupt)&&corrupt.localStore.getItem('ghrab.platform.handoff.v2')==='{broken'&&Array.isArray(corrupt.events)&&corrupt.events.length===1&&corrupt.events[0].appId==='other-app';
+    note('property:end-work-owned-data-independent-of-shared-data',cleanOwn&&corruptOwn,`clean=${cleanOwn}; corrupt=${corruptOwn}`);
+    note('property:end-work-corrupt-shared-data-reported-not-blocking',corruptOwn&&corrupt.App.lastOperation==='end-work'&&corrupt.toasts.some(x=>x.type==='info'&&/data ACTIVA byla smazána/i.test(x.msg)),`result=${corrupt.result}; lastOperation=${corrupt.App.lastOperation}; toasts=${corrupt.toasts.length}`);
   });
 }
 async function generationWarningAcknowledgementProperty(){
@@ -291,7 +327,7 @@ async function aiCoreAttestationProperty(){
 }
 function releaseConfigProperties(){
   const manifest=json('src/config/data-manifest.json');const storage=read('src/js/30-storage-api.js');
-  note('property:data-manifest-endwork-callable',manifest.sharedDevice?.control==='window.ACTIVA_END_WORK()'&&manifest.deletion?.clientControl==='window.ACTIVA_END_WORK()'&&storage.includes('window.ACTIVA_END_WORK=endActivaWork'));
+  note('property:data-manifest-endwork-callable',String(manifest.sharedDevice?.control||'').includes('window.ACTIVA_END_WORK()')&&manifest.deletion?.clientControl==='window.ACTIVA_END_WORK()'&&storage.includes('window.ACTIVA_END_WORK=endActivaWork'));
   const sessionPatterns=(manifest.stores||[]).filter(x=>x.kind==='sessionStorage').flatMap(x=>x.patterns||[]);
   const deployments=['src/config/deployment.json','src/config/deployment.school-server.json','src/config/deployment.school-server.example.json'].map(json);
   note('property:data-manifest-retention-truthful',manifest.retention?.automaticClientExpiryDays===null&&manifest.retention?.serverLogsDays===null&&manifest.deletion?.serverEndpoint===null&&!sessionPatterns.includes('ghrab.activity-builder.presentation.history.v1')&&deployments.every(x=>x.privacy?.retentionDays===null));
@@ -315,7 +351,7 @@ async function runProperties(){
 async function negativeControls(){
   const cases=[
     {name:'negative-control:prompt-boundary',rel:'src/js/40-ai-generation.js',mutate:s=>s.replace('NEDŮVĚRYHODNÝ UŽIVATELSKÝ A IMPORTOVANÝ OBSAH\n${UNTRUSTED_INPUT_BEGIN}','UNSAFE_GOAL_OUTSIDE_BOUNDARY: ${p.goal}\n\nNEDŮVĚRYHODNÝ UŽIVATELSKÝ A IMPORTOVANÝ OBSAH\n${UNTRUSTED_INPUT_BEGIN}')},
-    {name:'negative-control:targeted-retention',rel:'src/js/30-storage-api.js',mutate:s=>s.replace('if(handoffTargetAppId(packet)===APP_ID)safeRemove(storage,key)','if(false)safeRemove(storage,key)')},
+    {name:'negative-control:targeted-retention',rel:'src/js/30-storage-api.js',mutate:s=>s.replace("if(handoffTargetAppId(packet)===APP_ID&&!safeRemove(storage,key))failures.push(key)","if(false&&!safeRemove(storage,key))failures.push(key)")},
     {name:'negative-control:shared-data-blocks-owned-deletion',rel:'src/js/30-storage-api.js',mutate:s=>s.replace('try{await deleteActivaLibraryDatabase();','try{const preShared=validateSharedPlatformDataBeforeDeletion(localStore);if(!preShared.ok)throw new Error(\'negative-control-shared-block\');await deleteActivaLibraryDatabase();')},
     {name:'negative-control:privacy-field-coverage',rel:'src/js/30-storage-api.js',mutate:s=>s.replace("goal:value('goalInput',p.goal),",'')},
     {name:'negative-control:privacy-false-positive-regression',rel:'src/js/10-core.js',mutate:s=>s.replace(/^  Object\.freeze\(\{id:'phone'.*$/m,"  Object.freeze({id:'phone',label:'telefonní číslo',source:'(?:\\\\+420\\\\s?)?(?:\\\\d[\\\\s-]?){9}\\\\b',flags:'g',level:'danger',replacement:'[REDACTED_PHONE]'}),")},

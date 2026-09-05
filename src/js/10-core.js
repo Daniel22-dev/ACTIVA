@@ -27,6 +27,11 @@ function safeDiagnosticUrl(){try{const url=new URL(location.href);url.search='';
 const downloadText=(name,text,type='application/json')=>{const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)};
 function seededRandom(seed){let h=2166136261>>>0;for(const ch of String(seed))h=Math.imul(h^ch.charCodeAt(0),16777619);return()=>{h+=0x6D2B79F5;let t=h;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
 function shuffle(items,seed){const out=[...items],rnd=seededRandom(seed);for(let i=out.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[out[i],out[j]]=[out[j],out[i]]}return out}
+function createBlankProject(){return{
+  schema:'activa-project-v1',version:ACTIVA_VERSION,id:uid('project'),createdAt:nowIso(),updatedAt:nowIso(),
+  title:'Nový pracovní list',subject:'Český jazyk a literatura',grade:'',topic:'',goal:'',duration:20,difficulty:'standard',mode:'individual',sourceText:'',
+  selectedTypes:[],activities:[],teacherNote:'',variant:'A',activeLevel:'standard',subjectPack:'auto',differentiation:{enabled:true,levels:['support','standard','challenge'],lockedCore:true,balanced:true},print:{logo:true,mono:true,nameLine:true,levelMode:'current',variantMode:'current'}
+}}
 const App={
   version:ACTIVA_VERSION,
   activeStep:'source',
@@ -38,11 +43,7 @@ const App={
   privacyPreflight:{passed:false,warningAcknowledged:false,checkedAt:'',fields:[]},
   recommendedTypes:[],
   api:{key:'',model:'gemini-3.6-flash',storage:'none'},
-  project:{
-    schema:'activa-project-v1',version:ACTIVA_VERSION,id:uid('project'),createdAt:nowIso(),updatedAt:nowIso(),
-    title:'Nový pracovní list',subject:'Český jazyk a literatura',grade:'',topic:'',goal:'',duration:20,difficulty:'standard',mode:'individual',sourceText:'',
-    selectedTypes:[],activities:[],teacherNote:'',variant:'A',activeLevel:'standard',subjectPack:'auto',differentiation:{enabled:true,levels:['support','standard','challenge'],lockedCore:true,balanced:true},print:{logo:true,mono:true,nameLine:true,levelMode:'current',variantMode:'current'}
-  }
+  project:createBlankProject()
 };
 window.ACTIVA=App;
 function toast(message,type='info',duration=3200){const region=$('#toastRegion');if(!region)return;const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=message;region.appendChild(el);setTimeout(()=>el.remove(),duration)}

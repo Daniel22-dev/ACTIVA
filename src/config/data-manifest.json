@@ -1,13 +1,14 @@
 {
   "schema": "ghrab-data-manifest-v1",
   "appId": "activity-builder",
-  "appVersion": "0.5.19",
-  "manifestVersion": 6,
+  "appVersion": "0.5.20",
+  "manifestVersion": 7,
   "dataCategories": [
     "settings",
     "application-content",
     "diagnostics",
-    "ai-prompts-and-results"
+    "ai-prompts-and-results",
+    "lifecycle-security-state"
   ],
   "privacy": {
     "studentContentMayOccur": true,
@@ -18,21 +19,14 @@
   "stores": [
     {
       "kind": "localStorage",
-      "category": "application-data",
+      "category": "application-content",
       "patterns": [
-        "ghrab.activity-builder.*"
+        "ghrab.activity-builder.project.v1",
+        "ghrab.activity-builder.library.fallback.v1",
+        "ghrab.activity-builder.presentation.history.v1",
+        "ghrab.activity-builder.migration.p2-storage-namespace-v1.backup"
       ],
       "sensitivity": "potentially-personal",
-      "authority": "client",
-      "clearOnEndWork": true
-    },
-    {
-      "kind": "sessionStorage",
-      "category": "session-data",
-      "patterns": [
-        "ghrab.activity-builder.gemini.key.session"
-      ],
-      "sensitivity": "confidential",
       "authority": "client",
       "clearOnEndWork": true
     },
@@ -51,12 +45,26 @@
       "kind": "sessionStorage",
       "category": "credential",
       "patterns": [
-        "ghrab.activity-builder.gemini.key.permanent",
-        "ghrab.activity-builder.gemini.key.session"
+        "activa.gemini.key.session",
+        "activa.gemini.key.permanent",
+        "ghrab.activity-builder.gemini.key.session",
+        "ghrab.activity-builder.gemini.key.permanent"
       ],
       "sensitivity": "secret",
       "authority": "client-direct-mode-only",
-      "clearOnEndWork": true
+      "clearOnEndWork": true,
+      "note": "Aktuální consumer migruje prefix activa.* pouze v localStorage; session key activa.gemini.key.session proto zůstává skutečným runtime klíčem v sessionStorage."
+    },
+    {
+      "kind": "localStorage",
+      "category": "legacy-application-data",
+      "patterns": [
+        "activa.*"
+      ],
+      "sensitivity": "potentially-personal",
+      "authority": "client-legacy",
+      "clearOnEndWork": true,
+      "note": "Platformní migrace má legacy localStorage odstranit; případný reziduální legacy klíč je při cleanupu mazán a pokud zůstane, acknowledgement selže."
     },
     {
       "kind": "indexedDB",
@@ -67,6 +75,40 @@
       "sensitivity": "potentially-personal",
       "authority": "client",
       "clearOnEndWork": true
+    },
+    {
+      "kind": "localStorage",
+      "category": "settings",
+      "patterns": [
+        "ghrab.activity-builder.gemini.model",
+        "ghrab.activity-builder.theme.v1",
+        "ghrab.activity-builder.migration.p2-storage-namespace-v1.done"
+      ],
+      "sensitivity": "non-personal-setting",
+      "authority": "client-and-platform",
+      "clearOnEndWork": false
+    },
+    {
+      "kind": "localStorage",
+      "category": "suite-lifecycle-security-state",
+      "patterns": [
+        "ghrab.platform.suite-session-generation.v1",
+        "ghrab.activity-builder.suite-session-seen.v1",
+        "ghrab.activity-builder.suite-session-state.v1"
+      ],
+      "sensitivity": "non-content-security-state",
+      "authority": "shared-platform-and-client",
+      "clearOnEndWork": false
+    },
+    {
+      "kind": "sessionStorage",
+      "category": "suite-lifecycle-security-state",
+      "patterns": [
+        "ghrab.activity-builder.suite-session-tab-seen.v1"
+      ],
+      "sensitivity": "non-content-security-state",
+      "authority": "client",
+      "clearOnEndWork": false
     },
     {
       "kind": "cacheStorage",
@@ -90,15 +132,15 @@
       "sensitivity": "potentially-personal",
       "authority": "shared-platform",
       "clearOnEndWork": true,
-      "clearScope": "only valid packets/events targeted to activity-builder; other application data is preserved",
-      "malformedDataPolicy": "application-owned data is deleted independently; malformed or targetless shared records are preserved and reported to the user"
+      "clearScope": "only valid packets targeted to activity-builder and events owned by/targeted to activity-builder; other application data is preserved",
+      "malformedDataPolicy": "application-owned data is deleted independently; malformed or targetless shared records are preserved and reported"
     }
   ],
   "retention": {
     "mode": "user-controlled",
     "automaticClientExpiryDays": null,
     "serverLogsDays": null,
-    "note": "Serverless klient neprovádí automatické časové mazání. Lokální data se mažou výslovnou akcí Ukončit práci; sessionStorage končí s relací prohlížeče.",
+    "note": "Serverless klient neprovádí automatické časové mazání. Obsahová data se mažou akcí Ukončit práci i suite-session lifecyclem; sessionStorage končí s relací prohlížeče. Neobsahové lifecycle tombstones/acknowledgement a legitimní nastavení se zachovávají.",
     "sessionStorageEndsWithBrowserSession": true
   },
   "export": {
@@ -125,21 +167,29 @@
     "clientVerified": false,
     "clientControl": "window.ACTIVA_END_WORK()",
     "serverEndpoint": null,
-    "note": "Produkční profil je serverless; serverové mazání není připojeno. Vlastní data ACTIVA se mažou nezávisle na sdílených platformních klíčích. Neparsovatelný nebo bezcílový cizí handoff/event zůstane zachován a uživatel dostane pravdivé upozornění na částečný úklid sdílené vrstvy.",
+    "note": "Cleanup maže pouze manifestem vlastněná obsahová data a cílený sdílený handoff/event. Acknowledgement vzniká až po ověřeném cleanupu; při chybě zůstává persistence zablokována a handler vrací FAIL.",
     "clientPropertyTested": true,
-    "browserLifecycleVerified": false
+    "browserLifecycleVerified": false,
+    "suiteSessionContract": "ghrab-suite-session-v1",
+    "suiteStateKey": "ghrab.activity-builder.suite-session-state.v1",
+    "tabSeenKey": "ghrab.activity-builder.suite-session-tab-seen.v1"
   },
   "sharedDevice": {
     "supported": true,
     "defaultInSchoolProfile": true,
-    "control": "window.ACTIVA_END_WORK()"
+    "control": "window.ACTIVA_END_WORK() + GHRAB_PLATFORM.session.onEnd(...)",
+    "suiteSessionContract": "ghrab-suite-session-v1",
+    "replay": true,
+    "perTabFence": true
   },
   "storageNamespace": {
     "schema": "ghrab-storage-namespace-v1",
     "prefix": "ghrab.activity-builder.",
     "migrationId": "p2-storage-namespace-v1",
     "backup": "full",
-    "rollbackSupported": true
+    "rollbackSupported": true,
+    "backupClearOnEndWork": true,
+    "markerClearOnEndWork": false
   },
   "import": {
     "supported": true,

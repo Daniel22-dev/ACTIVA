@@ -1,9 +1,5 @@
-const ACTIVA_LIBRARY_DB = 'activa-library-v1';
 const ACTIVA_LIBRARY_STORE = 'materials';
-const ACTIVA_LIBRARY_FALLBACK_KEY = 'activa.library.fallback.v1';
-const ACTIVA_SESSION_HISTORY_KEY = 'activa.presentation.history.v1';
 const ACTIVA_LIBRARY_MAX_HISTORY = 40;
-let ACTIVA_MEMORY_LIBRARY = [];
 
 App.library = {
   personal: [], school: [], loaded: false, schoolLoaded: false,
@@ -69,6 +65,7 @@ function libraryFallbackRead() {
   }
 }
 function libraryFallbackWrite(entries) {
+  if (!activaPersistenceAllowed()) throw new Error('Persistence je po ukončení společné relace zablokována.');
   ACTIVA_MEMORY_LIBRARY = clone(entries);
   if (!localStore) return;
   if (!safeSet(localStore, ACTIVA_LIBRARY_FALLBACK_KEY, JSON.stringify(entries))) {
@@ -118,6 +115,7 @@ async function libraryDbAll() {
 }
 
 async function libraryDbPut(entry) {
+  if (!activaPersistenceAllowed()) throw new Error('Persistence je po ukončení společné relace zablokována.');
   const db = await libraryDb();
   if (!db) {
     const entries = libraryFallbackRead();
@@ -142,6 +140,7 @@ async function libraryDbPut(entry) {
 }
 
 async function libraryDbDelete(id) {
+  if (!activaPersistenceAllowed()) throw new Error('Persistence je po ukončení společné relace zablokována.');
   const db = await libraryDb();
   if (!db) {
     libraryFallbackWrite(libraryFallbackRead().filter((entry) => entry.id !== id));
@@ -279,7 +278,8 @@ function sessionHistory() {
   }
 }
 function saveSessionHistory(history) {
-  safeSet(localStore, ACTIVA_SESSION_HISTORY_KEY, JSON.stringify(history.slice(0, ACTIVA_LIBRARY_MAX_HISTORY)));
+  if (!activaPersistenceAllowed()) return false;
+  return safeSet(localStore, ACTIVA_SESSION_HISTORY_KEY, JSON.stringify(history.slice(0, ACTIVA_LIBRARY_MAX_HISTORY)));
 }
 function recordPresentationSession(summary) {
   const history = sessionHistory();

@@ -2,7 +2,7 @@
   "distEntry": "dist/index.html",
   "appId": "activity-builder",
   "appName": "ACTIVA",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "reporterPath": "src/access/error-reporter.js",
   "stylePath": "src/access/error-reporter.css",
   "adapterPath": "src/access/error-reporter-adapter.js",
@@ -17,7 +17,7 @@
     "src/styles.css",
     "src/manual/index.html",
     "README.md",
-    "RELEASE-NOTES-0.5.19.md"
+    "RELEASE-NOTES-0.5.20.md"
   ],
   "distCachePaths": [
     "dist/access/error-reporter.js",
@@ -30,5 +30,6 @@
     "light": "document.documentElement.dataset.theme='light';",
     "dark": "document.documentElement.dataset.theme='dark';"
   },
-  "manualGuardPath": "src/access/protected-page-bootstrap.js"
+  "manualGuardPath": "src/access/protected-page-bootstrap.js",
+  "requiredTextFiles": []
 }

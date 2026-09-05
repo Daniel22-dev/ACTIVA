@@ -1,3 +1,13 @@
+## 0.5.20 – 2026-09-05
+
+- Migrace na přesnou referenční GHRAB Platform 1.1.2 pro koordinovanou ecosystem release wave.
+- Integrace `ghrab-suite-session-v1`: cross-context signal, delayed-open replay, per-tab fence, Browser Back/Forward ochrana a fail-closed acknowledgement po dokončeném cleanupu.
+- PC-01 opravil data manifest podle skutečných writerů: pracovní projekt, lokální knihovna/fallback, historie, credentials, migrační full backup, Studio handoff a lifecycle/security state.
+- End-work cleanup již nemaže celý namespace naslepo; zachovává neobsahové nastavení, Cache Storage, suite tombstone/ack state a migration marker.
+- Persistence/autosave jsou během suite cleanupu zablokovány, aby stale karta nemohla po ukončení relace vrátit stará data.
+- Přidán skutečný browser test suite-session včetně open-child, delayed replay, multi-tab, Back/Forward, fail-closed a povinné negative control mutace.
+- Kandidát není automaticky produkční GREEN; E-01 zůstává ekosystémově otevřené do dokončení celé release wave.
+
 ## 0.5.19 – 2026-09-03
 
 - Opraveny HIGH regrese N-11 a N-12 z mimořádné kontroly 0.5.18.
