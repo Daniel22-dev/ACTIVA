@@ -1,3 +1,10 @@
+## 0.5.22 – Platform 1.1.2 suite browser QA delayed-replay fix
+
+- Opraven skutečný CI FAIL z ACTIVA 0.5.21 v povinném Chromium suite-session testu.
+- Delayed-open scénář nyní zapisuje syntetická persistence data přes samostatný storage-only seed a nesahá na `window.ACTIVA` v suite coordinatoru, kde child runtime z principu neexistuje.
+- Přidána fail-fast invariantní kontrola, že storage-only seed není závislý na ACTIVA runtime ani formuláři child aplikace.
+- Produkční suite-session cleanup, acknowledgement a referenční GHRAB Platform 1.1.2 zůstávají funkčně beze změny; 0.5.21 již v GitHub Chromiu prokázala PASS open-child scénáře.
+
 ## 0.5.20 – 2026-09-05
 
 

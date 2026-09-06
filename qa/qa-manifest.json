@@ -2,7 +2,7 @@
   "standard": "GHRAB-QA-1.0.2",
   "appId": "activity-builder",
   "appName": "ACTIVA – Sestavovač aktivit",
-  "appVersion": "0.5.21",
+  "appVersion": "0.5.22",
   "entryPoint": "dist/index.html",
   "serveRoot": "dist",
   "buildRoot": "dist",
@@ -47,17 +47,17 @@
     {
       "file": "package.json",
       "regex": "\\\"version\\\"\\s*:\\s*\\\"([0-9.]+)\\\"",
-      "expected": "0.5.21"
+      "expected": "0.5.22"
     },
     {
       "file": "dist/studio-manifest.json",
       "regex": "\\\"version\\\"\\s*:\\s*\\\"([0-9.]+)\\\"",
-      "expected": "0.5.21"
+      "expected": "0.5.22"
     },
     {
       "file": "dist/sw.js",
       "regex": "ghrab-activity-builder-v([0-9.]+)",
-      "expected": "0.5.21"
+      "expected": "0.5.22"
     }
   ],
   "pwaTargets": [

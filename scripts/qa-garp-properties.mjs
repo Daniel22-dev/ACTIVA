@@ -245,7 +245,7 @@ function retentionProperty(){
       databases:async()=>idbPresent?[{name:'activa-library-v1'}]:[]
     };
     const endCtx={
-      APP_ID:'activity-builder',ACTIVA_VERSION:'0.5.21',localStore,sessionStore,clearTimeout:()=>{},queueMicrotask,
+      APP_ID:'activity-builder',ACTIVA_VERSION:'0.5.22',localStore,sessionStore,clearTimeout:()=>{},queueMicrotask,
       window:{confirm:()=>true,indexedDB},document:{dispatchEvent:()=>{}},CustomEvent:class{constructor(type,options={}){this.type=type;this.detail=options.detail}},
       createBlankProject:()=>({schema:'activa-project-v1',sourceText:'',activities:[]}),isSchoolProfile:()=>false,nowIso:()=> '2026-09-05T00:00:00Z',
       App:{project:{sourceText:'SYNTH-MEMORY'},selectedActivityIndex:3,activeStep:'editor',library:{personal:['x'],search:'x',subject:'x'},api:{key:'synthetic',storage:'session'},privacyFindings:[{x:1}],privacyPreflight:{passed:true},lastOperation:''},
