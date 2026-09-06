@@ -60,7 +60,7 @@ function transformHtml(source, relative) {
   let html = source
     .replace(/data-ghrab-access=["']checking["']/gi, 'data-ghrab-access="granted"')
     .replace(/<script\b(?=[^>]*data-ghrab-access-bootstrap)[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/type=["']application\/ghrab-protected["']/gi, 'type="text/javascript"')
+    .replace(/type=["']application\/ghrab-protected["']/gi, 'type="text/javascript" defer')
     .replace(/\sdata-ghrab-protected(?:=["'][^"']*["'])?/gi, '')
     .replace(/<meta\b[^>]*http-equiv=["'](?:refresh|content-security-policy)["'][^>]*>/gi, '');
   if (/<head\b[^>]*>/i.test(html)) html = html.replace(/<head\b[^>]*>/i, m => `${m}\n${qaPrelude}`);
@@ -69,7 +69,7 @@ function transformHtml(source, relative) {
 }
 const transformSentinel = '<!doctype html><html><head></head><body><script type="application/ghrab-protected" data-ghrab-protected>for(var i=0;i<base.length;i++){base[i]=i;}</script></body></html>';
 const transformedSentinel = transformHtml(transformSentinel, 'sentinel.html');
-if (!transformedSentinel.includes('i<base.length') || !transformedSentinel.includes('base[i]=i')) {
+if (!transformedSentinel.includes('i<base.length') || !transformedSentinel.includes('base[i]=i') || !/type=["']text\/javascript["'][^>]*\bdefer\b/i.test(transformedSentinel)) {
   throw new Error('Runtime harness poškodil JavaScript při transformaci HTML.');
 }
 function qaAccessBootstrap(relative) {
@@ -156,7 +156,7 @@ const auditExpr = `(()=>{
  document.querySelectorAll('[role="dialog"],dialog').forEach(el=>{if(!name(el))add('serious','dialog-name',el,'Dialog nemá přístupný název.');if(visible(el)&&el.getAttribute('aria-modal')!=='true'&&!el.hasAttribute('open'))add('moderate','dialog-modal',el,'Viditelný dialog nemá aria-modal=true.');});
  document.querySelectorAll('a[target="_blank"]').forEach(el=>{if(!/\\bnoopener\\b/i.test(el.getAttribute('rel')||''))add('moderate','noopener',el,'Odkaz target=_blank nemá rel=noopener.');});
  const main=document.querySelector('main,[role="main"]');
- return {issues,domNodes:document.getElementsByTagName('*').length,scriptCount:document.scripts.length,mainTextLength:text(main).length,access:document.documentElement.dataset.ghrabAccess||'',qaErrors:window.__GHRAB_QA_ERRORS__||[],bootError:window.__GHRAB_QA_BOOT_ERROR__||'',ready:document.readyState};
+ return {issues,domNodes:document.getElementsByTagName('*').length,scriptCount:document.scripts.length,mainTextLength:text(main).length,access:document.documentElement.dataset.ghrabAccess||'',qaErrors:window.__GHRAB_QA_ERRORS__||[],bootError:window.__GHRAB_QA_BOOT_ERROR__||'',suiteBlocked:typeof window.ACTIVA_SUITE_DIAGNOSTICS==='function'?Boolean(window.ACTIVA_SUITE_DIAGNOSTICS()?.blocked):false,ready:document.readyState};
 })()`;
 const dialogStateExpr = `(()=>{const results=[];const all=[...document.querySelectorAll('[role="dialog"],dialog')];for(const d of all.slice(0,30)){const snapshot={hidden:d.hidden,style:d.getAttribute('style'),class:d.getAttribute('class'),inert:d.inert,ariaHidden:d.getAttribute('aria-hidden'),open:d.hasAttribute('open')};try{d.hidden=false;d.inert=false;d.removeAttribute('aria-hidden');d.setAttribute('aria-modal','true');d.classList.remove('hidden');if(d.tagName==='DIALOG')d.setAttribute('open','');d.style.display=d.tagName==='DIALOG'?'block':'flex';d.style.visibility='visible';d.style.opacity='1';const overflow=Math.max(0,document.documentElement.scrollWidth-document.documentElement.clientWidth,document.body?.scrollWidth-document.documentElement.clientWidth);results.push({id:d.id||'',overflow,width:d.getBoundingClientRect().width,scrollWidth:d.scrollWidth,clientWidth:d.clientWidth});}finally{d.hidden=snapshot.hidden;d.inert=snapshot.inert;if(snapshot.ariaHidden===null)d.removeAttribute('aria-hidden');else d.setAttribute('aria-hidden',snapshot.ariaHidden);if(!snapshot.open)d.removeAttribute('open');if(snapshot.class===null)d.removeAttribute('class');else d.setAttribute('class',snapshot.class);if(snapshot.style===null)d.removeAttribute('style');else d.setAttribute('style',snapshot.style);}}return results;})()`;
 try {
@@ -207,7 +207,7 @@ const issueRows=pageReports.flatMap(p=>p.widths.flatMap(w=>w.audit.issues.map(i=
 const exceptionRows=pageReports.flatMap(p=>p.widths.flatMap(w=>w.exceptions.map(detail=>({page:p.page,width:w.width,detail}))));
 const qaErrorRows=pageReports.flatMap(p=>p.widths.flatMap(w=>(w.audit.qaErrors||[]).map(detail=>({page:p.page,width:w.width,detail}))));
 const overflowRows=pageReports.flatMap(p=>p.widths.filter(w=>w.layout.overflow>1||w.dialogs.some(d=>d.overflow>1)).map(w=>({page:p.page,width:w.width,baseline:w.layout.overflow,dialogs:w.dialogs.filter(d=>d.overflow>1)})));
-const initFailures=pageReports.flatMap(p=>p.widths.filter(w=>w.audit.scriptCount<1||w.audit.mainTextLength<1||w.audit.access==='denied'||w.layout.bodyVisibility==='hidden'||Number(w.layout.bodyOpacity)===0||w.audit.bootError).map(w=>({page:p.page,width:w.width,audit:w.audit,layout:w.layout})));
+const initFailures=pageReports.flatMap(p=>p.widths.filter(w=>w.audit.scriptCount<1||w.audit.mainTextLength<1||w.audit.access==='denied'||w.layout.bodyVisibility==='hidden'||Number(w.layout.bodyOpacity)===0||w.audit.bootError||w.audit.suiteBlocked).map(w=>({page:p.page,width:w.width,audit:w.audit,layout:w.layout})));
 const severity={critical:0,serious:0,moderate:0,minor:0};for(const i of issueRows)severity[i.severity]=(severity[i.severity]||0)+1;
 const blockers=severity.critical+severity.serious+overflowRows.length+initFailures.length+exceptionRows.length;
 const report={schema:'ghrab-p5-runtime-audit-v2',appId:consumer.appId,appVersion:consumer.appVersion,chromium:chromiumPath(),scriptsExecuted:true,transport:'local-http',protectedScriptsUnlocked:true,viewportWidths:widths,pagesScanned:pageReports.length,statesScanned:pageReports.length*widths.length+pageReports.reduce((n,p)=>n+p.widths.reduce((m,w)=>m+w.dialogs.length,0),0),summary:{...severity,overflows:overflowRows.length,initFailures:initFailures.length,browserExceptions:exceptionRows.length,qaErrors:qaErrorRows.length,blockers},status:blockers?'failed':'passed',issues:issueRows,overflows:overflowRows,initFailures,browserExceptions:exceptionRows,qaErrors:qaErrorRows,pages:pageReports};

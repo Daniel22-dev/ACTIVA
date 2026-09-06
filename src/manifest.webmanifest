@@ -32,7 +32,7 @@
       "purpose": "maskable"
     }
   ],
-  "version": "0.5.20",
+  "version": "0.5.21",
   "ghrab_platform": {
     "contract": "ghrab-platform-v1",
     "version": "1.1.2",
@@ -40,6 +40,6 @@
     "brand_version": "1.0.0",
     "theme_contract": "ghrab-theme-v1",
     "sw_contract": "ghrab-sw-v1",
-    "cache_name": "ghrab-activity-builder-v0.5.20"
+    "cache_name": "ghrab-activity-builder-v0.5.21"
   }
 }

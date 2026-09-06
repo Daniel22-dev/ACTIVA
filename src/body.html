@@ -1,300 +1,284 @@
 <div class="app-shell" id="appShell">
-  <header class="topbar">
-    <div class="brand-lockup">
-      <span class="activa-mark" aria-hidden="true"><i>A</i><b></b></span>
-      <div class="brand-copy">
-        <span class="brand-eyebrow">AI STUDIO GHRAB · TVŮRČÍ EDICE</span>
-        <div class="brand-line"><strong>ACTIVA</strong><span>Redakční studio výukových materiálů</span></div>
-      </div>
-      <img src="./assets/brand/school-logo.png" alt="Logo Gymnázia, Ostrava-Hrabůvka" class="school-logo">
-    </div>
-    <div class="top-actions">
-      <span class="save-state" id="saveState"><i></i> Uloženo</span>
-      <a class="icon-btn help-top-btn" id="manualBtn" href="./manual/" title="Manuál ACTIVA" aria-label="Manuál ACTIVA">?</a>
-      <a class="icon-btn test-top-btn" id="testsBtn" href="./tests/" title="Interní testy" aria-label="Interní testy">✓</a>
-      <button class="icon-btn" id="diagnosticsBtn" type="button" title="Technický protokol" aria-label="Technický protokol">⌁</button>
-      <button class="icon-btn" id="fullscreenBtn" type="button" title="Celá obrazovka" aria-label="Celá obrazovka">⛶</button>
-      <button class="icon-btn" id="endWorkBtn" type="button" title="Ukončit práci a smazat lokální data" aria-label="Ukončit práci a smazat lokální data">⏻</button>
-      <button class="top-library-btn" id="libraryOpenBtn" type="button"><span>◇</span>Knihovna</button>
-      <button class="api-pill" id="apiOpenBtn" type="button" aria-label="Nastavení AI"><span class="api-dot"></span><span id="apiPillText">AI klíč nezadán</span></button>
-      <a class="studio-link" href="/AI-Studio-GHRAB/" data-ghrab-studio-link>Zpět do Studia</a>
-    </div>
-  </header>
-
-  <main class="workspace">
-    <aside class="flow-sidebar" aria-label="Postup tvorby">
-      <div class="flow-intro">
-        <span class="edition-badge">EDITORIAL WORKSHOP · 0.5</span>
-        <h1>Materiál, který vypadá profesionálně ještě před tiskem.</h1>
-        <p>Soustřeďte se na obsah. ACTIVA převezme sazbu, strukturu, varianty, řešení a přípravu pro tisk.</p>
-      </div>
-      <nav class="flow-steps" id="flowSteps">
-        <button class="flow-step active" data-step="source" type="button"><span>01</span><b>Zdroj a cíl</b><small>Co se má procvičit</small></button>
-        <button class="flow-step" data-step="activities" type="button"><span>02</span><b>Typy aktivit</b><small>Vyberte skladbu listu</small></button>
-        <button class="flow-step" data-step="generate" type="button"><span>03</span><b>Generování</b><small>AI nebo místní návrh</small></button>
-        <button class="flow-step" data-step="editor" type="button"><span>04</span><b>Editor a PDF</b><small>Kontrola, úpravy, tisk</small></button>
-      </nav>
-      <div class="sidebar-note">
-        <b>Bez mobilů ve třídě</b>
-        <span>Hlavním výstupem je tisknutelné PDF. Interaktivní režim není podmínkou.</span>
-      </div>
-      <div class="owner-mini">Vlastník aplikace: Daniel Baláž · Gymnázium, Ostrava-Hrabůvka<br>© 2026 Daniel Baláž. Všechna práva vyhrazena.</div>
-    </aside>
-
-    <section class="stage">
-      <section class="screen active" id="screen-source" data-screen="source">
-        <div class="screen-heading">
-          <div><span class="kicker">KROK 1</span><h2>Vložte učivo a určete výukový cíl</h2><p>Stačí téma, vlastní text nebo seznam pojmů. Aplikace pracuje napříč předměty.</p></div>
-          <button class="text-btn" id="loadDemoBtn" type="button">Načíst ukázku</button><a class="context-help" href="./manual/#prvni-material">Jak začít?</a>
-        </div>
-        <div class="source-layout">
-          <article class="premium-card source-card">
-            <div class="card-head"><div><span class="mini-label">ZDROJOVÝ MATERIÁL</span><h3>Obsah pro tvorbu aktivit</h3></div><span class="counter" id="sourceCounter">0 znaků</span></div>
-            <textarea id="sourceText" class="source-textarea" placeholder="Příklad:&#10;Fotosyntéza je proces, při kterém rostliny...&#10;&#10;Nebo vložte dvojice:&#10;chlorofyl – zelené barvivo&#10;stroma – vnitřní prostor chloroplastu"></textarea>
-            <div class="upload-row">
-              <label class="upload-btn" for="sourceFile">Nahrát TXT, MD nebo CSV</label>
-              <input id="sourceFile" type="file" accept=".txt,.md,.csv,.tsv,text/plain,text/csv" hidden>
-              <span>Citlivé údaje žáků před odesláním AI anonymizujte.</span>
-            </div>
-            <div class="privacy-strip" id="privacyStrip"><span class="privacy-icon">◇</span><div><b>Kontrola soukromí</b><small id="privacyText">Ve vstupu zatím nebyly rozpoznány rizikové údaje.</small></div><button id="privacyReviewBtn" type="button">Prověřit</button></div>
-          </article>
-
-          <article class="premium-card settings-card">
-            <div class="card-head"><div><span class="mini-label">PEDAGOGICKÉ NASTAVENÍ</span><h3>Pro koho a proč</h3></div></div>
-            <div class="form-grid">
-              <label><span>Předmět</span><select id="subjectInput"><option>Český jazyk a literatura</option><option>Anglický jazyk</option><option>Španělský jazyk</option><option>Německý jazyk</option><option>Matematika</option><option>Fyzika</option><option>Chemie</option><option>Biologie</option><option>Dějepis</option><option>Zeměpis</option><option>ZSV / občanská výchova</option><option>Informatika</option><option>Hudební výchova</option><option>Výtvarná výchova</option><option>Jiný předmět</option></select></label>
-              <label><span>Ročník / věk</span><input id="gradeInput" type="text" placeholder="např. tercie / 13–14 let"></label>
-              <label class="full"><span>Téma materiálu</span><input id="topicInput" type="text" placeholder="např. Fotosyntéza"></label>
-              <label class="full"><span>Cíl aktivity</span><input id="goalInput" type="text" placeholder="např. žák vysvětlí fáze procesu a použije klíčové pojmy"></label>
-              <label><span>Odhad času</span><select id="durationInput"><option value="10">10 minut</option><option value="20" selected>20 minut</option><option value="30">30 minut</option><option value="45">45 minut</option><option value="60">60 minut</option></select></label>
-              <label><span>Výchozí obtížnost</span><select id="difficultyInput"><option value="support">S podporou</option><option value="standard" selected>Standardní</option><option value="challenge">Rozšiřující</option></select></label>
-              <label><span>Organizace</span><select id="modeInput"><option value="individual" selected>Samostatná práce</option><option value="pair">Práce ve dvojici</option><option value="group">Skupinová práce</option><option value="projection">Společná práce s projekcí</option></select></label>
-              <label><span>Počet aktivit</span><select id="activityCountInput"><option value="2">2 aktivity</option><option value="3" selected>3 aktivity</option><option value="4">4 aktivity</option><option value="5">5 aktivit</option></select></label>
-            </div>
-          </article>
-        </div>
-        <article class="premium-card differentiation-setup">
-          <div class="diff-setup-copy"><span class="mini-label">DIFERENCIACE JEDNÍM KLIKNUTÍM</span><h3>Jedno učivo, tři přiměřeně odlišné pracovní listy</h3><p>Podpůrná, standardní a rozšiřující verze zachovají společný výukový cíl. Rozdíl je v rozsahu, nápovědách a náročnosti odpovědi.</p></div>
-          <div class="diff-options">
-            <label class="premium-toggle"><input id="differentiationEnabled" type="checkbox" checked><span><b>Vytvořit tři úrovně</b><small>Podpora · Standard · Výzva</small></span></label>
-            <label class="premium-toggle"><input id="lockedCoreCheck" type="checkbox" checked><span><b>Zamknout společné jádro</b><small>Stejný cíl, pojmy a klíčové odpovědi</small></span></label>
-            <label class="premium-toggle"><input id="balancedCheck" type="checkbox" checked><span><b>Hlídání srovnatelnosti</b><small>Automatická kontrola rozsahu a bodů</small></span></label>
-          </div>
-        </article>
-        <div class="screen-footer"><span>Výchozí nastavení lze později upravit.</span><button class="primary-action" data-next="activities" type="button">Pokračovat k aktivitám <b>→</b></button></div>
-      </section>
-
-      <section class="screen" id="screen-activities" data-screen="activities">
-        <div class="screen-heading">
-          <div><span class="kicker">KROK 2</span><h2>Vyberte skladbu pracovního listu</h2><p>Vyberte až pět modulů včetně skupinových, obrazových, mapových a datových formátů.</p></div>
-          <div class="heading-tools"><span class="selection-count" id="selectionCount">0 vybráno</span><a class="context-help" href="./manual/#katalog-aktivit">Přehled 39 formátů</a></div>
-        </div>
-        <div class="pack-studio">
-          <div class="pack-studio-head"><div><span class="mini-label">PŘEDMĚTOVÉ BALÍČKY</span><h3>Vyberte oborový profil</h3></div><small id="packHint">Automaticky podle zvoleného předmětu</small></div>
-          <div class="pack-selector" id="packSelector"></div>
-        </div>
-        <div class="recommendation" id="recommendationBox"><span>✦</span><div><b>Doporučení asistenta</b><p>Po vložení obsahu navrhneme vhodné typy aktivit.</p></div><button id="applyRecommendationBtn" type="button">Použít doporučení</button></div>
-        <div class="activity-grid" id="activityGrid"></div>
-        <div class="screen-footer"><button class="secondary-action" data-back="source" type="button">← Zpět</button><button class="primary-action" data-next="generate" type="button">Přejít ke generování <b>→</b></button></div>
-      </section>
-
-      <section class="screen" id="screen-generate" data-screen="generate">
-        <div class="screen-heading">
-          <div><span class="kicker">KROK 3</span><h2>Vytvořte první návrh</h2><p>AI zpracuje pouze anonymizovaný obsah. Pro test vzhledu lze použít i místní návrh bez API.</p></div><a class="context-help" href="./manual/#ai-a-soukromi">AI a soukromí</a>
-        </div>
-        <div class="generation-layout">
-          <article class="premium-card generation-main">
-            <span class="mini-label">SOUHRN ZADÁNÍ</span>
-            <div id="generationSummary" class="generation-summary"></div>
-            <div class="generation-choices">
-              <label class="choice-card active"><input type="radio" name="generationMode" value="ai" checked><span class="choice-icon">✦</span><div><b>Generovat pomocí AI</b><small>Nejlepší obsah a oborová přesnost. Vyžaduje osobní Gemini API klíč.</small></div></label>
-              <label class="choice-card"><input type="radio" name="generationMode" value="local"><span class="choice-icon">◇</span><div><b>Vytvořit místní ukázku</b><small>Bez odeslání dat. Vhodné pro kontrolu vzhledu a pracovního postupu.</small></div></label>
-            </div>
-            <div class="human-gate"><input id="sourceConfirmed" type="checkbox"><label for="sourceConfirmed"><b>Prošel/prošla jsem zdrojový text.</b><span>Neobsahuje jména žáků ani jiné citlivé údaje a mohu jej použít pro tvorbu materiálu.</span></label></div>
-            <div class="generation-actions"><button class="generate-btn" id="generateBtn" type="button"><span>✦</span><div><b>Vytvořit pracovní list</b><small id="generateButtonHint">AI návrh · 1 požadavek</small></div><i>→</i></button></div>
-            <div id="generationStatus" class="generation-status" aria-live="polite"></div>
-          </article>
-          <aside class="premium-card quality-card">
-            <span class="mini-label">KVALITA VÝSTUPU</span>
-            <h3>Čtyři ochranné vrstvy</h3>
-            <ul class="quality-list">
-              <li><span>01</span><div><b>Zdrojová věrnost</b><small>AI dostane pokyn nevymýšlet fakta mimo podklad.</small></div></li>
-              <li><span>02</span><div><b>Strukturovaný výstup</b><small>Každý typ aktivity má přesné datové schéma.</small></div></li>
-              <li><span>03</span><div><b>Programová kontrola</b><small>Křížovka, osmisměrka i varianty se přepočítají v aplikaci.</small></div></li>
-              <li><span>04</span><div><b>Učitelské potvrzení</b><small>PDF se zpřístupní až po kontrole zadání a řešení.</small></div></li>
-            </ul>
-          </aside>
-        </div>
-        <div class="screen-footer"><button class="secondary-action" data-back="activities" type="button">← Zpět</button><span>Rozpracování se ukládá jen v tomto prohlížeči.</span></div>
-      </section>
-
-      <section class="screen editor-screen" id="screen-editor" data-screen="editor">
-        <div class="editor-topline">
-          <div><span class="kicker">KROK 4</span><h2 id="editorProjectTitle">Pracovní list</h2></div>
-          <a class="context-help editor-help" href="./manual/#editor-a-pdf">Nápověda k editoru</a><div class="editor-actions">
-            <div class="level-switch" role="group" aria-label="Úroveň"><button data-level="support" type="button">Podpora</button><button class="active" data-level="standard" type="button">Standard</button><button data-level="challenge" type="button">Výzva</button></div><div class="variant-switch" role="group" aria-label="Varianta"><button class="active" data-variant="A" type="button">A</button><button data-variant="B" type="button">B</button><button data-variant="C" type="button">C</button></div>
-            <button class="secondary-action compact" id="saveToLibraryBtn" type="button">Uložit do knihovny</button>
-            <button class="secondary-action compact" id="openShareBtn" type="button">Sdílet</button>
-            <button class="secondary-action compact presentation-launch" id="openPresentationBtn" type="button">▶ Projekce</button>
-            <button class="secondary-action compact" id="projectExportBtn" type="button">Projekt JSON</button>
-            <label class="secondary-action compact file-label" for="projectImportInput">Načíst projekt</label><input id="projectImportInput" type="file" accept="application/json,.json" hidden>
-            <button class="primary-action compact" id="openExportBtn" type="button">PDF a tisk</button>
-          </div>
-        </div>
-        <div class="editor-workspace">
-          <aside class="document-outline">
-            <div class="outline-head"><span>OBSAH DOKUMENTU</span><button id="addActivityBtn" type="button" title="Přidat aktivitu">＋</button></div>
-            <div id="activityOutline" class="activity-outline"></div>
-            <div class="outline-tools"><button id="moveUpBtn" type="button">↑ Nahoru</button><button id="moveDownBtn" type="button">↓ Dolů</button><button id="duplicateActivityBtn" type="button">Kopie</button><button id="deleteActivityBtn" type="button" class="danger-text">Smazat</button></div>
-          </aside>
-          <section class="canvas-zone">
-            <div class="canvas-toolbar"><span id="pageCountLabel">Náhled A4</span><div><button id="zoomOutBtn" type="button">−</button><span id="zoomLabel">82 %</span><button id="zoomInBtn" type="button">＋</button></div></div>
-            <div class="canvas-scroll"><div class="page-stack" id="pagePreview"></div></div>
-          </section>
-          <aside class="property-panel">
-            <div class="property-head"><span>UPRAVIT AKTIVITU</span><small id="selectedActivityType">—</small></div>
-            <label><span>Název</span><input id="activityTitleInput" type="text"></label>
-            <label><span>Instrukce pro žáky</span><textarea id="activityInstructionInput" rows="3"></textarea></label>
-            <label><span id="dataEditorLabel">Obsah aktivity</span><textarea id="activityDataInput" class="data-editor" rows="14" spellcheck="false"></textarea><small id="dataEditorHelp" class="field-help"></small></label>
-            <div class="visual-asset-panel" id="visualAssetPanel" hidden>
-              <div class="visual-asset-head"><div><span class="mini-label">OBRAZOVÝ PODKLAD</span><b id="visualAssetTitle">Obrázek nebo mapa</b></div><span id="visualAssetSize">Nenahráno</span></div>
-              <div class="visual-editor-preview" id="visualEditorPreview"><div class="visual-empty-state"><span>▧</span><b>Nahrajte vlastní podklad</b><small>Po nahrání kliknutím do náhledu přidáte očíslovaný bod.</small></div></div>
-              <div class="visual-asset-actions"><label class="secondary-action compact file-label" for="visualAssetInput">Nahrát obrázek</label><input id="visualAssetInput" type="file" accept="image/png,image/jpeg,image/webp" hidden><button class="text-btn" id="removeVisualAssetBtn" type="button">Odebrat</button><button class="text-btn" id="clearVisualMarkersBtn" type="button">Smazat body</button></div>
-              <small class="field-help">Podklad se zmenší pro tisk a uloží do projektu. Používejte vlastní nebo licenčně povolené obrázky.</small>
-            </div>
-            <div class="property-row"><label><span>Body</span><input id="activityPointsInput" type="number" min="0" max="100"></label><label><span>Rozložení</span><select id="activityLayoutInput"><option value="standard">Standardní</option><option value="compact">Kompaktní</option><option value="spacious">Vzdušné</option></select></label></div>
-            <button class="apply-edit-btn" id="applyActivityEditBtn" type="button">Použít změny</button>
-            <div class="validation-box" id="activityValidation"><span>✓</span><div><b>Aktivita je připravena</b><small>Kontrola proběhne po každé změně.</small></div></div>
-            <div class="diff-audit-card" id="diffAuditCard"><div><span class="mini-label">SROVNATELNOST ÚROVNÍ</span><b id="diffAuditTitle">Kontrola připravena</b><small id="diffAuditText">Podpora, standard a výzva používají stejné jádro učiva.</small></div><button id="openDiffAuditBtn" type="button">Detail</button></div>
-          </aside>
-        </div>
-      </section>
-    </section>
-  </main>
+<header class="topbar">
+<div class="brand-lockup">
+<span class="activa-mark" aria-hidden="true"><i>A</i><b></b></span>
+<div class="brand-copy">
+<span class="brand-eyebrow">AI STUDIO GHRAB · TVŮRČÍ EDICE</span>
+<div class="brand-line"><strong>ACTIVA</strong><span>Redakční studio výukových materiálů</span></div>
 </div>
-
+<img src="./assets/brand/school-logo.png" alt="Logo Gymnázia, Ostrava-Hrabůvka" class="school-logo">
+</div>
+<div class="top-actions">
+<span class="save-state" id="saveState"><i></i> Uloženo</span>
+<a class="icon-btn help-top-btn" id="manualBtn" href="./manual/" title="Manuál ACTIVA" aria-label="Manuál ACTIVA">?</a>
+<a class="icon-btn test-top-btn" id="testsBtn" href="./tests/" title="Interní testy" aria-label="Interní testy">✓</a>
+<button class="icon-btn" id="diagnosticsBtn" type="button" title="Technický protokol" aria-label="Technický protokol">⌁</button>
+<button class="icon-btn" id="fullscreenBtn" type="button" title="Celá obrazovka" aria-label="Celá obrazovka">⛶</button>
+<button class="icon-btn" id="endWorkBtn" type="button" title="Ukončit práci a smazat lokální data" aria-label="Ukončit práci a smazat lokální data">⏻</button>
+<button class="top-library-btn" id="libraryOpenBtn" type="button"><span>◇</span>Knihovna</button>
+<button class="api-pill" id="apiOpenBtn" type="button" aria-label="Nastavení AI"><span class="api-dot"></span><span id="apiPillText">AI klíč nezadán</span></button>
+<a class="studio-link" href="/AI-Studio-GHRAB/" data-ghrab-studio-link>Zpět do Studia</a>
+</div>
+</header>
+<main class="workspace">
+<aside class="flow-sidebar" aria-label="Postup tvorby">
+<div class="flow-intro">
+<span class="edition-badge">EDITORIAL WORKSHOP · 0.5</span>
+<h1>Materiál, který vypadá profesionálně ještě před tiskem.</h1>
+<p>Soustřeďte se na obsah. ACTIVA převezme sazbu, strukturu, varianty, řešení a přípravu pro tisk.</p>
+</div>
+<nav class="flow-steps" id="flowSteps">
+<button class="flow-step active" data-step="source" type="button"><span>01</span><b>Zdroj a cíl</b><small>Co se má procvičit</small></button>
+<button class="flow-step" data-step="activities" type="button"><span>02</span><b>Typy aktivit</b><small>Vyberte skladbu listu</small></button>
+<button class="flow-step" data-step="generate" type="button"><span>03</span><b>Generování</b><small>AI nebo místní návrh</small></button>
+<button class="flow-step" data-step="editor" type="button"><span>04</span><b>Editor a PDF</b><small>Kontrola, úpravy, tisk</small></button>
+</nav>
+<div class="sidebar-note">
+<b>Bez mobilů ve třídě</b>
+<span>Hlavním výstupem je tisknutelné PDF. Interaktivní režim není podmínkou.</span>
+</div>
+<div class="owner-mini">Vlastník aplikace: Daniel Baláž · Gymnázium, Ostrava-Hrabůvka<br>© 2026 Daniel Baláž. Všechna práva vyhrazena.</div>
+</aside>
+<section class="stage">
+<section class="screen active" id="screen-source" data-screen="source">
+<div class="screen-heading">
+<div><span class="kicker">KROK 1</span><h2>Vložte učivo a určete výukový cíl</h2><p>Stačí téma, vlastní text nebo seznam pojmů. Aplikace pracuje napříč předměty.</p></div>
+<button class="text-btn" id="loadDemoBtn" type="button">Načíst ukázku</button><a class="context-help" href="./manual/#prvni-material">Jak začít?</a>
+</div>
+<div class="source-layout">
+<article class="premium-card source-card">
+<div class="card-head"><div><span class="mini-label">ZDROJOVÝ MATERIÁL</span><h3>Obsah pro tvorbu aktivit</h3></div><span class="counter" id="sourceCounter">0 znaků</span></div>
+<textarea id="sourceText" class="source-textarea" placeholder="Příklad:&#10;Fotosyntéza je proces, při kterém rostliny...&#10;&#10;Nebo vložte dvojice:&#10;chlorofyl – zelené barvivo&#10;stroma – vnitřní prostor chloroplastu"></textarea>
+<div class="upload-row">
+<label class="upload-btn" for="sourceFile">Nahrát TXT, MD nebo CSV</label>
+<input id="sourceFile" type="file" accept=".txt,.md,.csv,.tsv,text/plain,text/csv" hidden>
+<span>Citlivé údaje žáků před odesláním AI anonymizujte.</span>
+</div>
+<div class="privacy-strip" id="privacyStrip"><span class="privacy-icon">◇</span><div><b>Kontrola soukromí</b><small id="privacyText">Ve vstupu zatím nebyly rozpoznány rizikové údaje.</small></div><button id="privacyReviewBtn" type="button">Prověřit</button></div>
+</article>
+<article class="premium-card settings-card">
+<div class="card-head"><div><span class="mini-label">PEDAGOGICKÉ NASTAVENÍ</span><h3>Pro koho a proč</h3></div></div>
+<div class="form-grid">
+<label><span>Předmět</span><select id="subjectInput"><option>Český jazyk a literatura</option><option>Anglický jazyk</option><option>Španělský jazyk</option><option>Německý jazyk</option><option>Matematika</option><option>Fyzika</option><option>Chemie</option><option>Biologie</option><option>Dějepis</option><option>Zeměpis</option><option>ZSV / občanská výchova</option><option>Informatika</option><option>Hudební výchova</option><option>Výtvarná výchova</option><option>Jiný předmět</option></select></label>
+<label><span>Ročník / věk</span><input id="gradeInput" type="text" placeholder="např. tercie / 13–14 let"></label>
+<label class="full"><span>Téma materiálu</span><input id="topicInput" type="text" placeholder="např. Fotosyntéza"></label>
+<label class="full"><span>Cíl aktivity</span><input id="goalInput" type="text" placeholder="např. žák vysvětlí fáze procesu a použije klíčové pojmy"></label>
+<label><span>Odhad času</span><select id="durationInput"><option value="10">10 minut</option><option value="20" selected>20 minut</option><option value="30">30 minut</option><option value="45">45 minut</option><option value="60">60 minut</option></select></label>
+<label><span>Výchozí obtížnost</span><select id="difficultyInput"><option value="support">S podporou</option><option value="standard" selected>Standardní</option><option value="challenge">Rozšiřující</option></select></label>
+<label><span>Organizace</span><select id="modeInput"><option value="individual" selected>Samostatná práce</option><option value="pair">Práce ve dvojici</option><option value="group">Skupinová práce</option><option value="projection">Společná práce s projekcí</option></select></label>
+<label><span>Počet aktivit</span><select id="activityCountInput"><option value="2">2 aktivity</option><option value="3" selected>3 aktivity</option><option value="4">4 aktivity</option><option value="5">5 aktivit</option></select></label>
+</div>
+</article>
+</div>
+<article class="premium-card differentiation-setup">
+<div class="diff-setup-copy"><span class="mini-label">DIFERENCIACE JEDNÍM KLIKNUTÍM</span><h3>Jedno učivo, tři přiměřeně odlišné pracovní listy</h3><p>Podpůrná, standardní a rozšiřující verze zachovají společný výukový cíl. Rozdíl je v rozsahu, nápovědách a náročnosti odpovědi.</p></div>
+<div class="diff-options">
+<label class="premium-toggle"><input id="differentiationEnabled" type="checkbox" checked><span><b>Vytvořit tři úrovně</b><small>Podpora · Standard · Výzva</small></span></label>
+<label class="premium-toggle"><input id="lockedCoreCheck" type="checkbox" checked><span><b>Zamknout společné jádro</b><small>Stejný cíl, pojmy a klíčové odpovědi</small></span></label>
+<label class="premium-toggle"><input id="balancedCheck" type="checkbox" checked><span><b>Hlídání srovnatelnosti</b><small>Automatická kontrola rozsahu a bodů</small></span></label>
+</div>
+</article>
+<div class="screen-footer"><span>Výchozí nastavení lze později upravit.</span><button class="primary-action" data-next="activities" type="button">Pokračovat k aktivitám <b>→</b></button></div>
+</section>
+<section class="screen" id="screen-activities" data-screen="activities">
+<div class="screen-heading">
+<div><span class="kicker">KROK 2</span><h2>Vyberte skladbu pracovního listu</h2><p>Vyberte až pět modulů včetně skupinových, obrazových, mapových a datových formátů.</p></div>
+<div class="heading-tools"><span class="selection-count" id="selectionCount">0 vybráno</span><a class="context-help" href="./manual/#katalog-aktivit">Přehled 39 formátů</a></div>
+</div>
+<div class="pack-studio">
+<div class="pack-studio-head"><div><span class="mini-label">PŘEDMĚTOVÉ BALÍČKY</span><h3>Vyberte oborový profil</h3></div><small id="packHint">Automaticky podle zvoleného předmětu</small></div>
+<div class="pack-selector" id="packSelector"></div>
+</div>
+<div class="recommendation" id="recommendationBox"><span>✦</span><div><b>Doporučení asistenta</b><p>Po vložení obsahu navrhneme vhodné typy aktivit.</p></div><button id="applyRecommendationBtn" type="button">Použít doporučení</button></div>
+<div class="activity-grid" id="activityGrid"></div>
+<div class="screen-footer"><button class="secondary-action" data-back="source" type="button">← Zpět</button><button class="primary-action" data-next="generate" type="button">Přejít ke generování <b>→</b></button></div>
+</section>
+<section class="screen" id="screen-generate" data-screen="generate">
+<div class="screen-heading">
+<div><span class="kicker">KROK 3</span><h2>Vytvořte první návrh</h2><p>AI zpracuje pouze anonymizovaný obsah. Pro test vzhledu lze použít i místní návrh bez API.</p></div><a class="context-help" href="./manual/#ai-a-soukromi">AI a soukromí</a>
+</div>
+<div class="generation-layout">
+<article class="premium-card generation-main">
+<span class="mini-label">SOUHRN ZADÁNÍ</span>
+<div id="generationSummary" class="generation-summary"></div>
+<div class="generation-choices">
+<label class="choice-card active"><input type="radio" name="generationMode" value="ai" checked><span class="choice-icon">✦</span><div><b>Generovat pomocí AI</b><small>Nejlepší obsah a oborová přesnost. Vyžaduje osobní Gemini API klíč.</small></div></label>
+<label class="choice-card"><input type="radio" name="generationMode" value="local"><span class="choice-icon">◇</span><div><b>Vytvořit místní ukázku</b><small>Bez odeslání dat. Vhodné pro kontrolu vzhledu a pracovního postupu.</small></div></label>
+</div>
+<div class="human-gate"><input id="sourceConfirmed" type="checkbox"><label for="sourceConfirmed"><b>Prošel/prošla jsem zdrojový text.</b><span>Neobsahuje jména žáků ani jiné citlivé údaje a mohu jej použít pro tvorbu materiálu.</span></label></div>
+<div class="generation-actions"><button class="generate-btn" id="generateBtn" type="button"><span>✦</span><div><b>Vytvořit pracovní list</b><small id="generateButtonHint">AI návrh · 1 požadavek</small></div><i>→</i></button></div>
+<div id="generationStatus" class="generation-status" aria-live="polite"></div>
+</article>
+<aside class="premium-card quality-card">
+<span class="mini-label">KVALITA VÝSTUPU</span>
+<h3>Čtyři ochranné vrstvy</h3>
+<ul class="quality-list">
+<li><span>01</span><div><b>Zdrojová věrnost</b><small>AI dostane pokyn nevymýšlet fakta mimo podklad.</small></div></li>
+<li><span>02</span><div><b>Strukturovaný výstup</b><small>Každý typ aktivity má přesné datové schéma.</small></div></li>
+<li><span>03</span><div><b>Programová kontrola</b><small>Křížovka, osmisměrka i varianty se přepočítají v aplikaci.</small></div></li>
+<li><span>04</span><div><b>Učitelské potvrzení</b><small>PDF se zpřístupní až po kontrole zadání a řešení.</small></div></li>
+</ul>
+</aside>
+</div>
+<div class="screen-footer"><button class="secondary-action" data-back="activities" type="button">← Zpět</button><span>Rozpracování se ukládá jen v tomto prohlížeči.</span></div>
+</section>
+<section class="screen editor-screen" id="screen-editor" data-screen="editor">
+<div class="editor-topline">
+<div><span class="kicker">KROK 4</span><h2 id="editorProjectTitle">Pracovní list</h2></div>
+<a class="context-help editor-help" href="./manual/#editor-a-pdf">Nápověda k editoru</a><div class="editor-actions">
+<div class="level-switch" role="group" aria-label="Úroveň"><button data-level="support" type="button">Podpora</button><button class="active" data-level="standard" type="button">Standard</button><button data-level="challenge" type="button">Výzva</button></div><div class="variant-switch" role="group" aria-label="Varianta"><button class="active" data-variant="A" type="button">A</button><button data-variant="B" type="button">B</button><button data-variant="C" type="button">C</button></div>
+<button class="secondary-action compact" id="saveToLibraryBtn" type="button">Uložit do knihovny</button>
+<button class="secondary-action compact" id="openShareBtn" type="button">Sdílet</button>
+<button class="secondary-action compact presentation-launch" id="openPresentationBtn" type="button">▶ Projekce</button>
+<button class="secondary-action compact" id="projectExportBtn" type="button">Projekt JSON</button>
+<label class="secondary-action compact file-label" for="projectImportInput">Načíst projekt</label><input id="projectImportInput" type="file" accept="application/json,.json" hidden>
+<button class="primary-action compact" id="openExportBtn" type="button">PDF a tisk</button>
+</div>
+</div>
+<div class="editor-workspace">
+<aside class="document-outline">
+<div class="outline-head"><span>OBSAH DOKUMENTU</span><button id="addActivityBtn" type="button" title="Přidat aktivitu">＋</button></div>
+<div id="activityOutline" class="activity-outline"></div>
+<div class="outline-tools"><button id="moveUpBtn" type="button">↑ Nahoru</button><button id="moveDownBtn" type="button">↓ Dolů</button><button id="duplicateActivityBtn" type="button">Kopie</button><button id="deleteActivityBtn" type="button" class="danger-text">Smazat</button></div>
+</aside>
+<section class="canvas-zone">
+<div class="canvas-toolbar"><span id="pageCountLabel">Náhled A4</span><div><button id="zoomOutBtn" type="button">−</button><span id="zoomLabel">82 %</span><button id="zoomInBtn" type="button">＋</button></div></div>
+<div class="canvas-scroll"><div class="page-stack" id="pagePreview"></div></div>
+</section>
+<aside class="property-panel">
+<div class="property-head"><span>UPRAVIT AKTIVITU</span><small id="selectedActivityType">—</small></div>
+<label><span>Název</span><input id="activityTitleInput" type="text"></label>
+<label><span>Instrukce pro žáky</span><textarea id="activityInstructionInput" rows="3"></textarea></label>
+<label><span id="dataEditorLabel">Obsah aktivity</span><textarea id="activityDataInput" class="data-editor" rows="14" spellcheck="false"></textarea><small id="dataEditorHelp" class="field-help"></small></label>
+<div class="visual-asset-panel" id="visualAssetPanel" hidden>
+<div class="visual-asset-head"><div><span class="mini-label">OBRAZOVÝ PODKLAD</span><b id="visualAssetTitle">Obrázek nebo mapa</b></div><span id="visualAssetSize">Nenahráno</span></div>
+<div class="visual-editor-preview" id="visualEditorPreview"><div class="visual-empty-state"><span>▧</span><b>Nahrajte vlastní podklad</b><small>Po nahrání kliknutím do náhledu přidáte očíslovaný bod.</small></div></div>
+<div class="visual-asset-actions"><label class="secondary-action compact file-label" for="visualAssetInput">Nahrát obrázek</label><input id="visualAssetInput" type="file" accept="image/png,image/jpeg,image/webp" hidden><button class="text-btn" id="removeVisualAssetBtn" type="button">Odebrat</button><button class="text-btn" id="clearVisualMarkersBtn" type="button">Smazat body</button></div>
+<small class="field-help">Podklad se zmenší pro tisk a uloží do projektu. Používejte vlastní nebo licenčně povolené obrázky.</small>
+</div>
+<div class="property-row"><label><span>Body</span><input id="activityPointsInput" type="number" min="0" max="100"></label><label><span>Rozložení</span><select id="activityLayoutInput"><option value="standard">Standardní</option><option value="compact">Kompaktní</option><option value="spacious">Vzdušné</option></select></label></div>
+<button class="apply-edit-btn" id="applyActivityEditBtn" type="button">Použít změny</button>
+<div class="validation-box" id="activityValidation"><span>✓</span><div><b>Aktivita je připravena</b><small>Kontrola proběhne po každé změně.</small></div></div>
+<div class="diff-audit-card" id="diffAuditCard"><div><span class="mini-label">SROVNATELNOST ÚROVNÍ</span><b id="diffAuditTitle">Kontrola připravena</b><small id="diffAuditText">Podpora, standard a výzva používají stejné jádro učiva.</small></div><button id="openDiffAuditBtn" type="button">Detail</button></div>
+</aside>
+</div>
+</section>
+</section>
+</main>
+</div>
 <div class="modal-layer" id="apiModal" aria-hidden="true" inert>
-  <div class="modal-card api-modal-card" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
-    <button class="modal-close" data-close="apiModal" type="button">×</button>
-    <span class="modal-kicker">AI NASTAVENÍ</span><h2 id="apiModalTitle">Osobní Gemini API klíč</h2><p>Klíč se posílá pouze službě Google Gemini. Na sdíleném školním počítači jej ukládejte jen pro relaci.</p>
-    <label><span>API klíč</span><input id="apiKeyInput" type="password" placeholder="AIza…" autocomplete="off" spellcheck="false"></label>
-    <div class="api-key-actions"><button id="saveSessionKeyBtn" class="primary-action compact" type="button">Použít pro relaci</button><button id="savePermanentKeyBtn" class="secondary-action compact" type="button">Použít bezpečně jen pro relaci</button><button id="clearKeyBtn" class="text-btn danger-text" type="button">Smazat</button></div>
-    <div class="model-select-block"><span>Režim modelu</span><div class="model-cards"><button class="model-card active" data-model="gemini-3.6-flash" type="button"><b>Doporučený</b><small>gemini-3.6-flash</small></button><button class="model-card" data-model="gemini-3.5-flash-lite" type="button"><b>Úsporný</b><small>gemini-3.5-flash-lite</small></button></div></div>
-    <p class="modal-note">Každý kolega používá vlastní klíč. Klíč nikdy nevkládejte do zdrojového kódu ani na GitHub.</p>
-  </div>
+<div class="modal-card api-modal-card" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
+<button class="modal-close" data-close="apiModal" type="button">×</button>
+<span class="modal-kicker">AI NASTAVENÍ</span><h2 id="apiModalTitle">Osobní Gemini API klíč</h2><p>Klíč se posílá pouze službě Google Gemini. Na sdíleném školním počítači jej ukládejte jen pro relaci.</p>
+<label><span>API klíč</span><input id="apiKeyInput" type="password" placeholder="AIza…" autocomplete="off" spellcheck="false"></label>
+<div class="api-key-actions"><button id="saveSessionKeyBtn" class="primary-action compact" type="button">Použít pro relaci</button><button id="savePermanentKeyBtn" class="secondary-action compact" type="button">Použít bezpečně jen pro relaci</button><button id="clearKeyBtn" class="text-btn danger-text" type="button">Smazat</button></div>
+<div class="model-select-block"><span>Režim modelu</span><div class="model-cards"><button class="model-card active" data-model="gemini-3.6-flash" type="button"><b>Doporučený</b><small>gemini-3.6-flash</small></button><button class="model-card" data-model="gemini-3.5-flash-lite" type="button"><b>Úsporný</b><small>gemini-3.5-flash-lite</small></button></div></div>
+<p class="modal-note">Každý kolega používá vlastní klíč. Klíč nikdy nevkládejte do zdrojového kódu ani na GitHub.</p>
 </div>
-
+</div>
 <div class="modal-layer" id="exportModal" aria-hidden="true" inert>
-  <div class="modal-card export-modal-card" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
-    <button class="modal-close" data-close="exportModal" type="button">×</button>
-    <span class="modal-kicker">TISKOVÉ STUDIO</span><h2 id="exportModalTitle">Připravit PDF</h2>
-    <div class="export-grid">
-      <section><span class="section-label">OBSAH</span><label class="option-line"><input type="radio" name="printMode" value="student" checked><span><b>Pracovní list pro žáky</b><small>Bez řešení a metodických poznámek</small></span></label><label class="option-line"><input type="radio" name="printMode" value="key"><span><b>Řešení pro učitele</b><small>Správné odpovědi a poznámky</small></span></label><label class="option-line"><input type="radio" name="printMode" value="bundle"><span><b>Kompletní sada</b><small>Pracovní list následovaný řešením</small></span></label></section>
-      <section><span class="section-label">ROZSAH SADY</span>
-        <label class="option-line"><input type="radio" name="printLevelMode" value="current" checked><span><b>Aktuální úroveň</b><small>Jen právě zobrazená podpora, standard nebo výzva</small></span></label>
-        <label class="option-line"><input type="radio" name="printLevelMode" value="all"><span><b>Všechny tři úrovně</b><small>Samostatná sada pro diferenciaci ve třídě</small></span></label>
-        <label class="option-line"><input type="radio" name="printVariantMode" value="current" checked><span><b>Aktuální varianta</b><small>Jen A, B nebo C</small></span></label>
-        <label class="option-line"><input type="radio" name="printVariantMode" value="all"><span><b>Varianty A/B/C</b><small>Tři srovnatelné verze proti opisování</small></span></label>
-      </section>
-      <section><span class="section-label">VZHLED</span><label class="option-line"><input id="printLogoCheck" type="checkbox" checked><span><b>Logo školy</b><small>Decentní záhlaví na každé straně</small></span></label><label class="option-line"><input id="printMonoCheck" type="checkbox" checked><span><b>Černobílý úsporný tisk</b><small>Bez tmavých ploch a zbytečné spotřeby toneru</small></span></label><label class="option-line"><input id="printNameLineCheck" type="checkbox" checked><span><b>Jméno, třída a datum</b><small>Řádek v záhlaví žákovské verze</small></span></label></section>
-    </div>
-    <div class="print-summary" id="printSummary"></div>
-    <label class="human-gate export-gate"><input id="teacherPrintConfirmed" type="checkbox"><span><b>Zkontroloval/a jsem zadání, řešení a osobní údaje.</b><small>AI výstup je návrh. Za finální správnost materiálu odpovídá učitel.</small></span></label>
-    <div class="export-actions"><button class="secondary-action" id="exportPreviewBtn" type="button">Aktualizovat náhled</button><button class="primary-action" id="printBtn" type="button" disabled>Tisk / uložit jako PDF</button></div>
-    <p class="system-print-note">V systémovém dialogu zvolte tiskárnu nebo možnost <b>Uložit jako PDF</b>.</p>
-  </div>
+<div class="modal-card export-modal-card" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+<button class="modal-close" data-close="exportModal" type="button">×</button>
+<span class="modal-kicker">TISKOVÉ STUDIO</span><h2 id="exportModalTitle">Připravit PDF</h2>
+<div class="export-grid">
+<section><span class="section-label">OBSAH</span><label class="option-line"><input type="radio" name="printMode" value="student" checked><span><b>Pracovní list pro žáky</b><small>Bez řešení a metodických poznámek</small></span></label><label class="option-line"><input type="radio" name="printMode" value="key"><span><b>Řešení pro učitele</b><small>Správné odpovědi a poznámky</small></span></label><label class="option-line"><input type="radio" name="printMode" value="bundle"><span><b>Kompletní sada</b><small>Pracovní list následovaný řešením</small></span></label></section>
+<section><span class="section-label">ROZSAH SADY</span>
+<label class="option-line"><input type="radio" name="printLevelMode" value="current" checked><span><b>Aktuální úroveň</b><small>Jen právě zobrazená podpora, standard nebo výzva</small></span></label>
+<label class="option-line"><input type="radio" name="printLevelMode" value="all"><span><b>Všechny tři úrovně</b><small>Samostatná sada pro diferenciaci ve třídě</small></span></label>
+<label class="option-line"><input type="radio" name="printVariantMode" value="current" checked><span><b>Aktuální varianta</b><small>Jen A, B nebo C</small></span></label>
+<label class="option-line"><input type="radio" name="printVariantMode" value="all"><span><b>Varianty A/B/C</b><small>Tři srovnatelné verze proti opisování</small></span></label>
+</section>
+<section><span class="section-label">VZHLED</span><label class="option-line"><input id="printLogoCheck" type="checkbox" checked><span><b>Logo školy</b><small>Decentní záhlaví na každé straně</small></span></label><label class="option-line"><input id="printMonoCheck" type="checkbox" checked><span><b>Černobílý úsporný tisk</b><small>Bez tmavých ploch a zbytečné spotřeby toneru</small></span></label><label class="option-line"><input id="printNameLineCheck" type="checkbox" checked><span><b>Jméno, třída a datum</b><small>Řádek v záhlaví žákovské verze</small></span></label></section>
 </div>
-
+<div class="print-summary" id="printSummary"></div>
+<label class="human-gate export-gate"><input id="teacherPrintConfirmed" type="checkbox"><span><b>Zkontroloval/a jsem zadání, řešení a osobní údaje.</b><small>AI výstup je návrh. Za finální správnost materiálu odpovídá učitel.</small></span></label>
+<div class="export-actions"><button class="secondary-action" id="exportPreviewBtn" type="button">Aktualizovat náhled</button><button class="primary-action" id="printBtn" type="button" disabled>Tisk / uložit jako PDF</button></div>
+<p class="system-print-note">V systémovém dialogu zvolte tiskárnu nebo možnost <b>Uložit jako PDF</b>.</p>
+</div>
+</div>
 <div class="modal-layer" id="diffAuditModal" aria-hidden="true" inert>
-  <div class="modal-card diff-audit-modal" role="dialog" aria-modal="true" aria-labelledby="diffAuditModalTitle">
-    <button class="modal-close" data-close="diffAuditModal" type="button">×</button>
-    <span class="modal-kicker">DIFERENCIAČNÍ KONTROLA</span><h2 id="diffAuditModalTitle">Srovnatelnost pracovních listů</h2><p>Kontrola sleduje zachování společného cíle, pořadí úrovní a přiměřený rozsah.</p>
-    <div id="diffAuditOutput" class="diff-audit-output"></div>
-  </div>
+<div class="modal-card diff-audit-modal" role="dialog" aria-modal="true" aria-labelledby="diffAuditModalTitle">
+<button class="modal-close" data-close="diffAuditModal" type="button">×</button>
+<span class="modal-kicker">DIFERENCIAČNÍ KONTROLA</span><h2 id="diffAuditModalTitle">Srovnatelnost pracovních listů</h2><p>Kontrola sleduje zachování společného cíle, pořadí úrovní a přiměřený rozsah.</p>
+<div id="diffAuditOutput" class="diff-audit-output"></div>
 </div>
-
+</div>
 <div class="modal-layer" id="diagnosticsModal" aria-hidden="true" inert>
-  <div class="modal-card diagnostics-card" role="dialog" aria-modal="true" aria-labelledby="diagnosticsTitle">
-    <button class="modal-close" data-close="diagnosticsModal" type="button">×</button>
-    <span class="modal-kicker">SPRÁVCE A PODPORA</span><h2 id="diagnosticsTitle">Technický protokol</h2><p>Protokol neobsahuje zdrojový text ani API klíč.</p>
-    <pre id="diagnosticsOutput"></pre>
-    <div class="api-key-actions"><a class="secondary-action compact link-action" href="./tests/">Otevřít interní testy</a><button class="primary-action compact" id="copyDiagnosticsBtn" type="button">Kopírovat</button><button class="secondary-action compact" id="downloadDiagnosticsBtn" type="button">Stáhnout JSON</button></div>
-  </div>
+<div class="modal-card diagnostics-card" role="dialog" aria-modal="true" aria-labelledby="diagnosticsTitle">
+<button class="modal-close" data-close="diagnosticsModal" type="button">×</button>
+<span class="modal-kicker">SPRÁVCE A PODPORA</span><h2 id="diagnosticsTitle">Technický protokol</h2><p>Protokol neobsahuje zdrojový text ani API klíč.</p>
+<pre id="diagnosticsOutput"></pre>
+<div class="api-key-actions"><a class="secondary-action compact link-action" href="./tests/">Otevřít interní testy</a><button class="primary-action compact" id="copyDiagnosticsBtn" type="button">Kopírovat</button><button class="secondary-action compact" id="downloadDiagnosticsBtn" type="button">Stáhnout JSON</button></div>
 </div>
-
-
+</div>
 <div class="modal-layer library-layer" id="libraryModal" aria-hidden="true" inert>
-  <div class="modal-card library-modal-card" role="dialog" aria-modal="true" aria-labelledby="libraryModalTitle">
-    <button class="modal-close" data-close="libraryModal" type="button">×</button>
-    <div class="library-header">
-      <div><span class="modal-kicker">ACTIVA ARCHIV</span><h2 id="libraryModalTitle">Knihovna materiálů</h2><p>Osobní sbírka v tomto zařízení, oblíbené materiály a schválený školní katalog.</p></div>
-      <div class="library-header-actions"><button class="secondary-action compact" id="librarySaveToggleBtn" type="button">＋ Uložit aktuální</button><label class="secondary-action compact file-label" for="libraryImportInput">Importovat</label><input id="libraryImportInput" type="file" accept="application/json,.json" hidden><button class="text-btn" id="libraryExportBtn" type="button">Export knihovny</button></div>
-    </div>
-    <div class="library-stats" id="libraryStats"></div>
-    <div class="library-save-panel" id="librarySavePanel">
-      <div class="library-save-grid">
-        <label><span>Název materiálu</span><input id="libraryTitleInput" type="text" maxlength="160"></label>
-        <label><span>Autor zobrazený v katalogu</span><input id="libraryAuthorInput" type="text" maxlength="120" value="Učitel školy"></label>
-        <label><span>Štítky oddělené čárkou</span><input id="libraryTagsInput" type="text" placeholder="biologie, tercie, opakování"></label>
-        <label><span>Režim</span><select id="libraryVisibilityInput"><option value="personal">Osobní knihovna</option><option value="school-candidate">Kandidát do školního katalogu</option></select></label>
-        <label class="full"><span>Poznámka pro kolegy</span><textarea id="libraryNoteInput" rows="2" maxlength="1200"></textarea></label>
-        <label class="library-source-check full"><input id="libraryIncludeSourceCheck" type="checkbox"><span><b>Uložit také původní zdrojový text</b><small>Nezapínejte u materiálů s osobními údaji. Hotové aktivity se ukládají vždy.</small></span></label>
-      </div>
-      <div class="library-save-actions"><button class="text-btn" id="librarySaveCancelBtn" type="button">Zrušit</button><button class="secondary-action" id="librarySchoolCandidateBtn" type="button">Balíček pro správce</button><button class="primary-action" id="librarySaveConfirmBtn" type="button">Uložit materiál</button></div>
-    </div>
-    <div class="library-toolbar">
-      <div class="library-tabs"><button class="library-tab active" data-library-tab="personal" type="button">Moje materiály</button><button class="library-tab" data-library-tab="favorites" type="button">Oblíbené</button><button class="library-tab" data-library-tab="school" type="button">Školní katalog</button></div>
-      <div class="library-filters"><input id="librarySearchInput" type="search" placeholder="Hledat téma, předmět nebo štítek"><select id="librarySubjectFilter"><option value="all">Všechny předměty</option></select></div>
-    </div>
-    <div class="library-loading" id="libraryLoading">Načítám knihovnu…</div>
-    <div class="library-grid" id="libraryGrid"></div>
-    <div class="library-analytics"><div><span class="mini-label">NEJPOUŽÍVANĚJŠÍ FORMÁTY</span><div id="libraryTopTypes" class="library-top-types"></div></div><button class="secondary-action compact" id="libraryStatsExportBtn" type="button">Statistiky CSV</button></div>
-  </div>
+<div class="modal-card library-modal-card" role="dialog" aria-modal="true" aria-labelledby="libraryModalTitle">
+<button class="modal-close" data-close="libraryModal" type="button">×</button>
+<div class="library-header">
+<div><span class="modal-kicker">ACTIVA ARCHIV</span><h2 id="libraryModalTitle">Knihovna materiálů</h2><p>Osobní sbírka v tomto zařízení, oblíbené materiály a schválený školní katalog.</p></div>
+<div class="library-header-actions"><button class="secondary-action compact" id="librarySaveToggleBtn" type="button">＋ Uložit aktuální</button><label class="secondary-action compact file-label" for="libraryImportInput">Importovat</label><input id="libraryImportInput" type="file" accept="application/json,.json" hidden><button class="text-btn" id="libraryExportBtn" type="button">Export knihovny</button></div>
 </div>
-
+<div class="library-stats" id="libraryStats"></div>
+<div class="library-save-panel" id="librarySavePanel">
+<div class="library-save-grid">
+<label><span>Název materiálu</span><input id="libraryTitleInput" type="text" maxlength="160"></label>
+<label><span>Autor zobrazený v katalogu</span><input id="libraryAuthorInput" type="text" maxlength="120" value="Učitel školy"></label>
+<label><span>Štítky oddělené čárkou</span><input id="libraryTagsInput" type="text" placeholder="biologie, tercie, opakování"></label>
+<label><span>Režim</span><select id="libraryVisibilityInput"><option value="personal">Osobní knihovna</option><option value="school-candidate">Kandidát do školního katalogu</option></select></label>
+<label class="full"><span>Poznámka pro kolegy</span><textarea id="libraryNoteInput" rows="2" maxlength="1200"></textarea></label>
+<label class="library-source-check full"><input id="libraryIncludeSourceCheck" type="checkbox"><span><b>Uložit také původní zdrojový text</b><small>Nezapínejte u materiálů s osobními údaji. Hotové aktivity se ukládají vždy.</small></span></label>
+</div>
+<div class="library-save-actions"><button class="text-btn" id="librarySaveCancelBtn" type="button">Zrušit</button><button class="secondary-action" id="librarySchoolCandidateBtn" type="button">Balíček pro správce</button><button class="primary-action" id="librarySaveConfirmBtn" type="button">Uložit materiál</button></div>
+</div>
+<div class="library-toolbar">
+<div class="library-tabs"><button class="library-tab active" data-library-tab="personal" type="button">Moje materiály</button><button class="library-tab" data-library-tab="favorites" type="button">Oblíbené</button><button class="library-tab" data-library-tab="school" type="button">Školní katalog</button></div>
+<div class="library-filters"><input id="librarySearchInput" type="search" placeholder="Hledat téma, předmět nebo štítek"><select id="librarySubjectFilter"><option value="all">Všechny předměty</option></select></div>
+</div>
+<div class="library-loading" id="libraryLoading">Načítám knihovnu…</div>
+<div class="library-grid" id="libraryGrid"></div>
+<div class="library-analytics"><div><span class="mini-label">NEJPOUŽÍVANĚJŠÍ FORMÁTY</span><div id="libraryTopTypes" class="library-top-types"></div></div><button class="secondary-action compact" id="libraryStatsExportBtn" type="button">Statistiky CSV</button></div>
+</div>
+</div>
 <div class="modal-layer presentation-layer" id="presentationModal" aria-hidden="true" inert>
-  <div class="presentation-shell" role="dialog" aria-modal="true" aria-labelledby="presentationTitle">
-    <header class="presentation-topbar">
-      <div class="presentation-brand"><img src="./assets/brand/school-logo.png" alt="Logo školy"><div><span>ACTIVA · PROJEKČNÍ REŽIM</span><b id="presentationTitle">Interaktivní lekce</b></div></div>
-      <div class="presentation-top-actions"><div class="presentation-timer" id="presentationTimer">01:00</div><button id="presentationFullscreenBtn" type="button">⛶ Celá obrazovka</button><button class="danger" id="presentationEndBtn" type="button">Ukončit lekci</button></div>
-    </header>
-    <div class="presentation-progress"><i id="presentationProgressBar"></i></div>
-    <main class="presentation-main">
-      <section class="presentation-canvas" id="presentationSlide" tabindex="0"></section>
-      <aside class="presentation-console">
-        <section><span class="console-label">ČASOVAČ</span><div class="timer-presets" id="presentationTimerPresets"><button data-seconds="30" type="button">30 s</button><button data-seconds="60" type="button">1 min</button><button data-seconds="120" type="button">2 min</button><button data-seconds="300" type="button">5 min</button></div><button class="console-primary" id="presentationTimerToggleBtn" type="button">Spustit</button></section>
-        <section><div class="console-section-head"><span class="console-label">TÝMOVÉ SKÓRE</span><button id="presentationRandomTeamBtn" type="button">Náhodný tým</button></div><div class="presentation-teams" id="presentationTeams"></div></section>
-        <section><span class="console-label">VYHODNOCENÍ SNÍMKU</span><div class="outcome-controls"><button class="correct" id="presentationCorrectBtn" type="button">1 · Správně</button><button class="partial" id="presentationPartialBtn" type="button">2 · Částečně</button><button class="incorrect" id="presentationIncorrectBtn" type="button">3 · Chybně</button></div><div class="presentation-mini-stats" id="presentationMiniStats"></div></section>
-        <section class="keyboard-hint"><b>Klávesy</b><span>← → navigace · R řešení · T čas · F celá obrazovka</span></section>
-      </aside>
-    </main>
-    <footer class="presentation-controls"><button id="presentationPrevBtn" type="button">← Předchozí</button><span id="presentationCounter">1 / 1</span><button class="reveal" id="presentationRevealBtn" type="button">Ukázat řešení</button><button id="presentationNextBtn" type="button">Další →</button></footer>
-  </div>
+<div class="presentation-shell" role="dialog" aria-modal="true" aria-labelledby="presentationTitle">
+<header class="presentation-topbar">
+<div class="presentation-brand"><img src="./assets/brand/school-logo.png" alt="Logo školy"><div><span>ACTIVA · PROJEKČNÍ REŽIM</span><b id="presentationTitle">Interaktivní lekce</b></div></div>
+<div class="presentation-top-actions"><div class="presentation-timer" id="presentationTimer">01:00</div><button id="presentationFullscreenBtn" type="button">⛶ Celá obrazovka</button><button class="danger" id="presentationEndBtn" type="button">Ukončit lekci</button></div>
+</header>
+<div class="presentation-progress"><i id="presentationProgressBar"></i></div>
+<main class="presentation-main">
+<section class="presentation-canvas" id="presentationSlide" tabindex="0"></section>
+<aside class="presentation-console">
+<section><span class="console-label">ČASOVAČ</span><div class="timer-presets" id="presentationTimerPresets"><button data-seconds="30" type="button">30 s</button><button data-seconds="60" type="button">1 min</button><button data-seconds="120" type="button">2 min</button><button data-seconds="300" type="button">5 min</button></div><button class="console-primary" id="presentationTimerToggleBtn" type="button">Spustit</button></section>
+<section><div class="console-section-head"><span class="console-label">TÝMOVÉ SKÓRE</span><button id="presentationRandomTeamBtn" type="button">Náhodný tým</button></div><div class="presentation-teams" id="presentationTeams"></div></section>
+<section><span class="console-label">VYHODNOCENÍ SNÍMKU</span><div class="outcome-controls"><button class="correct" id="presentationCorrectBtn" type="button">1 · Správně</button><button class="partial" id="presentationPartialBtn" type="button">2 · Částečně</button><button class="incorrect" id="presentationIncorrectBtn" type="button">3 · Chybně</button></div><div class="presentation-mini-stats" id="presentationMiniStats"></div></section>
+<section class="keyboard-hint"><b>Klávesy</b><span>← → navigace · R řešení · T čas · F celá obrazovka</span></section>
+</aside>
+</main>
+<footer class="presentation-controls"><button id="presentationPrevBtn" type="button">← Předchozí</button><span id="presentationCounter">1 / 1</span><button class="reveal" id="presentationRevealBtn" type="button">Ukázat řešení</button><button id="presentationNextBtn" type="button">Další →</button></footer>
 </div>
-
+</div>
 <div class="modal-layer" id="sessionSummaryModal" aria-hidden="true" inert>
-  <div class="modal-card session-summary-card" role="dialog" aria-modal="true" aria-labelledby="sessionSummaryTitle">
-    <button class="modal-close" data-close="sessionSummaryModal" type="button">×</button>
-    <span class="modal-kicker">SOUHRN LEKCE</span><h2 id="sessionSummaryTitle">Výsledky projekčního režimu</h2>
-    <div id="sessionSummaryOutput"></div>
-    <div class="export-actions"><button class="primary-action" id="sessionSummaryCloseBtn" type="button">Hotovo</button></div>
-  </div>
+<div class="modal-card session-summary-card" role="dialog" aria-modal="true" aria-labelledby="sessionSummaryTitle">
+<button class="modal-close" data-close="sessionSummaryModal" type="button">×</button>
+<span class="modal-kicker">SOUHRN LEKCE</span><h2 id="sessionSummaryTitle">Výsledky projekčního režimu</h2>
+<div id="sessionSummaryOutput"></div>
+<div class="export-actions"><button class="primary-action" id="sessionSummaryCloseBtn" type="button">Hotovo</button></div>
 </div>
-
+</div>
 <div class="modal-layer" id="shareModal" aria-hidden="true" inert>
-  <div class="modal-card share-modal-card" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
-    <button class="modal-close" data-close="shareModal" type="button">×</button>
-    <span class="modal-kicker">SDÍLENÍ A INTERAKTIVNÍ VÝSTUP</span><h2 id="shareModalTitle">Předat materiál kolegovi nebo žákům</h2>
-    <div class="share-project-info" id="shareProjectInfo"></div>
-    <div class="share-option-grid">
-      <article><span class="share-icon">▶</span><h3>Samostatná interaktivní HTML</h3><p>Jeden soubor bez API klíče a bez účtu. Lze otevřít na počítači, nahrát na školní server nebo použít v počítačové učebně.</p><button class="primary-action" id="exportInteractiveHtmlBtn" type="button">Stáhnout HTML</button></article>
-      <article><span class="share-icon">◇</span><h3>Sdílecí balíček ACTIVA</h3><p>Upravitelný JSON soubor pro jiného kolegu. Po importu se uloží do jeho osobní knihovny.</p><button class="secondary-action" id="exportSharePackageBtn" type="button">Stáhnout balíček</button></article>
-      <article><span class="share-icon">⌁</span><h3>Textový sdílecí kód</h3><p>Pro menší materiály bez velkých obrázků. Kód lze poslat v chatu nebo e-mailu.</p><button class="secondary-action" id="copyShareCodeBtn" type="button">Kopírovat kód</button><small id="shareCodeSize"></small></article>
-    </div>
-    <div class="share-import"><label><span>Vložit přijatý kód</span><textarea id="shareCodeInput" rows="3" placeholder="ACTIVA4:…"></textarea></label><button class="secondary-action" id="importShareCodeBtn" type="button">Přidat do knihovny</button></div>
-    <p class="modal-note">Živé sdílení mezi zařízeními je v bezserverové verzi vypnuté. Datová vrstva je oddělena a připravena na budoucí školní server bez přestavby editoru.</p>
-  </div>
+<div class="modal-card share-modal-card" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+<button class="modal-close" data-close="shareModal" type="button">×</button>
+<span class="modal-kicker">SDÍLENÍ A INTERAKTIVNÍ VÝSTUP</span><h2 id="shareModalTitle">Předat materiál kolegovi nebo žákům</h2>
+<div class="share-project-info" id="shareProjectInfo"></div>
+<div class="share-option-grid">
+<article><span class="share-icon">▶</span><h3>Samostatná interaktivní HTML</h3><p>Jeden soubor bez API klíče a bez účtu. Lze otevřít na počítači, nahrát na školní server nebo použít v počítačové učebně.</p><button class="primary-action" id="exportInteractiveHtmlBtn" type="button">Stáhnout HTML</button></article>
+<article><span class="share-icon">◇</span><h3>Sdílecí balíček ACTIVA</h3><p>Upravitelný JSON soubor pro jiného kolegu. Po importu se uloží do jeho osobní knihovny.</p><button class="secondary-action" id="exportSharePackageBtn" type="button">Stáhnout balíček</button></article>
+<article><span class="share-icon">⌁</span><h3>Textový sdílecí kód</h3><p>Pro menší materiály bez velkých obrázků. Kód lze poslat v chatu nebo e-mailu.</p><button class="secondary-action" id="copyShareCodeBtn" type="button">Kopírovat kód</button><small id="shareCodeSize"></small></article>
 </div>
-
+<div class="share-import"><label><span>Vložit přijatý kód</span><textarea id="shareCodeInput" rows="3" placeholder="ACTIVA4:…"></textarea></label><button class="secondary-action" id="importShareCodeBtn" type="button">Přidat do knihovny</button></div>
+<p class="modal-note">Živé sdílení mezi zařízeními je v bezserverové verzi vypnuté. Datová vrstva je oddělena a připravena na budoucí školní server bez přestavby editoru.</p>
+</div>
+</div>
 <div id="toastRegion" class="toast-region" aria-live="polite"></div>
 <div id="printStage" class="print-stage" aria-hidden="true"></div>

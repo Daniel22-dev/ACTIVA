@@ -1,5 +1,13 @@
 ## 0.5.20 – 2026-09-05
 
+
+## 0.5.21 – Platform 1.1.2 CI hardening
+
+- Opraveno pořadí odemykání chráněného app.js v browser QA harnessu; test nyní věrně zachovává defer pořadí Platforma → child aplikace.
+- Suite browser QA fail-closed kontroluje zablokovaný lifecycle a při timeoutu vypisuje diagnostiku.
+- P5 runtime QA používá stejné pořadí a blokuje release při suiteBlocked.
+- Performance budgety nebyly zvýšeny; školní logo bylo zmenšeno z 384×384 na 192×192 px.
+
 - Migrace na přesnou referenční GHRAB Platform 1.1.2 pro koordinovanou ecosystem release wave.
 - Integrace `ghrab-suite-session-v1`: cross-context signal, delayed-open replay, per-tab fence, Browser Back/Forward ochrana a fail-closed acknowledgement po dokončeném cleanupu.
 - PC-01 opravil data manifest podle skutečných writerů: pracovní projekt, lokální knihovna/fallback, historie, credentials, migrační full backup, Studio handoff a lifecycle/security state.

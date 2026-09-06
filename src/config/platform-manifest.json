@@ -1,7 +1,7 @@
 {
   "schema": "ghrab-platform-app-integration-v1",
   "appId": "activity-builder",
-  "appVersion": "0.5.20",
+  "appVersion": "0.5.21",
   "contract": "ghrab-platform-v1",
   "requiredPlatformRange": ">=1.1.2 <2.0.0",
   "platformVersion": "1.1.2",
@@ -35,7 +35,7 @@
     ]
   },
   "storagePrefix": "ghrab.activity-builder.",
-  "cacheName": "ghrab-activity-builder-v0.5.20",
+  "cacheName": "ghrab-activity-builder-v0.5.21",
   "capabilities": [
     "activity-generation",
     "ai-generation",
