@@ -7,7 +7,6 @@ function pageLabel() {
 
 function failClosed() {
   document.documentElement.dataset.ghrabAccess = 'denied';
-  document.body.style.visibility = 'visible';
   document.body.className = 'ghrab-access-gate-body';
   document.body.innerHTML = '<main class="ghrab-access-gate" role="alert"><div class="ghrab-access-gate-mark">⬡</div><p class="ghrab-access-gate-eyebrow">AI STUDIO GHRAB</p><h1></h1><p></p><div class="ghrab-access-gate-actions"><a class="ghrab-access-gate-primary" data-ghrab-studio-link>Otevřít AI Studio</a></div></main>';
   const heading = document.querySelector('.ghrab-access-gate h1');
@@ -16,6 +15,13 @@ function failClosed() {
   if (message) message.textContent = `Tato stránka používá stejné oprávnění jako ACTIVA. Otevřete ji z AI Studia nebo z povolené aplikace.`;
   const link = document.querySelector('[data-ghrab-studio-link]');
   if (link) link.href = studioUrl;
+}
+
+
+function showDenied(){
+  document.documentElement.dataset.ghrabAccess='denied';
+  const f=document.querySelector('.ghrab-access-bootstrap-fallback');
+  if(f){f.querySelector('h1').textContent=`Přístup k ${pageLabel()} zamítnut`;f.querySelector('p').textContent='Otevřete stránku z ACTIVA nebo AI Studia.'}
 }
 
 async function activateProtectedScripts() {
@@ -47,9 +53,8 @@ async function boot() {
     if (guide) guide.href = urls.reporterGuideUrl;
     const { protectApp } = await import(urls.guardUrl);
     const allowed = await protectApp(APP_ID, { studioUrl, telemetry: false, errorReporter: false });
-    if (!allowed) return;
+    if (!allowed) { showDenied(); return; }
     document.documentElement.dataset.ghrabAccess = 'granted';
-    document.body.style.visibility = 'visible';
     await activateProtectedScripts();
     const readyEvent = document.documentElement.dataset.ghrabReadyEvent;
     if (readyEvent) window.dispatchEvent(new Event(readyEvent));

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
+const buildTime = process.env.GHRAB_BUILD_TIME || new Date().toISOString();
 const dist = path.join(root, 'dist');
 const consumerPath = path.join(root, 'ghrab-platform.consumer.json');
 const consumer = JSON.parse(fs.readFileSync(consumerPath, 'utf8'));
@@ -197,15 +198,22 @@ const swPath = path.join(dist, 'sw.js');
 if (fs.existsSync(swPath)) {
   let sw = fs.readFileSync(swPath, 'utf8');
   sw = sw.replace(/\n\/\* GHRAB_PLATFORM_P3_START \*\/[\s\S]*?\/\* GHRAB_PLATFORM_P3_END \*\/\n?/g, '\n');
-  const platformAssets = [
-    './ghrab/ghrab-platform.js',
+  const criticalListPath = path.resolve('security','security-critical-assets.json');
+  if (!fs.existsSync(criticalListPath)) throw new Error('Chybí autoritativní security-critical-assets.json.');
+  const criticalAssets = JSON.parse(fs.readFileSync(criticalListPath,'utf8'));
+  if (!Array.isArray(criticalAssets) || criticalAssets.some(x=>typeof x!=='string'||!x.trim())) throw new Error('Neplatný security-critical-assets.json.');
+  const normalizeAsset = value => String(value||'').replace(/^\.\//,'').replace(/^\//,'').replace(/[?#].*$/,'');
+  const criticalSet = new Set(criticalAssets.map(normalizeAsset));
+  const platformAssetsRaw = [
     './ghrab/ghrab-platform.css',
     './ghrab/ghrab-artifact-envelope-v1.schema.json',
     './ghrab/ghrab-app-registry-v2.schema.json',
     `./ghrab/ghrab-platform-manifest-${consumer.platform.version}.json`,
     './assets/brand/school-logo.png',
-    './ghrab-platform.consumer.json',
   ];
+  const blockedPlatformAssets = platformAssetsRaw.filter(asset=>criticalSet.has(normalizeAsset(asset)));
+  if (blockedPlatformAssets.length) throw new Error(`GHRAB Platform P3 seznam obsahuje security-critical asset: ${blockedPlatformAssets.join(', ')}`);
+  const platformAssets = platformAssetsRaw.filter(asset=>!criticalSet.has(normalizeAsset(asset)));
   const hasUpdateProtocol = sw.includes('GHRAB_SKIP_WAITING');
   sw += `\n/* GHRAB_PLATFORM_P3_START */\nconst GHRAB_PLATFORM_P3_ASSETS=${JSON.stringify(platformAssets)};\nself.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(${JSON.stringify(consumer.cache.name)});const results=await Promise.allSettled(GHRAB_PLATFORM_P3_ASSETS.map(asset=>cache.add(asset)));const failed=results.filter(item=>item.status==='rejected');if(failed.length)throw new Error('GHRAB Platform P3 precache selhal: '+failed.length);})()));\n${hasUpdateProtocol ? '' : "self.addEventListener('message',event=>{if(event.data?.type==='GHRAB_SKIP_WAITING')self.skipWaiting();});\n"}/* GHRAB_PLATFORM_P3_END */\n`;
   fs.writeFileSync(swPath, sw);
@@ -261,7 +269,7 @@ fs.writeFileSync(path.join(dist, 'platform-build-info.json'), `${JSON.stringify(
   cacheName: consumer.cache.name,
   processedHtmlFiles: htmlCount,
   qualityContracts: { accessibility: consumer.quality.accessibilityContract, performance: consumer.quality.performanceContract, modules: consumer.quality.moduleContract },
-  builtAt: new Date().toISOString(),
+  builtAt: buildTime,
 }, null, 2)}\n`);
 
 console.log(`[P3] ${consumer.appId} ${consumer.appVersion}: platform ${consumer.platform.version}, HTML ${htmlCount}, cache ${consumer.cache.name}`);

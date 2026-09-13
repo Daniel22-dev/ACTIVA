@@ -1,25 +1,19 @@
 const GHRAB_SW_CONTRACT='ghrab-service-worker-v1';
 /* GHRAB service-worker contract v1 · update activation is user-controlled. */
-const CACHE = "ghrab-activity-builder-v0.5.22";
+const CACHE = "ghrab-activity-builder-v0.5.27";
 const CACHE_PREFIXES = ["ghrab-activity-builder-v", "activa-v"];
 const REQUIRED = [
   "./",
   "./index.html",
   "./app.js",
-  "./access/access-bootstrap.js",
   "./manifest.webmanifest",
-  "./access/deployment-config.js",
   "./access/reporter-bootstrap.js",
   "./access/error-reporter.js",
   "./access/error-reporter.css",
   "./access/error-reporter-adapter.js",
-  "./access/protected-page-bootstrap.js",
   "./manual/manual.js",
-  "./tests/tests.js",
   "./config/brand-manifest.json",
-  "./config/platform-manifest.json",
-  "./assets/brand/school-logo.png",
-  "./ghrab-platform.consumer.json"
+  "./assets/brand/school-logo.png"
 ];
 const OPTIONAL = [
   "./access/access-gate.css",
@@ -27,7 +21,6 @@ const OPTIONAL = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./manual/",
-  "./tests/",
   "./school-library/library.json"
 ];
 
@@ -85,13 +78,30 @@ async function cacheFirst(request) {
   return response;
 }
 
-function isRuntimeRequest(url, scopePath) {
+async function networkOnlyNoStore(request) {
+  return fetch(request, { cache: 'no-store' });
+}
+
+function isSecurityCriticalRequest(url, scopePath) {
   const relative = url.pathname.slice(scopePath.length);
-  return relative === 'runtime-config.js' ||
+  return relative === 'access/deployment-config.js' ||
+    relative === 'access/access-bootstrap.js' ||
+    relative === 'access/protected-page-bootstrap.js' ||
+    relative === 'ghrab/ghrab-platform.js' ||
+    relative === 'ghrab-platform.consumer.json' ||
+    relative === 'ai-operations.json' ||
     relative === 'config/deployment.json' ||
     relative === 'config/deployment.school-server.json' ||
     relative === 'config/deployment.school-server-p0.json' ||
     relative === 'config/deployment.school-server.example.json' ||
+    relative === 'config/platform-manifest.json' ||
+    relative === 'config/release-acceptance.json' ||
+    relative === 'config/security-headers.json' ||
+    relative === 'release-integrity.json' ||
+    relative === 'release-integrity.sig' ||
+    relative === 'integrity-status' ||
+    relative === 'integrity-status.json' ||
+    relative === 'runtime-config.js' ||
     /^(?:api|auth|session|health)(?:\/|$)/.test(relative);
 }
 
@@ -101,7 +111,12 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
   const scopePath = new URL('./', self.location.href).pathname;
-  if (!url.pathname.startsWith(scopePath) || request.cache === 'no-store' || isRuntimeRequest(url, scopePath)) return;
+  if (!url.pathname.startsWith(scopePath)) return;
+  if (isSecurityCriticalRequest(url, scopePath)) {
+    event.respondWith(networkOnlyNoStore(request));
+    return;
+  }
+  if (request.cache === 'no-store') return;
   if (request.mode === 'navigate') {
     const fallback = url.pathname.includes('/manual/') ? './manual/index.html' : './index.html';
     event.respondWith(networkFirst(request, fallback));

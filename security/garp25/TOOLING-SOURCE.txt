@@ -1,0 +1,17 @@
+ACTIVA 0.5.27 GARP 2.5.1 TOOLING SOURCE
+Date: 2026-09-12
+
+Canonical package for this corrective round:
+GARP-2.5.1-ZAVEDENI-TOOLING-R2-ACT-N16-N17-HOTFIX.zip
+SHA-256: 221fcaa29b01a01e58776287ffb7d7232efeb21d7389fc3f47011995b47db6ff
+SHA256SUMS.txt SHA-256: 1e5afe87f264dd020f853be27422cbe621ec48e9aa7d3b5ccbb2d700e82d8bbd
+Canonical selftest: 104/104 PASS.
+
+This package is cumulative over the ACT-N11/N15 hotfix independently reviewed in
+ACTIVA 0.5.26. It closes the follow-up tooling findings ACT-N16 and ACT-N17.
+The service-worker checker now preserves CacheStorage identity through the actual
+service-worker global/self object, so dynamic and Reflect-based property access is
+observable, and its synthetic network-failure path must reject/throw or return an
+explicitly unsuccessful response. A manufactured successful response is fail-closed
+verification failure. The 16 tools under security/garp25/tools are byte-identical
+with canonical TOOLS/ at freeze time.

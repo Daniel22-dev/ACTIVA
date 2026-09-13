@@ -2,7 +2,7 @@
 const TYPES=['matching','sorting','ordering','gapfill','truefalse','multiplechoice','shortanswer','crossword','wordsearch','secretcode','sentenceorder','wordformation','errorcorrection','infogap','calculationchain','unitconversion','conceptmap','labprotocol','sourceanalysis','causeeffect','factopinion','climatedata','coordinates','algorithm','debugcode','safetycase','stations','jigsaw','expertgroups','escaperoom','boardgame','rolecards','casestudy','debatecards','imageannotation','diagramlabels','blankmap','datagraph','timelinecards'];
 const groups=[
  {id:'release',title:'Vydání a manifest',tests:[
-  ['manifest',async()=>{const j=await json('../studio-manifest.json');return check(j.id==='activity-builder'&&j.version==='0.5.22','Manifest ACTIVA 0.5.22','ID nebo verze nesouhlasí.')}],
+  ['manifest',async()=>{const j=await json('../studio-manifest.json');return check(j.id==='activity-builder'&&j.version==='0.5.27','Manifest ACTIVA 0.5.27','ID nebo verze nesouhlasí.')}],
   ['capabilities',async()=>{const j=await json('../studio-manifest.json');return check(['internal-self-tests','complete-in-app-manual','artifact-envelope-v1'].every(x=>j.capabilities?.includes(x)),'Produkční schopnosti jsou deklarované','Chybí produkční capability.')}],
   ['pwa-manifest',async()=>{const j=await json('../manifest.webmanifest');return check(j.theme_color==='#3157FF'&&j.icons?.length>=4,'PWA manifest je úplný','PWA manifest má nečekaná data.')}],
   ['app-shell',async()=>{const t=await text('../index.html');return check(t.includes('ACTIVA')&&t.includes('EDITORIAL WORKSHOP'),'Hlavní aplikace je sestavená','Chybí nový redakční shell.')}]
@@ -34,10 +34,10 @@ const groups=[
  {id:'pwa',title:'PWA a offline režim',tests:[
   ['sw-prefix',async()=>{const t=await text('../sw.js');return check(t.includes('CACHE_PREFIXES')&&t.includes('key.startsWith(prefix)'),'Service worker maže jen vlastní cache','Izolace cache není potvrzena.')}],
   ['atomic-precache',async()=>{const t=await text('../sw.js');return check(t.includes('cache.addAll(REQUIRED)'),'Povinný precache selže atomicky','Chybějící asset může být ignorován.')}],
-  ['offline-routes',async()=>{const t=await text('../sw.js');return check(t.includes("'./manual/'")&&t.includes("'./tests/'")&&t.includes('./manual/manual.js')&&t.includes('./tests/tests.js'),'Manuál i testy jsou v precache','Offline precache není úplný.')}]
+  ['offline-routes',async()=>{const t=await text('../sw.js');return check(t.includes('./manual/')&&t.includes('./manual/manual.js')&&!t.includes('./tests/')&&!t.includes('./tests/tests.js'),'Manuál zůstává v PWA cache a interní testy nejsou v release precache','Offline/release precache neodpovídá bezpečnostnímu profilu.')} ]
  ]}
 ];
-const result={schema:'activa-runtime-selftest-v1',version:'0.5.22',createdAt:'',tests:[]};
+const result={schema:'activa-runtime-selftest-v1',version:'0.5.27',createdAt:'',tests:[]};
 async function text(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url}: ${r.status}`);return r.text()}
 async function json(url){return JSON.parse(await text(url))}
 function check(ok,pass,fail){return{status:ok?'pass':'fail',message:ok?pass:fail||'Kontrola selhala.'}}

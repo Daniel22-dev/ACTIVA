@@ -3,11 +3,17 @@ import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
+const buildTime = process.env.GHRAB_BUILD_TIME || new Date().toISOString();
 const sourceDist = path.join(root, "dist");
 const targetDist = path.join(root, "dist-school-server");
 if (!fs.existsSync(sourceDist)) throw new Error("Chybí dist/. Nejprve spusťte standardní build.");
 fs.rmSync(targetDist, { recursive: true, force: true });
 fs.cpSync(sourceDist, targetDist, { recursive: true });
+
+// Source QA pages belong to the developer/static artifact, not to the school-server runtime deployment.
+for (const rel of ["tests", "test-results", "qa-results"]) {
+  fs.rmSync(path.join(targetDist, rel), { recursive: true, force: true });
+}
 
 function walk(dir) {
   const files = [];
@@ -52,12 +58,29 @@ for (const manifestPath of files.filter((file) => file.endsWith(`${path.sep}stud
   manifest.serverReadyPhase = "prepared-not-connected";
   manifest.launchUrl = appBaseUrl;
   manifest.manualUrl = `${appBaseUrl}manual/`;
+  manifest.capabilities = (manifest.capabilities || []).filter((item) => item !== "internal-self-tests");
+  if (manifest.description?.cs) manifest.description.cs = manifest.description.cs.replace(/,? interní testovací centrum/iu, "");
+  if (manifest.description?.en) manifest.description.en = manifest.description.en.replace(/,? an internal test centre/iu, "");
   if (manifest.aiCore?.status === "integrated-p1" || manifest.aiCore?.coreVersion) {
     manifest.aiCore.operationsManifestUrl = `${appBaseUrl}ai-operations.json`;
   } else if (manifest.aiCore && typeof manifest.aiCore === "object") {
     delete manifest.aiCore.operationsManifestUrl;
   }
   writeJson(manifestPath, manifest);
+}
+
+for (const file of walk(targetDist)) {
+  if (file.endsWith('.html')) {
+    let text = fs.readFileSync(file, 'utf8');
+    text = text.replace(/<a\b[^>]*href=(['"])[^'"]*tests\/[^'"]*\1[^>]*>([\s\S]*?)<\/a>/gi, '$2');
+    fs.writeFileSync(file, text);
+  }
+}
+const schoolAppJs = path.join(targetDist, 'app.js');
+if (fs.existsSync(schoolAppJs)) {
+  let text = fs.readFileSync(schoolAppJs, 'utf8');
+  text = text.replace('testsUrl:resolveProductionTestsUrl()', 'testsUrl:null');
+  fs.writeFileSync(schoolAppJs, text);
 }
 
 for (const stale of files.filter((file) => file.endsWith(`${path.sep}deployment.school-server-p0.json`))) {
@@ -72,7 +95,7 @@ writeJson(path.join(targetDist, "server-ready-build-info.json"), {
   version: pkg.version,
   phase: "prepared-not-connected",
   profile: "school-server",
-  builtAt: new Date().toISOString(),
+  builtAt: buildTime,
   activeAuthMode: deployment.authMode,
   activeAiTransport: deployment.aiTransport,
   telemetryMode: deployment.telemetryMode,

@@ -83,10 +83,11 @@ note('studio-ai-server-ready-capability', studio.aiCore?.serverReady===true);
 note('studio-no-backend-ready-capability', !studio.capabilities?.includes('backend-ready'));
 
 const sw = text('dist/sw.js');
-note('sw-runtime-config-network-bypass', sw.includes("relative === 'config/deployment.json'") && sw.includes("request.cache === 'no-store' || isRuntimeRequest"));
+note('sw-security-critical-network-only', sw.includes("function isSecurityCriticalRequest") && sw.includes("function networkOnlyNoStore") && sw.includes("event.respondWith(networkOnlyNoStore(request))"));
 const swOptional=sw.match(/const OPTIONAL\s*=\s*\[([\s\S]*?)\];/)?.[1]||'';
 note('sw-no-runtime-deployment-precache', !/deployment(?:\.school-server[^"']*)?\.json/.test(swOptional));
-note('sw-protected-app-assets', ['./app.js','./access/access-bootstrap.js','./access/protected-page-bootstrap.js','./manual/manual.js','./tests/tests.js'].every(x=>sw.includes(x)));
+note('sw-offline-noncritical-assets', ['./app.js','./manual/manual.js'].every(x=>sw.includes(x)));
+note('sw-critical-assets-not-precache', !['./access/access-bootstrap.js','./access/protected-page-bootstrap.js','./ghrab/ghrab-platform.js','./ghrab-platform.consumer.json'].some(x=>(sw.match(/const REQUIRED\s*=\s*\[([\s\S]*?)\];/)?.[1]||'').includes(x)));
 note('protected-page-awaits-script-load', text('src/access/protected-page-bootstrap.js').includes('await activateProtectedScripts()') && text('src/access/protected-page-bootstrap.js').includes("executable.addEventListener('load'"));
 const propertyReport=exists('qa-results/garp-properties.json')?json('qa-results/garp-properties.json'):null;
 const propertySnapshot=currentPropertySourceSnapshot();

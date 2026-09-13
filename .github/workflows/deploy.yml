@@ -12,12 +12,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   certify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 22
+          node-version: 22.16.0
           cache: npm
       - run: npm ci --ignore-scripts --no-fund
 
@@ -44,10 +44,24 @@ jobs:
       - name: Enforce P5 R2 release gate
         run: npm run qa:p5:ci
 
+      - name: Set deterministic build time
+        shell: bash
+        run: echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
+      - name: Build school-server SHIELD-PREP profile
+        run: npm run build:school-server
+      - name: Enforce GARP 2.5.1 SHIELD static gates
+        run: npm run garp25:prep-static
+      - name: Build hygienic GitHub Pages artifact
+        run: npm run build:pages
+      - name: Scan GitHub Pages artifact for leaks
+        run: npm run garp25:leaks:pages
+      - name: Exercise GitHub Pages hygiene negative control
+        run: npm run garp25:pages:selftest
+
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         if: github.event_name != 'pull_request'
         with:
-          path: dist
+          path: dist-pages
   deploy:
     permissions:
       pages: write
@@ -56,7 +70,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: certify
     steps:
       - name: Deploy

@@ -15,10 +15,17 @@
   <link rel="icon" type="image/svg+xml" href="./assets/activity-builder-icon.svg">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <link rel="stylesheet" href="./access/access-gate.css">
-  <style>html[data-ghrab-access="checking"] body{visibility:hidden}</style>
+  <style>
+    html[data-ghrab-access="checking"] body>:not(.ghrab-access-bootstrap-fallback):not(noscript),html[data-ghrab-access="denied"] body>:not(.ghrab-access-bootstrap-fallback):not(.ghrab-access-gate):not(noscript){display:none!important}
+    .ghrab-access-bootstrap-fallback{max-width:42rem;margin:4rem auto;padding:1.5rem;font:16px system-ui;color:#182033}html[data-ghrab-access="granted"] .ghrab-access-bootstrap-fallback{display:none!important}
+  </style>
   <style>/*==ACTIVA_STYLES==*/</style>
 </head>
 <body class="activa-editorial">
+  <main class="ghrab-access-bootstrap-fallback" role="status" aria-live="polite">
+    <h1>Ověřuji přístup k ACTIVA…</h1>
+    <p>Pokud zpráva nezmizí, přístupovou službu nelze načíst. Zkontrolujte připojení a otevřete ACTIVA z AI Studia.</p>
+  </main>
   <!--==ACTIVA_BODY==-->
   <script type="application/ghrab-protected" data-ghrab-protected src="./app.js"></script>
   <script type="module" src="./access/access-bootstrap.js" data-ghrab-access-bootstrap></script>

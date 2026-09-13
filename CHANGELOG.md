@@ -1,3 +1,28 @@
+## 0.5.27 — 2026-09-12
+
+- Tooling-only opravné kolo po nezávislém auditu 0.5.26: ACT-N16 a ACT-N17.
+- SW checker zachovává identitu Cache Storage i přes `self` a zachytí dynamický i `Reflect` přístup.
+- Network-failure scénář odmítá vyrobenou úspěšnou odpověď; fail-closed vyžaduje chybu/rejection nebo explicitně neúspěšnou odpověď.
+- Dokumentován integrační kontrakt `.ghrab-access-gate` mezi ACTIVA a centrálním app-guardem.
+- Aplikační, pedagogická, datová a AI logika beze změny proti 0.5.26 kromě synchronizace verze/cache identifikátoru.
+
+## 0.5.26 — 2026-09-12
+
+- Opravné kolo po nezávislém auditu 0.5.25: ACT-N11 až ACT-N15.
+- Denial UX je sjednocen na hlavní stránce i v manuálu a zůstává fail-closed.
+- SW checker ověřuje dosažitelný Cache Storage přístup v úplném modulovém scope a skutečný efekt cleanupu `activate`.
+- AI-boundary verifier pokrývá celý textově spustitelný projektový povrch; evidence manifest celý `security/` scope s explicitní výjimkou interní evidence.
+- Pedagogická a AI logika beze změny.
+
+## 0.5.23 - 2026-09-11
+
+## 0.5.25 — 2026-09-12
+- GARP 2.5.1 corrective round after independent Claude review: ACT-N1 through ACT-N6 remediation.
+- Added fail-closed visible access fallback, hygienic Pages artifact, deterministic school payload ZIP, and canonical GARP tooling hardening for SW path normalization/cache fallback and AI-boundary vendor/qa drift.
+
+
+- GARP 2.5.1 SHIELD-PREP hardening: service-worker security-critical network-only/no-store, release-integrity tooling, AI-boundary drift controls, recursive secret/leak scanning and CI gates.
+
 ## 0.5.22 – Platform 1.1.2 suite browser QA delayed-replay fix
 
 - Opraven skutečný CI FAIL z ACTIVA 0.5.21 v povinném Chromium suite-session testu.

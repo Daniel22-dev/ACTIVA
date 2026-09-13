@@ -1,0 +1,83 @@
+GARP 2.5.1 GHRAB - PRUVODNI LIST APLIKACE
+
+======================================================================
+1. IDENTITA
+======================================================================
+appId:                    activity-builder
+Nazev:                    ACTIVA / Sestavovac aktivit
+Repozitar:                daniel22-dev/ACTIVA
+Aktualni verze:           0.5.27
+Verze standardu:          GARP 2.5.1 GHRAB
+SHA-256 SHA256SUMS balicku, podle ktereho se audituje:
+                          1e5afe87f264dd020f853be27422cbe621ec48e9aa7d3b5ccbb2d700e82d8bbd
+Posledni uzavrene kolo:   2026-09-12, Claude role B, ACTIVA 0.5.26,
+                          OVERALL AMBER; 0 CRITICAL/HIGH/MEDIUM; zadny
+                          otevreny nalez aplikace; 0.5.26 prijata jako
+                          aktualni SHIELD-PREP stav.
+
+======================================================================
+2. TRVALA KLASIFIKACE
+======================================================================
+Trida dat:                D2
+  oduvodneni:             aplikace muze zpracovat studentsky text/praci; realna
+                          studentska data nejsou v PREP schvalena.
+Povolena egress cesta:    GHRAB AI Core; public/prep pouze deklarovana provider
+                          cesta, school profil pres school-gateway. School profil
+                          zakazuje lokalni provider klice.
+AGENTIC:                  NO
+  overeno proti call grafu dne: 2026-09-12; zadne autonomni tools/MCP/action loop.
+Deployment profil:        A staticky (GitHub Pages) + B school-server profil
+Build profil:             obecny + skolni + hygienicky Pages profil
+Service worker:           ANO
+Vendorovane komponenty:   GHRAB Platform 1.1.2; GHRAB AI Core 1.0.0;
+                          GHRAB error reporter
+
+======================================================================
+3. TRVALA ROZHODNUTI
+======================================================================
+KD-01 | AGENTIC controls | N/A pro SH-AG-01..15 | ACTIVA nema agency/tool loop | ChatGPT/Codex | 2026-09-12
+KD-02 | Real student data | zakazano v PREP | privacy/LIVE gate neni GREEN | ChatGPT/Codex | 2026-09-12
+KD-03 | RI school profile | local-untrusted-builder nesmi byt GREEN | produkcni builder/key custody chybi | ChatGPT/Codex | 2026-09-12
+
+======================================================================
+4. REGISTR DLUHU
+======================================================================
+DL-01 | MEDIUM/policy | served DAST + skutecne serverove security headers neovereny | static/XSS/SW PREP controls | SHIELD-LIVE | skutecny staging/school server test
+DL-02 | MEDIUM/policy | RI-14 production key custody/rotation/recovery neoverena | disposable PREP key pouze mimo repo | RI-LIVE | skolni key-custody attestation + recovery drill
+DL-03 | MEDIUM/policy | AIR behavior proti produkcnimu modelu neproveden v tomto kole | AI boundary fingerprint + inherited structural AIR | RED TEAM LIVE | bounded live-model AIR corpus
+DL-04 | LOW | GitHub Pages je mimo RI-PREP podpis/registry chain | hygienicky Pages artifact + leak scan | future distribution | rozhodnuti o Pages RI/Integrity Service
+DL-05 | LOW | branch protection/account governance neni dolozena z repo snapshotu | pinned workflows + policy checker | SH-SC-02 | organizacni evidence GitHub nastaveni
+
+======================================================================
+5. NOT TESTED
+======================================================================
+Kontrola | duvod | co ji odblokuje
+0.5.27 native browser rerun | lokalni managed Chromium blokuje test URL; aplikacni semantika proti 0.5.26 beze zmeny | nezavisly Chromium rerun podle uvazeni auditora
+0.5.27 fresh online npm ci/SCA | bounded registry pokus nedokoncen, partial install smazan | nezavisly registry-capable rerun; dependency graph proti 0.5.26 beze zmeny
+SHIELD-LIVE / RI-LIVE | chybi skutecny school-server runtime | staging/production-like server
+RI-14 | chybi organizacni key custody | skolni key ceremony/recovery drill
+AIR live-model | tento corrective round nemenil prompt/provider/model | provider-capable bounded AIR run
+SH-SC-02 | chybi organizacni GitHub evidence | overeni branch protection/MFA/roles
+
+======================================================================
+6. HISTORIE KOL
+======================================================================
+2026-09-11 | ChatGPT/Codex | 0.5.23 candidate f662ec5cab87897c3c9c8a81c0ccb7dde9ba0bc6a21633eb0c3efa559b95f4c8 | PREP mechanical GREEN; policy AMBER | PREDANI-ACTIVA-0.5.23-GARP2.5-SHIELD.txt
+2026-09-11 | Claude role B | 0.5.23 candidate f662ec5cab87897c3c9c8a81c0ccb7dde9ba0bc6a21633eb0c3efa559b95f4c8 | OVERALL AMBER; 0 CRITICAL/HIGH; ACT-N1..N6 | OVERENI-KANDIDATA-activa-0.5.23-2026-09-11.txt
+2026-09-12 | ChatGPT/Codex | 0.5.24 corrective candidate 9b357f8bb19bb522bfdeebff0aef7e4550441a6db0838946abb6f75237b67610 | PREP mechanical GREEN; policy AMBER | PREDANI-ACTIVA-0.5.24-GARP2.5.1-SHIELD-KOLO-2.txt
+2026-09-12 | Claude role B | 0.5.24 candidate 9b357f8bb19bb522bfdeebff0aef7e4550441a6db0838946abb6f75237b67610 | 0 CRITICAL/HIGH/MEDIUM; ACT-N1..N6 CLOSED; ACT-N7..N10 LOW tooling/selftest | OVERENI-KANDIDATA-activa-0.5.24-2026-09-12.txt
+2026-09-12 | ChatGPT/Codex | 0.5.25 candidate 37777281629892a749a7fdf7af1fae8e477dc4e52d9fe6abdc39efe4905b3830 | independent review completed | PREDANI-ACTIVA-0.5.25-GARP2.5.1-SHIELD-NOVY-CYKLUS.txt
+2026-09-12 | Claude role B | 0.5.25 candidate 37777281... | 0.5.25 prijata jako aktualni SHIELD-PREP; 0 CRITICAL/HIGH; ACT-N11/N12 MEDIUM, ACT-N13..N15 LOW | OVERENI-KANDIDATA-activa-0.5.25-2026-09-12.txt
+2026-09-12 | ChatGPT/Codex | 0.5.26 corrective candidate 5dd8cc68... | PREP GREEN; pending independent review | PREDANI-ACTIVA-0.5.26-GARP2.5.1-SHIELD-KOLO-4.txt
+2026-09-12 | Claude role B | 0.5.26 candidate 5dd8cc68... | 0.5.26 prijata jako aktualni SHIELD-PREP; 0 CRITICAL/HIGH/MEDIUM; aplikace bez otevreneho nalezu; ACT-N16/N17 LOW tooling | OVERENI-KANDIDATA-activa-0.5.26-2026-09-12.txt
+2026-09-12 | ChatGPT/Codex | 0.5.27 tooling-only candidate | ACT-N16/N17 closure; app semantics unchanged | pending independent review | PREDANI-ACTIVA-0.5.27-GARP2.5.1-SHIELD-KOLO-5.txt
+
+======================================================================
+7. REOPEN TRIGGERS
+======================================================================
+- zmena prompt assembly, modelu, provideru, AI transportu nebo egress -> znovu AI boundary + dotcene AIR;
+- zmena service worker/cache routingu -> SW negative controls + SIM-07;
+- zmena persistence/suite-session/import/export -> PC-01 + RT-17/20 + SIM-03/04/08;
+- zmena auth/app-guard -> RT-01/03/11 + LIVE revalidace;
+- zmena signing/registry/provenance -> RI/RISIM + strict school gate;
+- nove student-data flow -> preklasifikovat GH-06 a privacy gate.

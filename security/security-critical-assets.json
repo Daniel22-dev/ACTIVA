@@ -1,0 +1,17 @@
+[
+  "access/deployment-config.js",
+  "access/access-bootstrap.js",
+  "access/protected-page-bootstrap.js",
+  "ghrab/ghrab-platform.js",
+  "ghrab-platform.consumer.json",
+  "ai-operations.json",
+  "config/deployment.json",
+  "config/deployment.school-server.json",
+  "config/platform-manifest.json",
+  "config/release-acceptance.json",
+  "config/security-headers.json",
+  "release-integrity.json",
+  "release-integrity.sig",
+  "integrity-status",
+  "integrity-status.json"
+]
