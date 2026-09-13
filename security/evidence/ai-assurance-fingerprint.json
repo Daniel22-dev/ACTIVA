@@ -1,0 +1,213 @@
+{
+  "schema": "ghrab-ai-assurance-fingerprint-v2",
+  "appId": "activity-builder",
+  "appVersion": "0.5.27",
+  "coreVersion": "1.0.0",
+  "algorithm": "SHA-256",
+  "aggregate": "010498efb77b316c10aafde50db177002538025750ce80d7b1aaa5e80ed84a33",
+  "inventory": "security/ai-boundary-files.json",
+  "providerBoundary": "deployment-profile-and-egress-controlled",
+  "files": [
+    {
+      "path": "APP-activity-builder-GARP.txt",
+      "size": 6822,
+      "sha256": "15348206d93b6c07734423737425b9d46fa27cae8b3dac83e25c07c4fe1ee8fb"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 11944,
+      "sha256": "46fa19b53e697f86612c76e5f0ad4d86d5a8d687dd541ba2190060fef80345ff"
+    },
+    {
+      "path": "RELEASE-NOTES-0.5.15.md",
+      "size": 804,
+      "sha256": "7e0fb21cb712e33eecbdf8a2cffb148f6da78b626d90ec431bc58efd455cbf26"
+    },
+    {
+      "path": "ghrab-ai-core.consumer.json",
+      "size": 328,
+      "sha256": "73e517a6befddf808bd85d8074d8df5f3ad41e3ac08076711784776cda9b4c72"
+    },
+    {
+      "path": "qa/security-validator.mjs",
+      "size": 1149,
+      "sha256": "447b26d2dfefa2561496cb66db33f685f4dbcfb1f6d054d21be0e2d1b98f642f"
+    },
+    {
+      "path": "scripts/build-school-profile.mjs",
+      "size": 5607,
+      "sha256": "6b3fad7ac1a167a892091527956a6b481ced332c7edb63ae90f1439579bad702"
+    },
+    {
+      "path": "scripts/qa-garp-properties.mjs",
+      "size": 34011,
+      "sha256": "ea3adcfafc200e359feef315fefc5bb52a1841935c07bd6a3006dfd89f180e9b"
+    },
+    {
+      "path": "scripts/qa-garp-security.mjs",
+      "size": 11753,
+      "sha256": "fd6908a20f76e76ba6173e43e0b5c8d9cc987c255ab67768cd369463ff6d1719"
+    },
+    {
+      "path": "scripts/qa-garp25-ai-resource.mjs",
+      "size": 2213,
+      "sha256": "4d7a7e75ef850619d02f06446c40c67c3b55baadc46af7a76f2de7837cc73787"
+    },
+    {
+      "path": "security/garp25/tools/selftest-garp251.mjs",
+      "size": 55288,
+      "sha256": "ac61ab3f814d6c420dc96a43eaa75ff01ac39c8c3ceb62a71d90e62833242f88"
+    },
+    {
+      "path": "security/garp25/tools/verify-ai-assurance-fingerprint.mjs",
+      "size": 6912,
+      "sha256": "3b987de0f946704b43a907d215ebc6c691b7c137eee2ba057d09c70ac6d303e3"
+    },
+    {
+      "path": "src/access/deployment-config.js",
+      "size": 10651,
+      "sha256": "1e3819adc395738f1788eaeac60e7c2a1bb0dad1e9f3be122715b92735c841c0"
+    },
+    {
+      "path": "src/access/error-reporter.js",
+      "size": 75726,
+      "sha256": "60c7815cafde3a5d3918eaf6b4f9233c7d0c1fbd019a9dc7c891c9c7756bf67b"
+    },
+    {
+      "path": "src/ai-operations.json",
+      "size": 638,
+      "sha256": "f3638f2419a7236a92138279b0dc092d11c9bf8c24553a4967f8c77991194e1f"
+    },
+    {
+      "path": "src/config/data-manifest.json",
+      "size": 6778,
+      "sha256": "5551dcdd28acf0485efb988ea040a617fa4d6b418452d9ead9f85a1b8d0a1c1d"
+    },
+    {
+      "path": "src/config/deployment.json",
+      "size": 1816,
+      "sha256": "d030e7ed0ef8caed449951efed2392537c959aeec9339915ac41669ee67069ff"
+    },
+    {
+      "path": "src/config/deployment.school-server-p0.json",
+      "size": 1499,
+      "sha256": "c26871fab4951f5e341d7de58089ed3cad4b11c420a017b191eb47d9f0fe78bc"
+    },
+    {
+      "path": "src/config/deployment.school-server.example.json",
+      "size": 1802,
+      "sha256": "fffc5af1d9a072656b03018020fb3305df72ad176c3ef09395424dde759d7d7c"
+    },
+    {
+      "path": "src/config/deployment.school-server.json",
+      "size": 1813,
+      "sha256": "1ba863bc8430974d03b9edb239b8d50830cb753812a704a4a1c6150f4d7d4057"
+    },
+    {
+      "path": "src/config/release-acceptance.json",
+      "size": 1232,
+      "sha256": "5e3e576fbbf3779223120b6ab8688f0b796e417ee4d8d25ade365ddd45b662bb"
+    },
+    {
+      "path": "src/config/security-headers.json",
+      "size": 1826,
+      "sha256": "43b0ef1a12b5f368179b0b242bdf423f4d3cbad425d4813423b5b8ff0b98fc61"
+    },
+    {
+      "path": "src/js/10-core.js",
+      "size": 8874,
+      "sha256": "f9912ae0ec45432995eec9180f8ce98283f9cd47dd70816c56d638b5955c69d0"
+    },
+    {
+      "path": "src/js/25-subject-packs.js",
+      "size": 22610,
+      "sha256": "033b034cfcb03fd50f6e7018104faf688f3fc9d37c78446bcc5fc0ec1b58af8d"
+    },
+    {
+      "path": "src/js/27-collaboration-visual-packs.js",
+      "size": 25603,
+      "sha256": "a12d9b102acf0916f3adde879ef4e67d68628e472a243349103d6ce0276024a2"
+    },
+    {
+      "path": "src/js/40-ai-generation.js",
+      "size": 10830,
+      "sha256": "0d232d93ed2ac68ce2f41faaa447ffc4784fd6d7e0c1da67c48769b4896765f1"
+    },
+    {
+      "path": "src/js/41-ai-core-integration.js",
+      "size": 5112,
+      "sha256": "26db4ac4c96befe22a7942fb918bc54a10aa416b77e6998ec19b9a4a4aef6de0"
+    },
+    {
+      "path": "src/js/42-package3-ai.js",
+      "size": 5174,
+      "sha256": "235b26b75185d75a4b4b9cc03902f5aee05dc134798f401fca91117ccacc13d6"
+    },
+    {
+      "path": "src/js/45-differentiation.js",
+      "size": 6064,
+      "sha256": "51586a95a7fe58b25b9ad9ddea481908d0f388cf160351f16b0beda20edfc3cc"
+    },
+    {
+      "path": "src/js/47-package3-differentiation.js",
+      "size": 3381,
+      "sha256": "1b60a69957a47405791c655979a1a86399a6f9f3936bfbf973726571fd4753e4"
+    },
+    {
+      "path": "src/js/60-renderers.js",
+      "size": 21227,
+      "sha256": "5f462854341c1ad96819235039a36c03124805c1cf2f6dd89c0b7a36148977ab"
+    },
+    {
+      "path": "src/js/62-package3-renderers.js",
+      "size": 15409,
+      "sha256": "d6b1da3fa3bc94e64cb561235c84adeaa0b539bb340b92b0705ad92dcc8b9dd9"
+    },
+    {
+      "path": "src/js/64-presentation-slides.js",
+      "size": 13833,
+      "sha256": "679cb38e2ed07eb90d57de377142fc8a25b03e273d11a5d04c9730c8c5653496"
+    },
+    {
+      "path": "src/js/70-editor.js",
+      "size": 16563,
+      "sha256": "5400dc70528177ae201b1fb0ddeee6c2f2b10b397b9547876462ca44581809ce"
+    },
+    {
+      "path": "src/js/72-package3-editor.js",
+      "size": 14523,
+      "sha256": "83e53275042467308df4fb75edc48eb64be18fc04b0cc960a0c4c9cc5691caaa"
+    },
+    {
+      "path": "src/js/74-projection-ui.js",
+      "size": 11924,
+      "sha256": "836dcad391a06332c940b57a3ee299527a396b2166cdef00e98e74f98c09e411"
+    },
+    {
+      "path": "src/styles.css",
+      "size": 78145,
+      "sha256": "a174f0edfcee57936080b1a5c2b7426e9393fe896ea51ff1bf7b27e3e4e36803"
+    },
+    {
+      "path": "vendor/ghrab-ai-core-1.0.0/ghrab-ai-conformance-1.0.0.js",
+      "size": 14197,
+      "sha256": "7707811e4d2e3975a4f90b6d672321ef185e77f71649fdb755f6467da5d4c3b7"
+    },
+    {
+      "path": "vendor/ghrab-ai-core-1.0.0/ghrab-ai-contract-v1.0.0.md",
+      "size": 22111,
+      "sha256": "6add0ac005d3b2defea8f6a8d722f53244bc5d2d866115d48506182875529ed9"
+    },
+    {
+      "path": "vendor/ghrab-ai-core-1.0.0/ghrab-ai-core-1.0.0.js",
+      "size": 48405,
+      "sha256": "81acb93e1f17646ab2b58b3744fce38a6ed5c779e8d5e9cba2ae797816ecec44"
+    },
+    {
+      "path": "vendor/ghrab-ai-core-1.0.0/ghrab-ai-core-manifest-1.0.0.json",
+      "size": 392,
+      "sha256": "fc006c3e500495965188c1d385f5ecfd9a7b8967fd86d792883c649fd21ce9b8"
+    }
+  ],
+  "invalidationRule": "Any byte change to an inventoried AI/egress/runtime boundary or any newly detected untracked boundary candidate invalidates inherited AIR evidence. Provider/model/system instruction, connect-src, deployment transport, conformance or school-profile changes require review/retest."
+}
