@@ -4,7 +4,7 @@
   "appVersion": "0.5.27",
   "coreVersion": "1.0.0",
   "algorithm": "SHA-256",
-  "aggregate": "010498efb77b316c10aafde50db177002538025750ce80d7b1aaa5e80ed84a33",
+  "aggregate": "25e544205ee56d51ace0a78786371863adf323d907ee0107eaa33e4e80a37b31",
   "inventory": "security/ai-boundary-files.json",
   "providerBoundary": "deployment-profile-and-egress-controlled",
   "files": [
@@ -105,8 +105,8 @@
     },
     {
       "path": "src/config/release-acceptance.json",
-      "size": 1232,
-      "sha256": "5e3e576fbbf3779223120b6ab8688f0b796e417ee4d8d25ade365ddd45b662bb"
+      "size": 1271,
+      "sha256": "4b6f4cd040ba595d69b027334de2142a37d55f0d004ccb4b6de5f68e153a617b"
     },
     {
       "path": "src/config/security-headers.json",

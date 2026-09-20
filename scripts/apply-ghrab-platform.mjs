@@ -177,15 +177,24 @@ for (const name of ['studio-manifest.json', 'app-manifest.json']) {
   const target = path.join(dist, name);
   if (!fs.existsSync(target)) continue;
   const manifest = JSON.parse(fs.readFileSync(target, 'utf8'));
+  // Merge, do not replace: AI Studio still consumes the legacy-compatible aliases
+  // while P3/P5 consume the canonical Platform 1.1.2 contract fields.
   manifest.platform = {
+    ...(manifest.platform || {}),
+    schema: manifest.platform?.schema || 'ghrab-platform-app-integration-v1',
     contract: consumer.platform.contract,
     platformVersion: consumer.platform.version,
     requiredRange: consumer.platform.requiredRange,
+    requiredPlatformRange: consumer.platform.requiredRange,
     brandVersion: consumer.brand.version,
     themeContract: 'ghrab-theme-v1',
+    swContract: manifest.platform?.swContract || 'ghrab-service-worker-v1',
     storageContract: 'ghrab-storage-namespace-v1',
     bridgeContract: consumer.bridge.contract,
+    studioBridge: 2,
     artifactContract: consumer.artifact.schema,
+    artifactEnvelope: 1,
+    storagePrefix: `ghrab.${consumer.appId}.`,
     accessibilityContract: consumer.quality.accessibilityContract,
     performanceContract: consumer.quality.performanceContract,
     moduleContract: consumer.quality.moduleContract,

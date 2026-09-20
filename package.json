@@ -34,7 +34,7 @@
     "qa:p4": "npm run qa:p5",
     "qa:p4:ci": "npm run qa:p5:ci",
     "qa:p5": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
-    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
+    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && npm run verify:studio-manifest && npm run test:studio-dispatch && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs",
     "test:p5": "npm run qa:p5",
     "qa:runtime": "node scripts/qa-p5-runtime.mjs",
     "qa:xss": "node scripts/qa-p5-xss-sinks.mjs",
@@ -70,7 +70,14 @@
     "garp25:evidence:verify": "node security/garp25/tools/verify-evidence-manifest.mjs security/evidence security/security-evidence-manifest.json --project-root .",
     "garp25:evidence:selftest": "node scripts/garp25/test-expanded-evidence.mjs",
     "garp25:access-fallback:selftest": "node scripts/garp25/test-access-fallback.mjs",
-    "garp25:pages:selftest": "node scripts/garp25/test-pages-hygiene.mjs"
+    "garp25:pages:selftest": "node scripts/garp25/test-pages-hygiene.mjs",
+    "verify:studio-manifest": "node scripts/verify-studio-manifest-contract.mjs",
+    "prepare:pages": "node scripts/create-pages-release-identity.mjs",
+    "verify:release-chain": "node scripts/verify-release-chain.mjs",
+    "verify:live-release": "node scripts/verify-live-release.mjs",
+    "test:studio-dispatch": "node scripts/test-ai-studio-dispatch.mjs",
+    "qa:safe-promotion": "node scripts/qa-safe-promotion.mjs",
+    "qa:auto-patch-topology": "node scripts/qa-auto-patch-notification.mjs"
   },
   "engines": {
     "node": ">=18"
