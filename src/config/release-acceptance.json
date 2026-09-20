@@ -11,14 +11,15 @@
     "currentUseApproved": true
   },
   "github": {
-    "status": "not-yet-uploaded",
-    "uploadDeferredUntilEcosystemComplete": true,
+    "status": "connected-github-pages",
+    "uploadDeferredUntilEcosystemComplete": false,
     "postUploadValidationRequired": true,
+    "safePromotionRequired": true,
+    "deploySource": "main-only-after-green-p5",
     "requiredChecks": [
-      "project-tests",
+      "candidate-to-main",
       "p5-release-gate",
-      "live-pages-smoke",
-      "pwa-update-from-previous-release"
+      "axe"
     ]
   },
   "schoolServer": {

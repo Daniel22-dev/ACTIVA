@@ -3,7 +3,7 @@ name: Blocking axe-core audit
 on:
   workflow_dispatch:
   push:
-    branches: [main, master]
+    branches: [candidate, main]
   pull_request:
 
 permissions:
