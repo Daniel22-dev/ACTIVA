@@ -3,3 +3,6 @@ node_modules/
 qa-results/
 *.log
 .DS_Store
+dist-pages/
+dist-school-server/
+test-results/
