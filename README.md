@@ -1,37 +1,44 @@
 # ACTIVA – Sestavovač aktivit
 
 **Aktuální verze:** 0.5.27  
-**Platforma:** GHRAB Platform 1.1.2 · etapa P3
+**Platforma:** GHRAB Platform 1.1.2  
+**Release governance:** GARP 2.5.1 SHIELD-PREP · P5-R2 · Safe Promotion
 
+ACTIVA je redakční studio v ekosystému AI Studio GHRAB. Z učiva připraví tisknutelné pracovní listy, řešení, varianty A/B/C, tři úrovně diferenciace, skupinové sady, projekci bez telefonů a přenosné interaktivní HTML.
 
-**Verze: 0.5.27 · platformně sjednocený bezpečnostní kandidát**
-
-ACTIVA je originální prémiové redakční studio v ekosystému AI Studio GHRAB. Z učiva připraví tisknutelné pracovní listy, řešení, varianty A/B/C, tři úrovně diferenciace, skupinové sady, projekci bez telefonů a přenosné interaktivní HTML.
-
-## Produkční balík 5
+## Produkční profil
 
 - 39 modulárních typů aktivit,
-- originální světlý redakční design (kobalt + korál),
 - úplný prohledávatelný manuál přímo v aplikaci,
 - interní runtime testovací centrum,
 - GHRAB QA 1.0.2,
 - místní knihovna a zálohování,
 - úložný adaptér připravený na budoucí školní server; server je v této verzi vypnutý,
-- manifest, Access Guard a GHRAB Platform 1.1.2 pro aktuální AI Studio.
+- Access Guard a GHRAB Platform 1.1.2,
+- GARP 2.5.1 fail-closed kontroly včetně N5 selftestu,
+- exact release identity vázaná na source commit, manifest, SBOM, provenance a evidence,
+- produkční GitHub Pages release pouze z chráněného `main`,
+- live ověření releasu před `app-updated` dispatch do AI Studia.
+
+## Release cesta
+
+Kanonická cesta změny je:
+
+`candidate → P5/axe → promotion PR → protected main → main P5 → GitHub Pages → live verification → AI Studio dispatch`
+
+`main` je chráněný rulesetem. Přímé produkční nasazení z `candidate` není povoleno.
+
+Aktualizace GHRAB AI Core se zakládají jako draft PR do `candidate`; po schválení pokračují stejnou Safe Promotion cestou.
 
 ## Vývoj
 
 ```bash
 npm ci
 npm test
-npm run test:headless
-npm run qa:technical
-npm run qa:security
-npm run qa:pwa
-npm run qa:critical
-npm run qa:combinatorial
-npm run qa:visual
-npm run qa:report
+npm run qa:p5:ci
+npm run garp25:prep-static
+npm run qa:safe-promotion
+npm run qa:auto-patch-topology
 ```
 
-Výstup pro GitHub Pages vznikne v `dist/`.
+Běžný build vzniká v `dist/`. Produkční GitHub Pages artefakt vzniká v `dist-pages/` a školní serverový profil v `dist-school-server/`; jde o generované výstupy a nepatří do zdrojového repozitáře.

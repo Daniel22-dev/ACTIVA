@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: candidate
           fetch-depth: 0
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -66,7 +67,7 @@ jobs:
       - name: Conformance and application release gate
         run: npm test
 
-      - name: Create review branch and draft pull request
+      - name: Create review branch and draft pull request into candidate
         env:
           GH_TOKEN: ${{ github.token }}
           CORE_VERSION: ${{ github.event.client_payload.coreVersion }}
@@ -84,6 +85,6 @@ jobs:
           git push --set-upstream origin "$branch"
           gh pr create --draft \
             --title "chore: sync GHRAB AI Core ${CORE_VERSION}" \
-            --body "Automaticky stažené artefakty prošly kontrolou důvěryhodné URL, SHA-256 a celou aplikační testovací sadou. Před sloučením zkontrolujte změny integrace." \
-            --base "${{ github.event.repository.default_branch }}" \
+            --body "Automaticky stažené artefakty prošly kontrolou důvěryhodné URL, SHA-256 a celou aplikační testovací sadou. PR míří do durable candidate; po schválení změnu převezme standardní Safe Promotion candidate -> P5 -> protected main." \
+            --base "candidate" \
             --head "$branch"
