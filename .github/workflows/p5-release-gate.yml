@@ -32,8 +32,10 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
-      - name: Run P5 R2 CI gate
+      - name: Run P5 R2 + cumulative GARP 2.7 CI gate
         run: npm run qa:p5:ci
+        env:
+          GARP27_EXTERNAL_TRUST_SHA256: 4c73cd41a7c8bc92f468762953bee554f53f1e90af467263fcb5e1a2415ab8ad
       - name: Set deterministic build time
         if: github.event_name != 'pull_request'
         shell: bash
@@ -41,9 +43,11 @@ jobs:
       - name: Build school-server SHIELD-PREP profile for full GARP gate
         if: github.event_name != 'pull_request'
         run: npm run build:school-server
-      - name: Run full GARP 2.5.1 pre-production release gate
+      - name: Run full GARP 2.7 foundation gate
         if: github.event_name != 'pull_request'
-        run: npm run garp25:prep-static
+        run: npm run qa:garp27:foundation
+        env:
+          GARP27_EXTERNAL_TRUST_SHA256: 4c73cd41a7c8bc92f468762953bee554f53f1e90af467263fcb5e1a2415ab8ad
       - name: Build and verify PREP exact release identity
         if: github.event_name != 'pull_request'
         env:

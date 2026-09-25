@@ -1,0 +1,79 @@
+{
+  "schema": "garp27-policy-v1",
+  "garpVersion": "2.7",
+  "appId": "activity-builder",
+  "appVersion": "0.5.28",
+  "identity": {
+    "standaloneProfile": "signed-permit access gate",
+    "schoolProfile": "server-session; deployment deferred",
+    "roles": [
+      "teacher"
+    ]
+  },
+  "requestApiAi": {
+    "registry": "src/ai-operations.json",
+    "registeredOperations": [
+      "activity-pack-generation"
+    ],
+    "agentic": false,
+    "modelPolicy": "GHRAB AI Core registered operation and bounded model profiles"
+  },
+  "egress": {
+    "standalone": [
+      "self",
+      "Google Gemini API through existing direct-gemini profile"
+    ],
+    "school": [
+      "self",
+      "school-gateway when future school profile is activated"
+    ],
+    "defaultDeny": true
+  },
+  "files": {
+    "currentBoundary": "browser-local imports/exports and existing document import validation",
+    "serverBoundary": "DEFERRED_BY_OWNER_DECISION",
+    "imports": [
+      "activa-project",
+      "activa-library",
+      "activa-material",
+      "activa-share",
+      "docx",
+      "pdf"
+    ]
+  },
+  "dataLifecycle": {
+    "classification": "potentially personal educational content and optional client-held provider credential in direct mode",
+    "storage": "localStorage/sessionStorage/IndexedDB according to src/config/data-manifest.json",
+    "deletion": "ACTIVA_END_WORK and suite-session lifecycle"
+  },
+  "release": {
+    "activeAuthority": "GARP-2.7",
+    "promotion": "Safe Promotion + verified GitHub Pages release identity",
+    "publicAssurance": "ghrab-release-integrity-v2; transitional unsigned",
+    "rollback": "stable patch-only auto-promotion in AI Studio"
+  },
+  "inventory": {
+    "source": "security/garp27/capability-inventory.json",
+    "architecturePolicy": "security/garp27/architecture-policy.json",
+    "changeRule": "new AI/provider/tool/server capability requires inventory and trust-anchor review"
+  },
+  "securityHealth": {
+    "localCi": [
+      "GARP 2.7 contracts",
+      "architecture-integrity",
+      "policy mutations",
+      "application mutations",
+      "legacy GARP 2.5.1 regressions"
+    ],
+    "live": "NOT_TESTED for school-server-dependent controls",
+    "failureMode": "fail closed for release claims"
+  },
+  "incident": {
+    "current": "existing ACTIVA error reporter, Safe Promotion and release evidence remain active",
+    "future": "school-server incident workflow deferred until server phase"
+  },
+  "recovery": {
+    "current": "verified release chain, cache versioning, rollback-capable storage migration and prior release history",
+    "future": "server restore/backup controls deferred until server phase"
+  }
+}

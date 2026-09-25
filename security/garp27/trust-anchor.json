@@ -1,0 +1,20 @@
+{
+  "schema": "garp27-app-trust-anchor-v1",
+  "garpVersion": "2.7",
+  "appId": "activity-builder",
+  "appVersion": "0.5.28",
+  "garp27VendorTreeSha256": "2c653aa771c16ce1b610492bf5bf9d57c37af4987c85109de6cbb7cf8aa9a2fb",
+  "garp27VendorFileCount": 64,
+  "garpPolicySha256": "989c23728bc38eb178391c53fe890e7420dd002dfc4686f7f0aa04e4818493c6",
+  "capabilityInventorySha256": "6757efc34668ab9d748d0b7c3bd1a169bf49d9df905d9a51b388ff1bab648d4e",
+  "architecturePolicySha256": "6b178397cf199c1bf7705306ce30757cb6f59e09f452351c430773bda6d2bf9b",
+  "adapterToolSha256s": {
+    "scripts/garp27/contract-gate.mjs": "bcebca1aab6188db6d1334a41df1dec90a44c4ed2de5c069ca702b174e03b891",
+    "scripts/garp27/architecture-integrity.mjs": "3e93312777e0d0999e4ab41666ee92e68afbf8af85e5aa04a63dd356bab01390",
+    "scripts/garp27/policy-admission-mutations.mjs": "d98da95266041554f3bdd6ed2659d61dfbba58af55244b598fb318cdf9d69bb1",
+    "scripts/garp27/mutation-tests.mjs": "65759ffcb1b881005c093e5ae003f45b08f770e6631ee8bc7a6dd723f93dbaa4",
+    "scripts/garp27/auto-patch-contract.mjs": "acadd8f4dd717245deb50273bded38ee30c9de1931bcd69d36365147cefa04ca",
+    "scripts/garp27/foundation-gate.mjs": "b32b4eee3d0e3d71c7fa4d58fe5579d9e31d53ab3e0080e3cd54ae10e9e525a7"
+  },
+  "purpose": "Pin the exact GARP 2.7 r2/G-02 reference package and ACTIVA adapter bytes. External CI must also pin this trust-anchor file."
+}

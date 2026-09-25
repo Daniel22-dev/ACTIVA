@@ -1,8 +1,8 @@
 # ACTIVA – Sestavovač aktivit
 
-**Aktuální verze:** 0.5.27  
+**Aktuální verze:** 0.5.28  
 **Platforma:** GHRAB Platform 1.1.2  
-**Release governance:** GARP 2.5.1 SHIELD-PREP · P5-R2 · Safe Promotion
+**Release governance:** GARP 2.7 r2 / G-02 (legacy GARP 2.5.1/N5 regression) · P5-R2 · Safe Promotion
 
 ACTIVA je redakční studio v ekosystému AI Studio GHRAB. Z učiva připraví tisknutelné pracovní listy, řešení, varianty A/B/C, tři úrovně diferenciace, skupinové sady, projekci bez telefonů a přenosné interaktivní HTML.
 
