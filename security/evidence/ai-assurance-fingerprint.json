@@ -1,22 +1,22 @@
 {
   "schema": "ghrab-ai-assurance-fingerprint-v2",
   "appId": "activity-builder",
-  "appVersion": "0.5.27",
+  "appVersion": "0.5.28",
   "coreVersion": "1.0.0",
   "algorithm": "SHA-256",
-  "aggregate": "25e544205ee56d51ace0a78786371863adf323d907ee0107eaa33e4e80a37b31",
+  "aggregate": "1dd403b4b8895b25a64cce8ee512c3f56c89fe87c80362c43e866a2c7f2f3977",
   "inventory": "security/ai-boundary-files.json",
   "providerBoundary": "deployment-profile-and-egress-controlled",
   "files": [
     {
       "path": "APP-activity-builder-GARP.txt",
-      "size": 6822,
-      "sha256": "15348206d93b6c07734423737425b9d46fa27cae8b3dac83e25c07c4fe1ee8fb"
+      "size": 6901,
+      "sha256": "8ea507535d19cc4acda279156c948ec77edf0c334da438ad512a4f9729969826"
     },
     {
       "path": "CHANGELOG.md",
-      "size": 11944,
-      "sha256": "46fa19b53e697f86612c76e5f0ad4d86d5a8d687dd541ba2190060fef80345ff"
+      "size": 12604,
+      "sha256": "e02072113fc45532057f0d3cd1bcbd02540404ff0dd6c351f38fc63fdd3d75a0"
     },
     {
       "path": "RELEASE-NOTES-0.5.15.md",
@@ -39,9 +39,39 @@
       "sha256": "6b3fad7ac1a167a892091527956a6b481ced332c7edb63ae90f1439579bad702"
     },
     {
+      "path": "scripts/garp27/architecture-integrity.mjs",
+      "size": 5590,
+      "sha256": "3e93312777e0d0999e4ab41666ee92e68afbf8af85e5aa04a63dd356bab01390"
+    },
+    {
+      "path": "scripts/garp27/auto-patch-contract.mjs",
+      "size": 1092,
+      "sha256": "acadd8f4dd717245deb50273bded38ee30c9de1931bcd69d36365147cefa04ca"
+    },
+    {
+      "path": "scripts/garp27/contract-gate.mjs",
+      "size": 1541,
+      "sha256": "bcebca1aab6188db6d1334a41df1dec90a44c4ed2de5c069ca702b174e03b891"
+    },
+    {
+      "path": "scripts/garp27/foundation-gate.mjs",
+      "size": 1784,
+      "sha256": "b32b4eee3d0e3d71c7fa4d58fe5579d9e31d53ab3e0080e3cd54ae10e9e525a7"
+    },
+    {
+      "path": "scripts/garp27/mutation-tests.mjs",
+      "size": 2814,
+      "sha256": "65759ffcb1b881005c093e5ae003f45b08f770e6631ee8bc7a6dd723f93dbaa4"
+    },
+    {
+      "path": "scripts/garp27/policy-admission-mutations.mjs",
+      "size": 1805,
+      "sha256": "d98da95266041554f3bdd6ed2659d61dfbba58af55244b598fb318cdf9d69bb1"
+    },
+    {
       "path": "scripts/qa-garp-properties.mjs",
       "size": 34011,
-      "sha256": "ea3adcfafc200e359feef315fefc5bb52a1841935c07bd6a3006dfd89f180e9b"
+      "sha256": "6ed5fe676fe9288f04220cfeb7d7d7df6b0f8bbfd11e634a0aff69d6c83429dc"
     },
     {
       "path": "scripts/qa-garp-security.mjs",
@@ -51,7 +81,7 @@
     {
       "path": "scripts/qa-garp25-ai-resource.mjs",
       "size": 2213,
-      "sha256": "4d7a7e75ef850619d02f06446c40c67c3b55baadc46af7a76f2de7837cc73787"
+      "sha256": "8d7edd94a09a84e0ed1f5c1b7b777b04368f33b84211415626f415aca6fa5a98"
     },
     {
       "path": "security/garp25/tools/selftest-garp251.mjs",
@@ -62,6 +92,31 @@
       "path": "security/garp25/tools/verify-ai-assurance-fingerprint.mjs",
       "size": 6912,
       "sha256": "3b987de0f946704b43a907d215ebc6c691b7c137eee2ba057d09c70ac6d303e3"
+    },
+    {
+      "path": "security/garp27/application-migration-profile.json",
+      "size": 1587,
+      "sha256": "07d6b57bdc47f8c6105398746a4f6a252fbf1aa47363e2f7526af04971e95f6c"
+    },
+    {
+      "path": "security/garp27/architecture-policy.json",
+      "size": 1181,
+      "sha256": "6b178397cf199c1bf7705306ce30757cb6f59e09f452351c430773bda6d2bf9b"
+    },
+    {
+      "path": "security/garp27/capability-inventory.json",
+      "size": 773,
+      "sha256": "6757efc34668ab9d748d0b7c3bd1a169bf49d9df905d9a51b388ff1bab648d4e"
+    },
+    {
+      "path": "security/garp27/garp-policy.json",
+      "size": 2661,
+      "sha256": "989c23728bc38eb178391c53fe890e7420dd002dfc4686f7f0aa04e4818493c6"
+    },
+    {
+      "path": "security/garp27/live-status.json",
+      "size": 243,
+      "sha256": "75daab25853645d5f3e1c7236f721a43619b5ac6a7fbba18e2fc36dfd3b91f56"
     },
     {
       "path": "src/access/deployment-config.js",
@@ -76,12 +131,12 @@
     {
       "path": "src/ai-operations.json",
       "size": 638,
-      "sha256": "f3638f2419a7236a92138279b0dc092d11c9bf8c24553a4967f8c77991194e1f"
+      "sha256": "dcd5a29df85bde20e8063d9c66099e8f15fc722dba983d919ee52fcffd054b8c"
     },
     {
       "path": "src/config/data-manifest.json",
       "size": 6778,
-      "sha256": "5551dcdd28acf0485efb988ea040a617fa4d6b418452d9ead9f85a1b8d0a1c1d"
+      "sha256": "db5ff2bc9bef40d91929a24044282c297bee8f9daf4671ef7abd528d941892eb"
     },
     {
       "path": "src/config/deployment.json",
@@ -106,12 +161,12 @@
     {
       "path": "src/config/release-acceptance.json",
       "size": 1271,
-      "sha256": "4b6f4cd040ba595d69b027334de2142a37d55f0d004ccb4b6de5f68e153a617b"
+      "sha256": "7575968cc601b700c0b84e674f87078d8c256f2ce59704dfefd9fdc3d94c10eb"
     },
     {
       "path": "src/config/security-headers.json",
       "size": 1826,
-      "sha256": "43b0ef1a12b5f368179b0b242bdf423f4d3cbad425d4813423b5b8ff0b98fc61"
+      "sha256": "77f4764221ae8a9d0a8e1ad1a46f8593e29db5d87ca75bcf7672adb59445c34d"
     },
     {
       "path": "src/js/10-core.js",
@@ -186,7 +241,7 @@
     {
       "path": "src/styles.css",
       "size": 78145,
-      "sha256": "a174f0edfcee57936080b1a5c2b7426e9393fe896ea51ff1bf7b27e3e4e36803"
+      "sha256": "f7355a4fb9a51ebe5797bf1a7516fa9f0c3eee595f3f0187cb5c274c83150363"
     },
     {
       "path": "vendor/ghrab-ai-core-1.0.0/ghrab-ai-conformance-1.0.0.js",
