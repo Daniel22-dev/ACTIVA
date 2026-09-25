@@ -1,0 +1,61 @@
+{
+  "classification": "GARP27_FOUNDATION_GATE",
+  "garpVersion": "2.7",
+  "appId": "activity-builder",
+  "appVersion": "0.5.28",
+  "status": "FOUNDATION_PASS_LIVE_NOT_TESTED",
+  "serverPhase": "DEFERRED_BY_OWNER_DECISION",
+  "liveStatus": "NOT_TESTED",
+  "steps": [
+    {
+      "id": "build-pages",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "build-school",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "contracts",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "architecture",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "policy-mutations",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "mutations",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "auto-patch",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "legacy-garp25",
+      "actualExit": 0,
+      "pass": true
+    },
+    {
+      "id": "platform",
+      "actualExit": 0,
+      "pass": true
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0
+  }
+}
