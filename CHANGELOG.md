@@ -1,5 +1,15 @@
 ## 0.5.27 — 2026-09-12
 
+
+## 0.5.28 – migrace na GARP 2.7 r2 / G-02 (2026-09-25)
+
+- Aktivní bezpečnostní autorita přechází na **GARP 2.7 r2 / G-02**; GARP 2.5.1/N5 zůstává povinnou regresní vrstvou.
+- Přidán aplikační GARP 2.7 adaptér: policy, capability inventory, migration profile, trust anchor a contract/architecture/mutation/auto-patch/foundation gates.
+- Normativní 64souborový GARP master je vendorizován beze změny.
+- Produkční artifact hygiene se ověřuje proti skutečnému `dist-pages`.
+- školní server zůstává `DEFERRED_BY_OWNER_DECISION`; LIVE stav je `NOT_TESTED`.
+- Pedagogická logika, 39 typů aktivit, AI workflow a UI nebyly měněny.
+
 - Tooling-only opravné kolo po nezávislém auditu 0.5.26: ACT-N16 a ACT-N17.
 - SW checker zachovává identitu Cache Storage i přes `self` a zachytí dynamický i `Reflect` přístup.
 - Network-failure scénář odmítá vyrobenou úspěšnou odpověď; fail-closed vyžaduje chybu/rejection nebo explicitně neúspěšnou odpověď.
@@ -62,8 +72,8 @@
 - Zúžena číselná privacy heuristika tak, aby legitimní matematické/fyzikální hodnoty nebyly blokovány bez PII kontextu; přidána pozitivní i negativní regresní sada.
 - Property evidence je svázána s verzí a SHA-256 tree snapshotem relevantních zdrojů/build artefaktů; samostatný běh security gate odmítne stale report.
 - Ukončení práce nyní validuje sdílené handoff/event záznamy před první mutací a u poškozených dat selže atomicky a fail-closed.
-- Diagnostická redakce sjednocena s novými kontextovými numerickými pravidly.
-- Performance budget vědomě upraven na distBytes 855000 / precacheBytes 765000 kvůli explicitně přidanému security/evidence kódu a minimální rezervě 0.5.17.
+- Diagnostická redakce sjednocena s novými contextovými numerickými pravidly.
+- Performance budget vědomě upraven na distBytes 855000 / precacheBytes 765000 kvůli explicitně přidanému security/evidence kódu a miniiální rezervě 0.5.17.
 
 ## 0.5.17
 
@@ -115,7 +125,7 @@
 - Reportér používá dvoukrokové vytvoření a skutečné stažení diagnostického ZIPu; Gmail je dostupný až po kliknutí na stažení.
 - Rozhraní i e-mail vyžadují ruční přiložení ZIPu a pomocné video je bezpečně skryté uvnitř reportéru i při scrollování.
 - Regresní sada fyzicky ověřuje stažený ZIP, jeho snímky a diagnostiku, jednu instanci reportéru, motivy, mobilní zobrazení a klávesnici.
-- Úplný manuál je na úzkých displejích omezen na šířku viewportu; vodorovná navigace zůstává posuvná bez přetečení stránky.
+- Úplný manuál je na úzkých displejích omezen na šířku viewportu; vodorová navigace zůstává posuvná bez pořetečení stránky.
 - Tvorba aktivit ani uložené materiály nebyly změněny; PWA cache je `ghrab-activity-builder-v0.5.10`.
 
 ## 0.5.9 — P5 (2026-08-05)

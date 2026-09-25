@@ -1,0 +1,48 @@
+name: GARP 2.7 evidence sync
+
+on:
+  push:
+    branches: [candidate]
+
+permissions:
+  contents: write
+
+jobs:
+  sync-evidence:
+    if: ${{ !contains(github.event.head_commit.message, '[evidence-sync]') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: candidate
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22.16.0
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+      - name: Build school profile required by deployment SBOM
+        run: npm run build:school-server
+      - name: Regenerate deterministic GARP evidence
+        run: |
+          npm run garp25:sbom
+          npm run garp25:sbom:deploy
+          npm run garp25:ai-evidence
+          npm run garp25:sbom:check
+          npm run garp25:sbom:deploy:check
+          npm run garp25:ai-evidence:check
+          npm run garp25:ai-evidence:verify
+      - name: Commit generated evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add security/evidence/ai-assurance-fingerprint.json security/sbom/activa-0.5.28.cdx.json security/sbom/activa-0.5.28-deployment.cdx.json
+          if git diff --cached --quiet; then
+            echo "Evidence already current."
+            exit 0
+          fi
+          git commit -m "evidence: sync ACTIVA 0.5.28 GARP 2.7 [evidence-sync]"
+          git push origin HEAD:candidate

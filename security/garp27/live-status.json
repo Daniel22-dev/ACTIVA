@@ -1,0 +1,9 @@
+{
+  "schema": "garp27-live-status-v1",
+  "garpVersion": "2.7",
+  "appId": "activity-builder",
+  "appVersion": "0.5.28",
+  "status": "NOT_TESTED",
+  "reason": "SCHOOL_SERVER_PHASE_DEFERRED_BY_OWNER_DECISION",
+  "environment": "school-server"
+}

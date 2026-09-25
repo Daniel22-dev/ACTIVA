@@ -79,7 +79,7 @@ runNode('security/garp25/tools/create-build-provenance.mjs', [studioManifestPath
   GHRAB_BUILD_STARTED_AT: process.env.GITHUB_RUN_STARTED_AT || createdAt,
   GHRAB_BUILD_FINISHED_AT: createdAt,
   GHRAB_LOCKFILE: path.join(root, 'package-lock.json'),
-  GHRAB_BUILD_PROFILE: 'GARP-2.5.1-SHIELD-PREP/P5-R2',
+  GHRAB_BUILD_PROFILE: 'GARP-2.7/P5-R2',
 });
 
 const sbomSha256 = sha256(sbomPath);
@@ -97,10 +97,10 @@ runNode('security/garp25/tools/create-release-integrity.mjs', [dist, appId, vers
 
 const integrity = JSON.parse(await fsp.readFile(integrityPath, 'utf8'));
 Object.assign(integrity, {
-  assuranceMode: 'TRANSITIONAL', releaseStage, status: 'GREEN', environment: 'github-pages', garpProfile: 'GARP-2.5.1-SHIELD-PREP', gate: 'P5-R2',
+  assuranceMode: 'TRANSITIONAL', releaseStage, status: 'GREEN', environment: 'github-pages', garpProfile: 'GARP-2.7', gate: 'P5-R2',
   manifestSha256, sbomSha256, buildProvenanceSha256: provenanceSha256, evidenceManifestSha256: evidenceSha256,
   buildRun: { provider: process.env.GITHUB_ACTIONS === 'true' ? 'github-actions' : 'local', repository, workflowRef, runId: String(runId), runAttempt: String(runAttempt), sourceCommit: source },
-  tooling: { garp: '2.5.1', platform: '1.1.2', node: process.version },
+  tooling: { garp: '2.7', legacyGarp: '2.5.1', platform: '1.1.2', node: process.version },
   signature: { algorithm: 'Ed25519', keyId: 'TRANSITIONAL-UNSIGNED', status: 'NOT_PRESENT', note: 'TRANSITIONAL: exact release identity is machine-verified, but no production signing key is asserted for this GitHub Pages release.' },
 });
 await fsp.writeFile(integrityPath, `${JSON.stringify(integrity, null, 2)}\n`, 'utf8');

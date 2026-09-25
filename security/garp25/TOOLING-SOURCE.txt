@@ -1,4 +1,4 @@
-ACTIVA 0.5.27 GARP 2.5.1 TOOLING SOURCE
+ACTIVA 0.5.28 GARP 2.5.1 TOOLING SOURCE
 Date: 2026-09-12
 
 Canonical package for this corrective round:

@@ -1,0 +1,31 @@
+{
+  "schema": "garp27-app-capability-inventory-v1",
+  "garpVersion": "2.7",
+  "appId": "activity-builder",
+  "appVersion": "0.5.28",
+  "aiOperations": [
+    "activity-pack-generation"
+  ],
+  "providerTools": [],
+  "agentic": false,
+  "agenticProfile": "NO",
+  "autonomousToolCapabilities": [],
+  "dataClass": "D2-POTENTIALLY-PERSONAL-EDUCATIONAL-CONTENT",
+  "localProviderCredential": true,
+  "schoolProviderCredential": false,
+  "egressProfiles": [
+    "direct-gemini",
+    "school-gateway"
+  ],
+  "fileCapabilities": [
+    "json-import-export",
+    "docx-import",
+    "pdf-import",
+    "html-export",
+    "pdf-export",
+    "docx-export"
+  ],
+  "releaseIdentity": "ghrab-release-integrity-v2",
+  "studioBridge": "v2",
+  "schoolServerPhase": "DEFERRED_BY_OWNER_DECISION"
+}
