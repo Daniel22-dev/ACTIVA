@@ -1,5 +1,10 @@
-## 0.5.27 — 2026-09-12
+## 0.5.29 — 2026-09-27
 
+- Přidána sjednocená záložka **O aplikaci** podle společného vzoru AI Studia a ostatních aplikací.
+- Karta obsahuje identitu a určení ACTIVA, autora a vývojového garanta, školní projekt, technický stav, architekturu, stav GARP a provozní zásady.
+- Uživatelsky důležité změny jsou nově dostupné v rozbalovacím **Katalogu změn** přímo v kartě O aplikaci.
+- Navigace si při otevření karty pamatuje poslední pracovní krok a tlačítko „Zpět k práci“ vrátí uživatele bez zásahu do rozpracovaného materiálu.
+- Pedagogická logika, generování aktivit, datový model i AI transport zůstávají beze změny.
 
 ## 0.5.28 – migrace na GARP 2.7 r2 / G-02 (2026-09-25)
 
@@ -9,6 +14,8 @@
 - Produkční artifact hygiene se ověřuje proti skutečnému `dist-pages`.
 - školní server zůstává `DEFERRED_BY_OWNER_DECISION`; LIVE stav je `NOT_TESTED`.
 - Pedagogická logika, 39 typů aktivit, AI workflow a UI nebyly měněny.
+
+## 0.5.27 — 2026-09-12
 
 - Tooling-only opravné kolo po nezávislém auditu 0.5.26: ACT-N16 a ACT-N17.
 - SW checker zachovává identitu Cache Storage i přes `self` a zachytí dynamický i `Reflect` přístup.

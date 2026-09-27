@@ -6,14 +6,14 @@ GARP 2.7 r2 / G-02 GHRAB - PRUVODNI LIST APLIKACE
 appId:                    activity-builder
 Nazev:                    ACTIVA / Sestavovac aktivit
 Repozitar:                daniel22-dev/ACTIVA
-Aktualni verze:           0.5.28
+Aktualni verze:           0.5.29
 Verze standardu:          GARP 2.7 r2 / G-02 GHRAB
 SHA-256 SHA256SUMS balicku, podle ktereho se audituje:
                           1e5afe87f264dd020f853be27422cbe621ec48e9aa7d3b5ccbb2d700e82d8bbd
 Aktivni autorita:         GARP 2.7 r2 / G-02
 Legacy regrese:            GARP 2.5.1 / N5 / P5-R2
 LIVE stav:                 NOT_TESTED / DEFERRED_BY_OWNER_DECISION
-Poznamka:                  migrace 0.5.28 nemeni pedagogicke workflow ani AI operaci;
+Poznamka:                  patch 0.5.29 sjednocuje kartu O aplikaci; pedagogicke workflow ani AI operace se nemeni;
                           meni security/governance baseline a release gates.
 
 ======================================================================

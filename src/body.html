@@ -32,6 +32,7 @@
 <button class="flow-step" data-step="activities" type="button"><span>02</span><b>Typy aktivit</b><small>Vyberte skladbu listu</small></button>
 <button class="flow-step" data-step="generate" type="button"><span>03</span><b>Generování</b><small>AI nebo místní návrh</small></button>
 <button class="flow-step" data-step="editor" type="button"><span>04</span><b>Editor a PDF</b><small>Kontrola, úpravy, tisk</small></button>
+<button class="flow-step flow-step-about" data-step="about" type="button"><span>ⓘ</span><b>O aplikaci</b><small>Identita a změny</small></button>
 </nav>
 <div class="sidebar-note">
 <b>Bez mobilů ve třídě</b>
@@ -162,6 +163,48 @@
 <div class="diff-audit-card" id="diffAuditCard"><div><span class="mini-label">SROVNATELNOST ÚROVNÍ</span><b id="diffAuditTitle">Kontrola připravena</b><small id="diffAuditText">Podpora, standard a výzva používají stejné jádro učiva.</small></div><button id="openDiffAuditBtn" type="button">Detail</button></div>
 </aside>
 </div>
+</section>
+<section class="screen about-screen" id="screen-about" data-screen="about">
+<div class="screen-heading about-heading">
+<div><span class="kicker">IDENTITA A PROJEKT</span><h2>O aplikaci</h2><p>Účel, odpovědnost, technický stav, provozní zásady a změny ACTIVA.</p></div>
+<div class="about-heading-actions"><span class="about-version-badge">v__APP_VERSION__</span><button class="secondary-action compact" id="aboutBackBtn" type="button">← Zpět k práci</button></div>
+</div>
+<div class="about-layout">
+<article class="premium-card about-brand-card"><span class="activa-mark about-mark" aria-hidden="true"><i>A</i><b></b></span><span class="about-wordmark">ACTIVA</span><h3>Redakční studio výukových materiálů</h3><p>Tvorba tisknutelných, projekčních a sdílených výukových aktivit od zdrojového textu přes diferenciaci až po učitelskou kontrolu a export.</p></article>
+<div class="about-facts-grid">
+<article class="about-fact-card"><span>AUTOR A VÝVOJOVÝ GARANT</span><h3>Daniel Baláž</h3><p>Koncepce, návrh funkcí, metodické vedení a vývoj aplikace.</p></article>
+<article class="about-fact-card"><span>ŠKOLNÍ PROJEKT</span><h3>Gymnázium, Ostrava-Hrabůvka</h3><p>Interní nástroj AI Studia GHRAB pro přípravu a zpracování výukových materiálů.</p></article>
+<article class="about-fact-card"><span>PŘÍSTUP A URČENÍ</span><h3>Pro učitele s přístupem z AI Studia</h3><p>Autorský nástroj pro přípravu materiálů. Nenahrazuje školní informační systém ani konečné odborné posouzení učitele.</p></article>
+<article class="about-fact-card"><span>TECHNICKÝ STAV</span><h3>v__APP_VERSION__ · PWA</h3><p>Aktuální vydání: 27. 9. 2026. Serverové funkce a interní QA se evidují odděleně.</p></article>
+<article class="about-fact-card"><span>ARCHITEKTURA</span><h3>Serverless · Platform 1.1.2</h3><p>GHRAB Platform 1.1.2 · GHRAB AI Core 1.0.0 · lokální pracovní data s řízeným AI transportem.</p></article>
+<article class="about-fact-card"><span>GARP STAV</span><h3>GARP 2.7 r2 / G-02</h3><p>Aktivní bezpečnostní autorita; GARP 2.5.1/N5 zůstává regresní vrstvou. Školní server: DEFERRED / NOT_TESTED.</p></article>
+</div>
+</div>
+<section class="about-principles" aria-labelledby="aboutPrinciplesTitle">
+<div class="about-section-title"><span>PROVOZNÍ ZÁSADY</span><h3 id="aboutPrinciplesTitle">Co je dobré vědět</h3></div>
+<div class="about-principles-grid">
+<article class="about-principle-card"><span>01</span><h4>Local-first a řízený AI přenos</h4><p>Rozpracovaný projekt a knihovna zůstávají v prohlížeči. Do AI se obsah odesílá až při výslovném generování a po kontrole soukromí; místní návrh nic do AI neposílá.</p></article>
+<article class="about-principle-card"><span>02</span><h4>Učitelská kontrola</h4><p>AI výstup je pracovní návrh. Zdroj, soukromí, zadání i řešení zůstávají před finálním tiskem a exportem pod kontrolou učitele.</p></article>
+</div>
+</section>
+<section class="about-changelog-section" aria-labelledby="aboutChangelogTitle">
+<details id="changelog" class="about-changelog">
+<summary><div><span>HISTORIE VYDÁNÍ</span><strong id="aboutChangelogTitle">Katalog změn</strong><small>Rozbalte poslední důležité změny ACTIVA.</small></div><b class="about-changelog-toggle" aria-hidden="true">＋</b></summary>
+<div class="about-changelog-body"><div class="about-changelog-list">
+<article class="about-changelog-entry current"><header><b>0.5.29</b><span>27. 9. 2026</span></header><h4>Sjednocená karta O aplikaci</h4><p>Přidána společná identita aplikace, určení, technický stav, provozní zásady a sbalený katalog změn.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.28</b><span>25. 9. 2026</span></header><h4>GARP 2.7 r2 / G-02</h4><p>Bezpečnostní a governance migrace na aktivní GARP 2.7 při zachování GARP 2.5.1/N5 jako regresní vrstvy.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.27</b><span>12. 9. 2026</span></header><h4>Uzavření GARP tooling kontrol</h4><p>Zpřesněny service-worker a fail-closed kontroly ACT-N16/N17 bez změny pedagogické a AI logiky.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.26</b><span>12. 9. 2026</span></header><h4>Denial UX a evidence hardening</h4><p>Sjednocen fail-closed přístup, zpřesněna kontrola service workeru a rozšířen rozsah bezpečnostní evidence.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.25</b><span>12. 9. 2026</span></header><h4>GARP 2.5.1 SHIELD corrective tooling</h4><p>Zpřísněny kontroly síťového provozu, AI boundary driftu, hygieny Pages artefaktu a bezpečnostních workflow.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.22</b><span>září 2026</span></header><h4>Platform 1.1.2 suite-session fix</h4><p>Opraven browser QA delayed-replay scénář bez změny produkčního suite-session lifecycle.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.21</b><span>září 2026</span></header><h4>GHRAB Platform 1.1.2</h4><p>ACTIVA přešla na referenční Platform 1.1.2 se suite-session lifecycle, cleanupem a cross-context koordinací.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.19</b><span>3. 9. 2026</span></header><h4>Privacy a retention regrese</h4><p>Zpřesněno rozlišení PII, diagnostická redakce a bezpečné ukončení práce.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.18</b><span>2. 9. 2026</span></header><h4>Privacy availability a evidence</h4><p>Zúžena numerická privacy heuristika a evidence byla svázána s verzí a SHA-256 snapshotem zdrojů.</p></article>
+<article class="about-changelog-entry"><header><b>0.5.15</b><span>31. 8. 2026</span></header><h4>AI Core server-ready metadata</h4><p>Srovnáno metadata AI Core se skutečným technickým stavem; školní server zůstal odděleně nepřipojený.</p></article>
+</div></div>
+</details>
+</section>
+<footer class="about-footer"><img src="./assets/brand/school-logo.png" alt=""><p><b>Autor a vývojový garant: Daniel Baláž</b><br>Školní projekt Gymnázia, Ostrava-Hrabůvka · Součást AI Studia GHRAB</p><span>© 2026</span></footer>
 </section>
 </section>
 </main>

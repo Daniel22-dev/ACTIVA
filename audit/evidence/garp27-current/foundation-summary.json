@@ -2,7 +2,7 @@
   "classification": "GARP27_FOUNDATION_GATE",
   "garpVersion": "2.7",
   "appId": "activity-builder",
-  "appVersion": "0.5.28",
+  "appVersion": "0.5.29",
   "status": "FOUNDATION_PASS_LIVE_NOT_TESTED",
   "serverPhase": "DEFERRED_BY_OWNER_DECISION",
   "liveStatus": "NOT_TESTED",

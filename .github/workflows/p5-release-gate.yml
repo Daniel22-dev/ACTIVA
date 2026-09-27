@@ -35,7 +35,7 @@ jobs:
       - name: Run P5 R2 + cumulative GARP 2.7 CI gate
         run: npm run qa:p5:ci
         env:
-          GARP27_EXTERNAL_TRUST_SHA256: 4c73cd41a7c8bc92f468762953bee554f53f1e90af467263fcb5e1a2415ab8ad
+          GARP27_EXTERNAL_TRUST_SHA256: b5823f1bf54a5a797d31fbfa01acb41cc2454a20d368b2ea7fc9629b2616aee9
       - name: Set deterministic build time
         if: github.event_name != 'pull_request'
         shell: bash
@@ -47,7 +47,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: npm run qa:garp27:foundation
         env:
-          GARP27_EXTERNAL_TRUST_SHA256: 4c73cd41a7c8bc92f468762953bee554f53f1e90af467263fcb5e1a2415ab8ad
+          GARP27_EXTERNAL_TRUST_SHA256: b5823f1bf54a5a797d31fbfa01acb41cc2454a20d368b2ea7fc9629b2616aee9
       - name: Build and verify PREP exact release identity
         if: github.event_name != 'pull_request'
         env:
