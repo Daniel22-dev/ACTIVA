@@ -33,6 +33,11 @@ try {
 
   const context = await browser.newContext({
     viewport: { width: 1366, height: 768 },
+    // This QA harness stubs the central AI Studio guard with Playwright routes.
+    // A root-scoped test service worker would otherwise intercept that synthetic
+    // /AI-Studio-GHRAB/ request before Playwright can fulfil it. PWA behaviour
+    // is covered separately by qa:pwa / platform conformance.
+    serviceWorkers: "block",
   });
   const page = await context.newPage();
   const errors = [];
