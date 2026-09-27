@@ -1,4 +1,4 @@
-# ACTIVA 0.5.29 – architektura
+# ACTIVA 0.5.30 – architektura
 
 ARCHITEKTURA: SERVERLESS
 

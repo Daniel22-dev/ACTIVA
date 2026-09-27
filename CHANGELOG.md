@@ -1,3 +1,11 @@
+## 0.5.30 — 2026-09-27
+
+- Opravena registrace PWA service workeru po asynchronním odemčení aplikace přístupovou bránou.
+- ACTIVA už nečeká na událost `window.load`, která mohla před spuštěním chráněného skriptu dávno proběhnout; service worker se registruje okamžitě stejně jako v ostatních aplikacích.
+- Tím se obnovuje standardní GHRAB update UX: při čekající nové verzi se zobrazí okno **Je dostupná nová verze** s tlačítky **Aktualizovat / Později**.
+- Doplněn regresní test, který zakazuje návrat k opožděné registraci přes `window.load`.
+- Pedagogická logika, generování aktivit, datový model a AI transport zůstávají beze změny.
+
 ## 0.5.29 — 2026-09-27
 
 - Přidána sjednocená záložka **O aplikaci** podle společného vzoru AI Studia a ostatních aplikací.
