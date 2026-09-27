@@ -2,7 +2,7 @@
   "schema": "garp27-policy-v1",
   "garpVersion": "2.7",
   "appId": "activity-builder",
-  "appVersion": "0.5.28",
+  "appVersion": "0.5.29",
   "identity": {
     "standaloneProfile": "signed-permit access gate",
     "schoolProfile": "server-session; deployment deferred",

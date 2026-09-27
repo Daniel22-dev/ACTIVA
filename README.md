@@ -1,6 +1,6 @@
 # ACTIVA – Sestavovač aktivit
 
-**Aktuální verze:** 0.5.28  
+**Aktuální verze:** 0.5.29  
 **Platforma:** GHRAB Platform 1.1.2  
 **Release governance:** GARP 2.7 r2 / G-02 (legacy GARP 2.5.1/N5 regression) · P5-R2 · Safe Promotion
 
