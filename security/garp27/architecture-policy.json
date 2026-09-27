@@ -2,7 +2,7 @@
   "schema": "garp27-architecture-policy-v1",
   "garpVersion": "2.7",
   "appId": "activity-builder",
-  "appVersion": "0.5.29",
+  "appVersion": "0.5.30",
   "singleAuthority": "GARP-2.7",
   "requiredFiles": [
     "package.json",

@@ -74,7 +74,7 @@ jobs:
       - name: Enforce P5 R2 + cumulative GARP 2.7 release gate
         run: npm run qa:p5:ci
         env:
-          GARP27_EXTERNAL_TRUST_SHA256: b5823f1bf54a5a797d31fbfa01acb41cc2454a20d368b2ea7fc9629b2616aee9
+          GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
       - name: Set deterministic build time
         shell: bash
         run: echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
@@ -83,7 +83,7 @@ jobs:
       - name: Enforce cumulative GARP 2.7 foundation and legacy regressions
         run: npm run qa:garp27:foundation
         env:
-          GARP27_EXTERNAL_TRUST_SHA256: b5823f1bf54a5a797d31fbfa01acb41cc2454a20d368b2ea7fc9629b2616aee9
+          GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
       - name: Verify AI Studio dispatch credential
         shell: bash
         env:
