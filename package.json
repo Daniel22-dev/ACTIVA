@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node scripts/test.mjs && node scripts/package3-test.mjs && node scripts/package4-test.mjs && node scripts/package5-test.mjs && npm run build && npm run qa:garp",
+    "test": "node scripts/test.mjs && node scripts/package3-test.mjs && node scripts/package4-test.mjs && node scripts/package5-test.mjs && npm run build && npm run qa:garp && npm run test:manual-pdf:structure",
     "test:headless": "node scripts/headless-check.mjs",
     "qa:technical": "node scripts/qa-technical.mjs",
     "qa:security": "node scripts/qa-security.mjs",
@@ -85,7 +85,8 @@
     "qa:garp27:auto-patch": "node scripts/garp27/auto-patch-contract.mjs",
     "qa:garp27:static": "npm run build:pages && npm run qa:garp27:contracts && npm run qa:garp27:architecture && npm run qa:garp27:policy-mutations && npm run qa:garp27:mutations && npm run qa:garp27:auto-patch",
     "qa:garp27": "npm run qa:garp27:static && npm run garp25:prep-static",
-    "qa:garp27:foundation": "node scripts/garp27/foundation-gate.mjs"
+    "qa:garp27:foundation": "node scripts/garp27/foundation-gate.mjs",
+    "test:manual-pdf:structure": "node scripts/qa-manual-pdf-structure.mjs"
   },
   "engines": {
     "node": ">=18"
