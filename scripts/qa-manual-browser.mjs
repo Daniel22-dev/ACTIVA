@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { readFile, mkdir } from 'node:fs/promises';
+import { readFile, mkdir, copyFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
@@ -28,6 +29,11 @@ const server=createServer(async(req,res)=>{
     if(url.pathname==='/access/qa-guard.js'){
       res.writeHead(200,{'Content-Type':'text/javascript;charset=utf-8'});
       res.end('export async function protectApp(){return true}');
+      return;
+    }
+    if(url.pathname==='/manualy/pdf-export.js'){
+      res.writeHead(200,{'Content-Type':'text/javascript;charset=utf-8'});
+      res.end(await readFile(path.join(out,'shared-pdf-export.js')));
       return;
     }
     let rel=decodeURIComponent(url.pathname).replace(/^\/+/, '');
@@ -59,6 +65,33 @@ try{
     return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);
   });
   assert(contrast>=4.5,'Return button contrast too low: '+contrast);
+  // Real protected manual content, exported only inside isolated CI test.
+  // User-facing PDF remains hidden until a factual editorial sign-off.
+  const downloadPromise=page.waitForEvent('download',{timeout:120000});
+  const pdfResult=await page.evaluate(async()=>{
+    const {downloadManualPdf}=await import('/manualy/pdf-export.js');
+    return await downloadManualPdf(document,{
+      title:document.title,
+      filename:'manual-ci-evidence.pdf',
+      extras:Array.isArray(window.GHRAB_MANUAL_EXPORT)?window.GHRAB_MANUAL_EXPORT:[]
+    });
+  });
+  const downloaded=await downloadPromise;
+  const pdfFile=await downloaded.path();
+  const pdfBuffer=await readFile(pdfFile);
+  assert.equal(pdfBuffer.toString('latin1',0,8),'%PDF-1.4','PDF header signature');
+  const actualPdf=path.join(out,appName+'-real-content.pdf');
+  await copyFile(pdfFile,actualPdf);
+  const pdfText=execFileSync('pdftotext',['-layout',actualPdf,'-'],{encoding:'utf8',timeout:40000});
+  const required=appName==='SORTIO'
+    ? ['První hodina ve čtyřech krocích','Importujte třídu','Zkontrolujte jména','Označte docházku','Spusťte aktivitu']
+    : ['Od učiva k profesionálnímu materiálu','Vložte učivo','Vyberte formáty','Vytvořte návrh','Zkontrolujte obsah','Vytiskněte nebo promítněte','Uložte a sdílejte'];
+  for(const phrase of required)
+    assert(pdfText.includes(phrase),'Real manual PDF omitted: '+phrase);
+  assert(!pdfText.includes('Ověřuji přístup k manuálu'),
+    'Access-gate placeholder exported instead of manual');
+  execFileSync('pdftoppm',['-f','1','-l','1','-r','130','-png','-singlefile',actualPdf,
+    path.join(out,appName+'-pdf-page1')],{timeout:40000});
   await page.screenshot({path:path.join(out,appName+'-dark.png')});
   const themeSelector=await page.locator('#themeBtn,#manual-theme').count();
   if(themeSelector){await page.locator('#themeBtn,#manual-theme').first().click();await page.screenshot({path:path.join(out,appName+'-light.png')});}
