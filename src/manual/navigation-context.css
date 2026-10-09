@@ -36,3 +36,10 @@ html[data-ghrab-manual-embedded="viewer"] header.manual-topbar { position:relati
 .ghrab-manual-navigation .ghrab-manual-pdf:disabled { opacity:.6; cursor:wait; }
 .ghrab-manual-pdf-status { max-width:24rem; color:var(--text,var(--ink,#eef5fb)); font-size:13px; }
 .ghrab-manual-pdf-status:empty { display:none; }
+
+/* ACTIVA mobile link override: legacy .top a:not(.primary) would hide return links. */
+@media(max-width:680px) {
+  header.top { flex-wrap:wrap; }
+  header.top .ghrab-manual-navigation { width:100%; flex-basis:100%; justify-content:flex-start; margin-left:0; }
+  header.top .ghrab-manual-navigation a { display:inline-flex !important; }
+}
