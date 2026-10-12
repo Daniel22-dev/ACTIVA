@@ -50,4 +50,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: axe-p5-r2-${{ github.sha }}
-          path: dist/qa-p5-axe-runtime-report.json
+          path: |
+            dist/qa-p5-axe-runtime-report.json
+            qa-results/ci-playwright-browser.json
