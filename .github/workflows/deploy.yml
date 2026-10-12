@@ -48,6 +48,9 @@ jobs:
         with:
           ref: ${{ steps.release-source.outputs.source_sha }}
           persist-credentials: false
+      - name: Bind all audit commands to the checked-out release SHA
+        shell: bash
+        run: echo "GHRAB_SOURCE_COMMIT=${{ steps.release-source.outputs.source_sha }}" >> "$GITHUB_ENV"
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -69,6 +72,8 @@ jobs:
         run: node scripts/doc-import-test.mjs
       - name: Run release QA
         run: npm run qa:release
+      - name: Preserve release QA evidence before later builds
+        run: node scripts/ci-evidence.mjs capture release
       - name: Verify GHRAB Platform P3 conformance
         run: npm run qa:platform
       - name: Enforce P5 R2 + cumulative GARP 2.7 release gate
@@ -103,6 +108,24 @@ jobs:
           GHRAB_RELEASE_STAGE: LIVE-PUBLIC-PAGES
       - name: Verify complete release chain
         run: npm run verify:release-chain
+      - name: Verify P5, GARP, QA and exact-SHA evidence in LIVE release
+        run: node scripts/ci-evidence.mjs verify-stage LIVE-PUBLIC-PAGES
+      - name: Upload complete LIVE release assurance evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: live-assurance-${{ steps.release-source.outputs.source_sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            qa-results/p5-snapshot/**
+            qa-results/release-snapshot/**
+            qa-results/current/**
+            audit/evidence/garp27-current/**
+            dist-pages/release-integrity.json
+            dist-pages/studio-manifest.json
+            dist-pages/sbom.cdx.json
+            dist-pages/build-provenance.json
+            dist-pages/security-evidence-manifest.json
+          include-hidden-files: true
+          if-no-files-found: error
       - name: Export verified release identity
         id: release-identity
         shell: bash
