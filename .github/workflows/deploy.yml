@@ -103,6 +103,8 @@ jobs:
           node scripts/ci-timing.mjs stop p5
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
+      - name: Preserve canonical tested dist digest
+        run: node scripts/ci-canonical.mjs capture
       - name: Build school-server SHIELD-PREP profile
         run: npm run build:school-server
       - name: Enforce cumulative GARP 2.7 foundation and legacy regressions
@@ -123,6 +125,7 @@ jobs:
         run: |
           node scripts/ci-timing.mjs start pages-build
           npm run build:pages
+          node scripts/ci-canonical.mjs verify
           node scripts/ci-timing.mjs stop pages-build
       - name: Prepare canonical Pages artifact and exact release identity
         run: |
@@ -148,6 +151,7 @@ jobs:
           name: live-assurance-${{ steps.release-source.outputs.source_sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             qa-results/p5-snapshot/**
+            qa-results/ci-canonical.json
             qa-results/release-snapshot/**
             qa-results/current/**
             qa-results/ci-timing-release.json
