@@ -21,8 +21,17 @@ jobs:
           node-version: 22.16.0
           cache: npm
           registry-url: https://registry.npmjs.org
+      - name: Pin source timestamp before any build
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
+          echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
       - name: Install locked dependencies
-        run: npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+        run: |
+          node scripts/ci-timing.mjs start npm-ci
+          npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+          node scripts/ci-timing.mjs stop npm-ci
       - name: Verify pinned audit tools
         run: |
           node -e "const p=require('./node_modules/axe-core/package.json'); if(p.version!=='4.12.1') process.exit(1)"
@@ -30,22 +39,31 @@ jobs:
       - name: Install pinned Playwright Chromium
         shell: bash
         run: |
+          node scripts/ci-timing.mjs start playwright
           npx playwright install --with-deps chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
+          node scripts/ci-timing.mjs stop playwright
+      - name: Verify P0 reproducibility and race-guard regressions
+        run: |
+          npm run test:build-determinism
+          npm run test:deploy-source
+          npm run test:ci-timing
       - name: Run P5 R2 + cumulative GARP 2.7 CI gate
-        run: npm run qa:p5:ci
+        run: |
+          node scripts/ci-timing.mjs start p5
+          npm run qa:p5:ci
+          node scripts/ci-timing.mjs stop p5
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
-      - name: Set deterministic build time
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
       - name: Build school-server SHIELD-PREP profile for full GARP gate
         if: github.event_name != 'pull_request'
         run: npm run build:school-server
       - name: Run full GARP 2.7 foundation gate
         if: github.event_name != 'pull_request'
-        run: npm run qa:garp27:foundation
+        run: |
+          node scripts/ci-timing.mjs start foundation
+          npm run qa:garp27:foundation
+          node scripts/ci-timing.mjs stop foundation
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
       - name: Build and verify PREP exact release identity
@@ -57,15 +75,20 @@ jobs:
           GHRAB_WORKFLOW_REF: ${{ github.workflow_ref }}
           GHRAB_RELEASE_STAGE: PREP-VALIDATION
         run: |
+          node scripts/ci-timing.mjs start prep-release
           npm run build:pages
           npm run prepare:pages
           npm run verify:release-chain
           npm run qa:auto-patch-topology
+          node scripts/ci-timing.mjs stop prep-release
       - name: Verify preserved P5 certification evidence
         run: node scripts/ci-evidence.mjs verify p5
       - name: Verify PREP evidence and exact-SHA binding
         if: github.event_name != 'pull_request'
         run: node scripts/ci-evidence.mjs verify-stage PREP-VALIDATION
+      - name: Publish CI timing evidence (including interrupted phases)
+        if: always()
+        run: node scripts/ci-timing.mjs report p5
       - name: Upload audit evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -74,6 +97,7 @@ jobs:
           path: |
             qa-results/p5-snapshot/**
             qa-results/current/**
+            qa-results/ci-timing-p5.json
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
             dist-pages/sbom.cdx.json
