@@ -80,7 +80,7 @@ const report = {
   version: manifest.appVersion,
   qaStandard: manifest.standard,
   date: new Date().toISOString(),
-  commit: process.env.GITHUB_SHA || null,
+  commit: process.env.GHRAB_SOURCE_COMMIT || process.env.GITHUB_SHA || null,
   buildSha256: buildHash,
   gates,
   counts,
