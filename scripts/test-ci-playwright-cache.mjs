@@ -22,7 +22,8 @@ function contract(yml) {
   assert(yml.includes("hashFiles('package-lock.json')"));
   assert(yml.includes('ubuntu24-x64-pw1.61.1'));
   assert(yml.includes('npx --no-install playwright install --with-deps --no-shell chromium'));
-  assert(yml.includes('node scripts/ci-playwright-cache.mjs'));
+  assert(yml.includes('node scripts/ci-playwright-cache.mjs verify'));
+  assert(!yml.includes('node scripts/ci-playwright-cache.mjs record'));
   assert(!yml.includes('restore-keys:'));
   const install = yml.split('Restore pinned Playwright browser cache (experimental)')[1]?.split('Verify pinned browser cache and Chromium smoke before any QA')[0];
   assert(install && !install.includes('continue-on-error: true'));
@@ -57,6 +58,10 @@ try {
   fs.rmSync(link);
   test(() => assert.throws(() => fingerprintTree(temp, ['../escape']), /directory list/));
   test(() => assert.throws(() => fingerprintTree(temp, ['chromium-1228', 'chromium-1228']), /directory list/));
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'security/toolchain/playwright-chromium-ubuntu2404-x64.json'), 'utf8'));
+  test(() => assert.match(manifest.treeSha256, /^[a-f0-9]{64}$/));
+  test(() => assert.deepEqual(manifest.directories, BROWSER_DIRS));
+  test(() => assert.equal(manifest.playwrightVersion, EXPECTED_VERSION));
   const rels = ['.github/workflows/p5-release-gate.yml', '.github/workflows/axe-supplemental.yml', '.github/workflows/deploy.yml'];
   for (const rel of rels) {
     const yml = fs.readFileSync(path.join(root, rel), 'utf8');
