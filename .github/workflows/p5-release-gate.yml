@@ -59,10 +59,10 @@ jobs:
       - name: Preserve canonical tested dist digest for later release build
         run: node scripts/ci-canonical.mjs capture
       - name: Build school-server SHIELD-PREP profile for full GARP gate
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.base_ref == 'candidate'
         run: npm run build:school-server
       - name: Run full GARP 2.7 foundation gate
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.base_ref == 'candidate'
         run: |
           node scripts/ci-timing.mjs start foundation
           npm run qa:garp27:foundation
@@ -70,7 +70,7 @@ jobs:
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
       - name: Build and verify PREP exact release identity
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.base_ref == 'candidate'
         env:
           GHRAB_SOURCE_REPOSITORY: ${{ github.repository }}
           GHRAB_SOURCE_COMMIT: ${{ github.sha }}
@@ -88,7 +88,7 @@ jobs:
       - name: Verify preserved P5 certification evidence
         run: node scripts/ci-evidence.mjs verify p5
       - name: Verify PREP evidence and exact-SHA binding
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.base_ref == 'candidate'
         run: node scripts/ci-evidence.mjs verify-stage PREP-VALIDATION
       - name: Publish CI timing evidence (including interrupted phases)
         if: always()
@@ -111,7 +111,7 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
       - name: Upload GARP foundation logs (PREP only)
-        if: always() && github.event_name != 'pull_request'
+        if: always() && (github.event_name != 'pull_request' || github.base_ref == 'candidate')
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: garp27-foundation-${{ github.sha }}
