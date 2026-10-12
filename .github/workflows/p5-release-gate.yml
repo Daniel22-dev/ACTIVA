@@ -61,18 +61,31 @@ jobs:
           npm run prepare:pages
           npm run verify:release-chain
           npm run qa:auto-patch-topology
+      - name: Verify preserved P5 certification evidence
+        run: node scripts/ci-evidence.mjs verify p5
+      - name: Verify PREP evidence and exact-SHA binding
+        if: github.event_name != 'pull_request'
+        run: node scripts/ci-evidence.mjs verify-stage PREP-VALIDATION
       - name: Upload audit evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: p5-r2-${{ github.sha }}
           path: |
-            dist/qa-p5-*.json
-            dist/qa-p3-browser-report.json
-            dist/quality-report.json
+            qa-results/p5-snapshot/**
             qa-results/current/**
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
             dist-pages/sbom.cdx.json
             dist-pages/build-provenance.json
             dist-pages/security-evidence-manifest.json
+          include-hidden-files: true
+          if-no-files-found: error
+      - name: Upload GARP foundation logs (PREP only)
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: garp27-foundation-${{ github.sha }}
+          path: audit/evidence/garp27-current/**
+          include-hidden-files: true
+          if-no-files-found: error
