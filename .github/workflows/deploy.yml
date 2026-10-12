@@ -15,6 +15,10 @@ concurrency:
 
 jobs:
   release-build:
+    permissions:
+      contents: read
+      actions: read
+      checks: read
     if: >-
       (github.event_name == 'workflow_dispatch' && github.ref_name == 'main') ||
       (github.event.workflow_run.conclusion == 'success' &&
@@ -69,6 +73,12 @@ jobs:
           node-version: 22.16.0
           cache: npm
           registry-url: https://registry.npmjs.org
+      - name: Verify release admission regressions before releasing
+        run: npm run test:ci-release-admission
+      - name: Require independent exact-SHA P5/axe main certification
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/ci-release-admission.mjs check
       - name: Install locked dependencies
         run: |
           node scripts/ci-timing.mjs start npm-ci
@@ -163,6 +173,8 @@ jobs:
         run: npm run verify:release-chain
       - name: Verify P5, GARP, QA and exact-SHA evidence in LIVE release
         run: node scripts/ci-evidence.mjs verify-stage LIVE-PUBLIC-PAGES
+      - name: Reverify live admission receipt after P5/GARP/QA
+        run: node scripts/ci-release-admission.mjs verify
       - name: Finalize measured CI phase durations
         if: always()
         run: node scripts/ci-timing.mjs report release
@@ -176,6 +188,7 @@ jobs:
             qa-results/release-snapshot/**
             qa-results/current/**
             qa-results/ci-timing-release.json
+            qa-results/ci-release-admission.json
             qa-results/p5-p1-orchestration.json
             qa-results/ci-playwright-browser.json
             audit/evidence/garp27-current/**
