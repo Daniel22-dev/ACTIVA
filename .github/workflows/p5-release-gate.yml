@@ -43,6 +43,12 @@ jobs:
           npx playwright install --with-deps chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
           node scripts/ci-timing.mjs stop playwright
+      - name: Reproduce LIVE QA side effects on candidate PR (diagnostic only)
+        if: github.event_name == 'pull_request' && github.base_ref == 'candidate'
+        run: |
+          npm run test:reporter
+          node scripts/doc-import-test.mjs
+          npm run qa:release
       - name: Verify P0 reproducibility and race-guard regressions
         run: |
           npm run test:build-determinism
