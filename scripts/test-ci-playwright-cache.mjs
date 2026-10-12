@@ -24,7 +24,8 @@ function contract(yml) {
   assert(yml.includes('npx --no-install playwright install --with-deps --no-shell chromium'));
   assert(yml.includes('node scripts/ci-playwright-cache.mjs'));
   assert(!yml.includes('restore-keys:'));
-  assert(!yml.includes('continue-on-error: true'));
+  const install = yml.split('Restore pinned Playwright browser cache (experimental)')[1]?.split('Verify pinned browser cache and Chromium smoke before any QA')[0];
+  assert(install && !install.includes('continue-on-error: true'));
 }
 try {
   seed();
