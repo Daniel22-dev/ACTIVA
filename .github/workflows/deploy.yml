@@ -75,6 +75,8 @@ jobs:
           registry-url: https://registry.npmjs.org
       - name: Verify release admission regressions before releasing
         run: npm run test:ci-release-admission
+      - name: Verify GARP 2.5.1 fixture isolation under release identity
+        run: npm run test:ci-garp25-isolation
       - name: Require independent exact-SHA P5/axe main certification
         env:
           GH_TOKEN: ${{ github.token }}
