@@ -97,7 +97,8 @@
     "test:p2:browser-cache": "node scripts/test-ci-playwright-cache.mjs",
     "test:ci-cdp-target": "node scripts/test-qa-cdp-target.mjs",
     "test:p2:canonical-equivalence": "node scripts/test-ci-canonical-equivalence.mjs",
-    "test:ci-release-admission": "node scripts/test-ci-release-admission.mjs"
+    "test:ci-release-admission": "node scripts/test-ci-release-admission.mjs",
+    "test:ci-garp25-isolation": "node scripts/test-ci-garp25-isolation.mjs"
   },
   "engines": {
     "node": ">=18"
