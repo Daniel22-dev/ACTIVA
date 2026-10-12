@@ -87,6 +87,8 @@ jobs:
         run: npm run test:reporter
       - name: Run document import regression
         run: node scripts/doc-import-test.mjs
+      - name: Verify P1 fail-closed P5 orchestration regression
+        run: npm run test:p5:parallel
       - name: Run release QA
         run: |
           node scripts/ci-timing.mjs start release-qa
@@ -158,6 +160,7 @@ jobs:
             qa-results/release-snapshot/**
             qa-results/current/**
             qa-results/ci-timing-release.json
+            qa-results/p5-p1-orchestration.json
             audit/evidence/garp27-current/**
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
