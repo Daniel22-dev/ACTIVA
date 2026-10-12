@@ -34,6 +34,8 @@ jobs:
           node scripts/ci-timing.mjs stop npm-ci
       - name: P2 browser cache contract negative regressions
         run: npm run test:p2:browser-cache
+      - name: Verify bounded CDP page target readiness regressions
+        run: npm run test:ci-cdp-target
       - name: Verify pinned audit tools
         run: |
           node -e "const p=require('./node_modules/axe-core/package.json'); if(p.version!=='4.12.1') process.exit(1)"
