@@ -24,11 +24,23 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
       - name: Verify exact axe-core version
         run: node -e "const p=require('./node_modules/axe-core/package.json'); if(p.version!=='4.12.1') process.exit(1)"
+      # Exact-version, exact-lockfile cache; no fallback/restore keys.
+      # Browser content is attested before use; cache never skips OS deps.
+      - name: Restore pinned Playwright browser cache (experimental)
+        id: p2-browser-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ~/.cache/ms-playwright
+          key: activa-p2-ubuntu24-x64-pw1.61.1-${{ hashFiles('package-lock.json') }}-v1
       - name: Install pinned Playwright Chromium
         shell: bash
         run: |
-          npx playwright install --with-deps chromium
+          npx --no-install playwright install --with-deps --no-shell chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
+      - name: Verify pinned browser cache and Chromium smoke before any QA
+        env:
+          PLAYWRIGHT_CACHE_HIT: ${{ steps.p2-browser-cache.outputs.cache-hit }}
+        run: node scripts/ci-playwright-cache.mjs record
       - name: Build application
         run: npm run build
       - name: Run blocking axe audit on executed UI
