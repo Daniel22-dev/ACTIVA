@@ -46,6 +46,7 @@ jobs:
       - name: Verify P0 reproducibility and race-guard regressions
         run: |
           npm run test:build-determinism
+          npm run test:ci-canonical
           npm run test:deploy-source
           npm run test:ci-timing
       - name: Run P5 R2 + cumulative GARP 2.7 CI gate
@@ -55,6 +56,8 @@ jobs:
           node scripts/ci-timing.mjs stop p5
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
+      - name: Preserve canonical tested dist digest for later release build
+        run: node scripts/ci-canonical.mjs capture
       - name: Build school-server SHIELD-PREP profile for full GARP gate
         if: github.event_name != 'pull_request'
         run: npm run build:school-server
@@ -77,6 +80,7 @@ jobs:
         run: |
           node scripts/ci-timing.mjs start prep-release
           npm run build:pages
+          node scripts/ci-canonical.mjs verify
           npm run prepare:pages
           npm run verify:release-chain
           npm run qa:auto-patch-topology
@@ -96,6 +100,7 @@ jobs:
           name: p5-r2-${{ github.sha }}
           path: |
             qa-results/p5-snapshot/**
+            qa-results/ci-canonical.json
             qa-results/current/**
             qa-results/ci-timing-p5.json
             dist-pages/release-integrity.json
