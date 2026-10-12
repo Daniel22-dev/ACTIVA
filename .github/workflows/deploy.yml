@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.event.workflow_run.head_branch || github.ref_name }}
-  cancel-in-progress: true
+  group: activa-production-pages
+  cancel-in-progress: false
 
 jobs:
   release-build:
@@ -48,6 +48,21 @@ jobs:
         with:
           ref: ${{ steps.release-source.outputs.source_sha }}
           persist-credentials: false
+      - name: Bind all audit commands to the checked-out release SHA
+        shell: bash
+        run: echo "GHRAB_SOURCE_COMMIT=${{ steps.release-source.outputs.source_sha }}" >> "$GITHUB_ENV"
+      - name: Pin deterministic build time before any release QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
+          echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
+      - name: Verify source is still latest main before build
+        shell: bash
+        run: |
+          set -euo pipefail
+          head_sha="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          node scripts/verify-deploy-source.mjs "${{ steps.release-source.outputs.source_sha }}" "$head_sha"
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -55,33 +70,48 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
       - name: Install locked dependencies
-        run: npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+        run: |
+          node scripts/ci-timing.mjs start npm-ci
+          npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+          node scripts/ci-timing.mjs stop npm-ci
       - name: Verify pinned Playwright version
         run: node -e "const p=require('./node_modules/playwright/package.json'); if(p.version!=='1.61.1') process.exit(1)"
       - name: Install pinned Playwright Chromium
         shell: bash
         run: |
+          node scripts/ci-timing.mjs start playwright
           npx playwright install --with-deps chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
+          node scripts/ci-timing.mjs stop playwright
       - name: Run unified error reporter regression
         run: npm run test:reporter
       - name: Run document import regression
         run: node scripts/doc-import-test.mjs
       - name: Run release QA
-        run: npm run qa:release
+        run: |
+          node scripts/ci-timing.mjs start release-qa
+          npm run qa:release
+          node scripts/ci-timing.mjs stop release-qa
+      - name: Preserve release QA evidence before later builds
+        run: node scripts/ci-evidence.mjs capture release
       - name: Verify GHRAB Platform P3 conformance
         run: npm run qa:platform
       - name: Enforce P5 R2 + cumulative GARP 2.7 release gate
-        run: npm run qa:p5:ci
+        run: |
+          node scripts/ci-timing.mjs start p5
+          npm run qa:p5:ci
+          node scripts/ci-timing.mjs stop p5
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
-      - name: Set deterministic build time
-        shell: bash
-        run: echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
+      - name: Preserve canonical tested dist digest
+        run: node scripts/ci-canonical.mjs capture
       - name: Build school-server SHIELD-PREP profile
         run: npm run build:school-server
       - name: Enforce cumulative GARP 2.7 foundation and legacy regressions
-        run: npm run qa:garp27:foundation
+        run: |
+          node scripts/ci-timing.mjs start foundation
+          npm run qa:garp27:foundation
+          node scripts/ci-timing.mjs stop foundation
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
       - name: Verify AI Studio dispatch credential
@@ -92,9 +122,16 @@ jobs:
           set -euo pipefail
           if [ -z "${AI_STUDIO_DISPATCH_TOKEN:-}" ]; then echo "::error::Missing AI_STUDIO_DISPATCH_TOKEN. Deployment is blocked because AI Studio could not be notified safely."; exit 1; fi
       - name: Build hygienic GitHub Pages artifact
-        run: npm run build:pages
+        run: |
+          node scripts/ci-timing.mjs start pages-build
+          npm run build:pages
+          node scripts/ci-canonical.mjs verify
+          node scripts/ci-timing.mjs stop pages-build
       - name: Prepare canonical Pages artifact and exact release identity
-        run: npm run prepare:pages
+        run: |
+          node scripts/ci-timing.mjs start release-identity
+          npm run prepare:pages
+          node scripts/ci-timing.mjs stop release-identity
         env:
           GHRAB_SOURCE_REPOSITORY: ${{ github.repository }}
           GHRAB_SOURCE_COMMIT: ${{ steps.release-source.outputs.source_sha }}
@@ -103,6 +140,29 @@ jobs:
           GHRAB_RELEASE_STAGE: LIVE-PUBLIC-PAGES
       - name: Verify complete release chain
         run: npm run verify:release-chain
+      - name: Verify P5, GARP, QA and exact-SHA evidence in LIVE release
+        run: node scripts/ci-evidence.mjs verify-stage LIVE-PUBLIC-PAGES
+      - name: Finalize measured CI phase durations
+        if: always()
+        run: node scripts/ci-timing.mjs report release
+      - name: Upload complete LIVE release assurance evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: live-assurance-${{ steps.release-source.outputs.source_sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            qa-results/p5-snapshot/**
+            qa-results/ci-canonical.json
+            qa-results/release-snapshot/**
+            qa-results/current/**
+            qa-results/ci-timing-release.json
+            audit/evidence/garp27-current/**
+            dist-pages/release-integrity.json
+            dist-pages/studio-manifest.json
+            dist-pages/sbom.cdx.json
+            dist-pages/build-provenance.json
+            dist-pages/security-evidence-manifest.json
+          include-hidden-files: true
+          if-no-files-found: error
       - name: Export verified release identity
         id: release-identity
         shell: bash
@@ -116,6 +176,12 @@ jobs:
           if (missing.length) { console.error(`::error::Release identity incomplete: ${missing.join(', ')}`); process.exit(1); }
           for (const [key, value] of Object.entries(required)) { if (/[\r\n]/.test(String(value))) { console.error('::error::Release identity output must be single-line.'); process.exit(1); } process.stdout.write(`${key}=${value}\n`); }
           NODE
+      - name: Verify latest main before constructing Pages deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          head_sha="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          node scripts/verify-deploy-source.mjs "${{ steps.release-source.outputs.source_sha }}" "$head_sha"
       - name: Configure GitHub Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
       - name: Upload GitHub Pages artifact
@@ -136,6 +202,15 @@ jobs:
     outputs:
       page_url: ${{ steps.deployment_1.outputs.page_url || steps.deployment_2.outputs.page_url || steps.deployment_3.outputs.page_url }}
     steps:
+      - name: Reject superseded main release before Pages deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_sha="$(git ls-remote --exit-code "https://github.com/${{ github.repository }}.git" refs/heads/main | cut -f1)"
+          if [ "$main_sha" != "${{ needs.release-build.outputs.source_sha }}" ]; then
+            echo "::error::Superseded SHA: certified source differs from current main."
+            exit 1
+          fi
       - name: Deploy to GitHub Pages (attempt 1/3)
         id: deployment_1
         continue-on-error: true
@@ -186,6 +261,12 @@ jobs:
           GHRAB_LIVE_MANIFEST_SHA256: ${{ needs.release-build.outputs.manifest_sha256 }}
           GHRAB_LIVE_OUT: ${{ runner.temp }}/live-release.json
         run: npm run verify:live-release
+      - name: Reject superseded release before notifying AI Studio
+        shell: bash
+        run: |
+          set -euo pipefail
+          main_sha="$(git ls-remote --exit-code origin refs/heads/main | cut -f1)"
+          node scripts/verify-deploy-source.mjs "${{ needs.release-build.outputs.source_sha }}" "$main_sha"
       - name: Dispatch app-updated event to AI Studio
         shell: bash
         env:

@@ -45,6 +45,15 @@ const buildId = process.env.GHRAB_BUILD_ID || `github-${runId}-${runAttempt}`;
 const createdAt = new Date().toISOString();
 const releaseStage = process.env.GHRAB_RELEASE_STAGE || (process.env.GITHUB_ACTIONS === 'true' ? 'LIVE-PUBLIC-PAGES' : 'PREP-VALIDATION');
 
+// GitHub releases must link the attestations captured before later builds erased dist/.
+// Local development builds remain usable without pretending to be CI-certified.
+if (process.env.GITHUB_ACTIONS === 'true' || process.env.CI_EVIDENCE_REQUIRED === '1') {
+  runNode('scripts/ci-evidence.mjs', ['import', 'p5']);
+  if (releaseStage === 'LIVE-PUBLIC-PAGES') runNode('scripts/ci-evidence.mjs', ['import', 'release']);
+  runNode('scripts/ci-evidence.mjs', ['import', 'foundation']);
+  runNode('scripts/ci-canonical.mjs', ['emit']);
+}
+
 for (const sourceDir of [path.join(root, 'dist'), path.join(root, 'test-results')]) {
   if (!fs.existsSync(sourceDir)) continue;
   for (const name of fs.readdirSync(sourceDir)) {
