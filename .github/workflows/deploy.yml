@@ -74,6 +74,8 @@ jobs:
           node scripts/ci-timing.mjs start npm-ci
           npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
           node scripts/ci-timing.mjs stop npm-ci
+      - name: P2 browser cache contract negative regressions
+        run: npm run test:p2:browser-cache
       - name: Verify pinned Playwright version
         run: node -e "const p=require('./node_modules/playwright/package.json'); if(p.version!=='1.61.1') process.exit(1)"
       # Exact-version, exact-lockfile cache; no fallback/restore keys.
@@ -170,6 +172,7 @@ jobs:
             qa-results/release-snapshot/**
             qa-results/current/**
             qa-results/ci-timing-release.json
+            qa-results/ci-playwright-browser.json
             audit/evidence/garp27-current/**
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
