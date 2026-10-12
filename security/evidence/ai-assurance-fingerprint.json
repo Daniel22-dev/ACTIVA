@@ -4,7 +4,7 @@
   "appVersion": "0.5.30",
   "coreVersion": "1.0.0",
   "algorithm": "SHA-256",
-  "aggregate": "ced81e39179b0554732c9fcd4d4046eba9d74164cd169f50f5899c6b237fc94b",
+  "aggregate": "20263674c915fb76210819325c37b1a6d407f48d3cbe6ba8c18a7375b4a3058d",
   "inventory": "security/ai-boundary-files.json",
   "providerBoundary": "deployment-profile-and-egress-controlled",
   "files": [
@@ -85,8 +85,8 @@
     },
     {
       "path": "security/garp25/tools/selftest-garp251.mjs",
-      "size": 55288,
-      "sha256": "ac61ab3f814d6c420dc96a43eaa75ff01ac39c8c3ceb62a71d90e62833242f88"
+      "size": 55758,
+      "sha256": "95293e254c73f394627233a497bb6261b94da08f7a5db6c12879a09762e78025"
     },
     {
       "path": "security/garp25/tools/verify-ai-assurance-fingerprint.mjs",
