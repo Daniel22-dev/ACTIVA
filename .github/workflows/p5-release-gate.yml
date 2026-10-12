@@ -69,6 +69,9 @@ jobs:
           node scripts/ci-timing.mjs stop foundation
         env:
           GARP27_EXTERNAL_TRUST_SHA256: 40452c944f2d3be1ab10bbe717218ad94f1141400ff68690dcfe6a753f89676e
+      - name: Diagnose GARP foundation failure (sanitized)
+        if: failure()
+        run: node scripts/ci-garp-diagnostic.mjs
       - name: Build and verify PREP exact release identity
         if: github.event_name != 'pull_request' || github.base_ref == 'candidate'
         env:
