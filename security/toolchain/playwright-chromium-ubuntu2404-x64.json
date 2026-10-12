@@ -1,0 +1,20 @@
+{
+  "schema": "activa-playwright-browser-v1",
+  "playwrightVersion": "1.61.1",
+  "os": "ubuntu-24.04",
+  "arch": "x64",
+  "treeSha256": "b2df826c5cab857b586206a6457c7ef3bba6027757907fb6478b35c0312a59b4",
+  "files": 309,
+  "bytes": 401462870,
+  "links": 0,
+  "directories": [
+    "chromium-1228",
+    "ffmpeg-1011"
+  ],
+  "provenance": {
+    "method": "fresh Playwright 1.61.1 --with-deps --no-shell downloads on ubuntu-24.04 GitHub-hosted x64",
+    "firstObservation": "https://github.com/Daniel22-dev/ACTIVA/actions/runs/38244904203",
+    "secondObservation": "https://github.com/Daniel22-dev/ACTIVA/actions/runs/38244903622",
+    "trustNote": "Pinned clean-install tree digest. Cache contents must match before executing the browser; rebaseline requires separate review."
+  }
+}

@@ -49,7 +49,11 @@ const releaseStage = process.env.GHRAB_RELEASE_STAGE || (process.env.GITHUB_ACTI
 // Local development builds remain usable without pretending to be CI-certified.
 if (process.env.GITHUB_ACTIONS === 'true' || process.env.CI_EVIDENCE_REQUIRED === '1') {
   runNode('scripts/ci-evidence.mjs', ['import', 'p5']);
-  if (releaseStage === 'LIVE-PUBLIC-PAGES') runNode('scripts/ci-evidence.mjs', ['import', 'release']);
+  if (releaseStage === 'LIVE-PUBLIC-PAGES') {
+    runNode('scripts/ci-evidence.mjs', ['import', 'release']);
+    // LIVE admission is created from independent exact-SHA GitHub run provenance.
+    runNode('scripts/ci-release-admission.mjs', ['import']);
+  }
   runNode('scripts/ci-evidence.mjs', ['import', 'foundation']);
   runNode('scripts/ci-canonical.mjs', ['emit']);
 }

@@ -34,7 +34,7 @@
     "qa:p4": "npm run qa:p5",
     "qa:p4:ci": "npm run qa:p5:ci",
     "qa:p5": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs && npm run qa:garp27:static && npm run test:manual-pdf:structure",
-    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && npm run verify:studio-manifest && npm run test:studio-dispatch && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs && npm run test:ci-evidence && node scripts/ci-evidence.mjs capture p5 && npm run qa:garp27:static && npm run test:manual-pdf:structure && node scripts/ci-evidence.mjs verify p5",
+    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:p5:parallel && npm run verify:studio-manifest && npm run test:studio-dispatch && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs && npm run test:ci-evidence && node scripts/ci-evidence.mjs capture p5 && npm run qa:garp27:static && npm run test:manual-pdf:structure && node scripts/ci-evidence.mjs verify p5",
     "test:p5": "npm run qa:p5",
     "qa:runtime": "node scripts/qa-p5-runtime.mjs",
     "qa:xss": "node scripts/qa-p5-xss-sinks.mjs",
@@ -91,7 +91,13 @@
     "test:build-determinism": "node scripts/test-build-determinism.mjs",
     "test:deploy-source": "node scripts/test-deploy-source.mjs",
     "test:ci-timing": "node scripts/test-ci-timing.mjs",
-    "test:ci-canonical": "node scripts/test-ci-canonical.mjs"
+    "test:ci-canonical": "node scripts/test-ci-canonical.mjs",
+    "qa:p5:parallel": "node scripts/qa-p5-parallel.mjs",
+    "test:p5:parallel": "node scripts/test-qa-p5-parallel.mjs",
+    "test:p2:browser-cache": "node scripts/test-ci-playwright-cache.mjs",
+    "test:ci-cdp-target": "node scripts/test-qa-cdp-target.mjs",
+    "test:p2:canonical-equivalence": "node scripts/test-ci-canonical-equivalence.mjs",
+    "test:ci-release-admission": "node scripts/test-ci-release-admission.mjs"
   },
   "engines": {
     "node": ">=18"

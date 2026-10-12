@@ -32,23 +32,41 @@ jobs:
           node scripts/ci-timing.mjs start npm-ci
           npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
           node scripts/ci-timing.mjs stop npm-ci
+      - name: P2 browser cache contract negative regressions
+        run: npm run test:p2:browser-cache
+      - name: Verify bounded CDP page target readiness regressions
+        run: npm run test:ci-cdp-target
       - name: Verify pinned audit tools
         run: |
           node -e "const p=require('./node_modules/axe-core/package.json'); if(p.version!=='4.12.1') process.exit(1)"
           node -e "const p=require('./node_modules/playwright/package.json'); if(p.version!=='1.61.1') process.exit(1)"
+      # Exact-version, exact-lockfile cache; no fallback/restore keys.
+      # Browser content is attested before use; cache never skips OS deps.
+      - name: Restore pinned Playwright browser cache (experimental)
+        id: p2-browser-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ~/.cache/ms-playwright
+          key: activa-p2-ubuntu24-x64-pw1.61.1-${{ hashFiles('package-lock.json') }}-v1
       - name: Install pinned Playwright Chromium
         shell: bash
         run: |
           node scripts/ci-timing.mjs start playwright
-          npx playwright install --with-deps chromium
+          npx --no-install playwright install --with-deps --no-shell chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
           node scripts/ci-timing.mjs stop playwright
+      - name: Verify pinned browser cache and Chromium smoke before any QA
+        env:
+          PLAYWRIGHT_CACHE_HIT: ${{ steps.p2-browser-cache.outputs.cache-hit }}
+        run: node scripts/ci-playwright-cache.mjs verify
       - name: Verify P0 reproducibility and race-guard regressions
         run: |
           npm run test:build-determinism
           npm run test:ci-canonical
           npm run test:deploy-source
           npm run test:ci-timing
+          npm run test:p5:parallel
+          npm run test:ci-release-admission
       - name: Run P5 R2 + cumulative GARP 2.7 CI gate
         run: |
           node scripts/ci-timing.mjs start p5
@@ -106,6 +124,8 @@ jobs:
             qa-results/ci-canonical.json
             qa-results/current/**
             qa-results/ci-timing-p5.json
+            qa-results/p5-p1-orchestration.json
+            qa-results/ci-playwright-browser.json
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
             dist-pages/sbom.cdx.json
