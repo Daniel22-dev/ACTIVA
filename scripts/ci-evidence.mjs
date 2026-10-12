@@ -78,6 +78,7 @@ function verifyStage(stage){
  if(e.sourceRevision!==ctx().sourceSha||i.sourceCommit!==ctx().sourceSha||i.releaseStage!==stage)error('release identity mismatch');
  const wanted=[...['manifest.json',...p5.map(x=>'reports/'+x)].map(x=>'p5/'+x),...['foundation-summary.json',...ids.map(x=>x+'.log')].map(x=>'garp27/'+x),...(stage==='LIVE-PUBLIC-PAGES'?['manifest.json',...names('release').map(x=>'reports/'+x)].map(x=>'release/'+x):[])];
  wanted.push('ci-canonical.json');
+ if(stage==='LIVE-PUBLIC-PAGES')wanted.push('ci-release-admission.json');
  const index=new Map((e.files||[]).map(x=>[x.path,x]));
  for(const rel of wanted){const item=index.get(rel),bytes=read(path.join(stageRoot,rel));if(!item||item.sha256!==hash(bytes)||item.size!==bytes.length)error('release manifest missing/tampered '+rel)}
  console.log('CI-EVIDENCE verified stage '+stage+' ('+wanted.length+' files)');
