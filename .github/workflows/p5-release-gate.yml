@@ -49,6 +49,7 @@ jobs:
           npm run test:ci-canonical
           npm run test:deploy-source
           npm run test:ci-timing
+          npm run test:p5:parallel
       - name: Run P5 R2 + cumulative GARP 2.7 CI gate
         run: |
           node scripts/ci-timing.mjs start p5
@@ -106,6 +107,7 @@ jobs:
             qa-results/ci-canonical.json
             qa-results/current/**
             qa-results/ci-timing-p5.json
+            qa-results/p5-p1-orchestration.json
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
             dist-pages/sbom.cdx.json
