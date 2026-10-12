@@ -9,7 +9,7 @@ if (!deploy.includes("github.event.workflow_run.head_branch == 'main'")) fail('d
 if (!deploy.includes("github.event_name == 'workflow_dispatch' && github.ref_name == 'main'")) fail('manual deploy must reject non-main refs');
 if (/head_branch\s*==\s*['"]candidate['"]/.test(deploy)) fail('candidate must never be a production deploy source');
 if (!/push:[\s\S]*branches:\s*\[candidate, main\]/.test(p5)) fail('P5 workflow must run on candidate and main pushes');
-if (!/pull_request:\s*\n\s*branches:\s*\[main\]/.test(p5)) fail('P5 pull-request gate must target main');
+if (!/pull_request:\s*\n\s*branches:\s*\[(?:candidate,\s*main|main,\s*candidate|main)\]/.test(p5)) fail('P5 pull-request gate must include main (candidate may be tested additionally)');
 for (const required of ['candidate-to-main:', 'open-promotion-pr:', 'merge-promotion-pr:', 'SAFE_PROMOTION_TOKEN', 'rules/branches/main']) if (!safe.includes(required)) fail(`Safe Promotion controller missing ${required}`);
 const head = process.env.SAFE_PROMOTION_HEAD || ''; const base = process.env.SAFE_PROMOTION_BASE || '';
 if (head || base) { if (base !== 'main') fail(`unexpected base branch: ${base || '<empty>'}`); if (head !== 'candidate') fail(`only candidate may promote to main; got ${head || '<empty>'}`); }
