@@ -68,4 +68,12 @@ const deploy=fs.readFileSync(path.join(process.cwd(),'.github/workflows/deploy.y
 for(const cmd of ['npm run qa:release','npm run qa:p5:ci','npm run qa:garp27:foundation','node scripts/ci-evidence.mjs verify-stage LIVE-PUBLIC-PAGES','node scripts/ci-release-admission.mjs check']) {
  yes(()=>assert(deploy.includes(cmd),'Mandatory release gate missing: '+cmd));
 }
+const qaStart=deploy.indexOf('npm run qa:release');
+const restore=deploy.indexOf('Restore pinned Chromium provenance after QA workspace reset');
+const refresh=deploy.indexOf('Refresh exact-SHA release admission after QA workspace reset');
+const admissionAfter=deploy.indexOf('node scripts/ci-release-admission.mjs check',refresh);
+const evidenceCapture=deploy.indexOf('node scripts/ci-evidence.mjs capture release');
+const backup=deploy.indexOf('Preserve pinned Chromium provenance outside QA workspace');
+yes(()=>assert(qaStart>0&&refresh>qaStart&&admissionAfter>refresh&&evidenceCapture>admissionAfter,'Live admission receipt lost by QA workspace reset'));
+yes(()=>assert(backup>0&&backup<qaStart&&restore>qaStart&&restore<refresh,'Pinned browser provenance lost by QA workspace reset'));
 console.log(JSON.stringify({status:'PASS',checks,scope:'P2.3 exact-SHA GitHub admission, independent jobs, artifacts, main policy, manual bypass, receipt and mandatory LIVE gates'}));
