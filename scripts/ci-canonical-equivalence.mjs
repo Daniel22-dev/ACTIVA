@@ -14,19 +14,15 @@ export function assertCanonical(record) {
   if (!/^[a-f0-9]{40}$/.test(String(record.sourceSha || ''))) fail('invalid source SHA');
   if (!record.buildTime || !Number.isFinite(Date.parse(record.buildTime))) fail('invalid deterministic build time');
   if (!Array.isArray(record.files) || record.files.length < 3) fail('missing file inventory');
-  const seen = new Set(), names = [];
+  const seen = new Set();
   for (const item of record.files) {
-    if (typeof item.name !== 'string' || !/^[a-z0-9]/i.test(item.name) || item.name.includes('\\') ||
+    if (typeof item.name !== 'string' || !item.name || /[\x00-\x1f]/.test(item.name) || item.name.includes('\\') ||
         item.name.startsWith('/') || item.name.split('/').some(x => x === '.' || x === '..') ||
         !Number.isInteger(item.size) || item.size < 0 || !/^[a-f0-9]{64}$/.test(String(item.sha256))) fail('unsafe file inventory row');
     if (seen.has(item.name)) fail('duplicate inventory file');
-    seen.add(item.name); names.push(item.name);
+    seen.add(item.name);
   }
   if (!['index.html','app.js','studio-manifest.json'].every(x => seen.has(x))) fail('missing critical canonical files');
-  if (JSON.stringify([...names].sort()) !== JSON.stringify(names)) {
-    // Sorting is done by the producing canonical scanner. Don't reconstruct
-    // an alternative order here; digest always validates the exact file array.
-  }
   if (record.digest !== sha256(JSON.stringify(record.files))) fail('canonical digest inconsistent with inventory');
   return record;
 }
