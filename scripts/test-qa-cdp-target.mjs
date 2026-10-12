@@ -19,4 +19,4 @@ await assert.rejects(waitForChromiumPage(async()=>null,url,{attempts:1,delayMs:0
 await assert.rejects(waitForChromiumPage(async()=>[],url,{attempts:0,delayMs:0,sleepFn:noWait}),/Invalid bounded/);
 await assert.rejects(waitForChromiumPage(async()=>[],url,{attempts:200,delayMs:0,sleepFn:noWait}),/Invalid bounded/);
 await assert.rejects(waitForChromiumPage(async()=>[],url,{attempts:1,delayMs:300,sleepFn:noWait}),/Invalid bounded/);
-console.log(JSON.stringify({status:'PASS',cases:10,scope:'bounded Chromium target readiness'}));
+console.log(JSON.stringify({status:'PASS',cases:9,scope:'bounded Chromium target readiness'}));
