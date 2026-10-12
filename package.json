@@ -90,7 +90,8 @@
     "test:ci-evidence": "node scripts/test-ci-evidence.mjs",
     "test:build-determinism": "node scripts/test-build-determinism.mjs",
     "test:deploy-source": "node scripts/test-deploy-source.mjs",
-    "test:ci-timing": "node scripts/test-ci-timing.mjs"
+    "test:ci-timing": "node scripts/test-ci-timing.mjs",
+    "test:ci-canonical": "node scripts/test-ci-canonical.mjs"
   },
   "engines": {
     "node": ">=18"
