@@ -20,6 +20,12 @@ jobs:
           node-version: 22.16.0
           cache: npm
           registry-url: https://registry.npmjs.org
+      - name: Pin source timestamp to match independent P5 build
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GHRAB_BUILD_TIME=$(git show -s --format=%cI HEAD)" >> "$GITHUB_ENV"
+          echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
       - name: Install locked dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
       - name: Verify exact axe-core version
@@ -29,8 +35,12 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           node -e "console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
+      - name: Check canonical-equivalence invariants
+        run: npm run test:p2:canonical-equivalence
       - name: Build application
         run: npm run build
+      - name: Record independently built axe canonical artifact
+        run: node scripts/ci-canonical.mjs capture
       - name: Run blocking axe audit on executed UI
         run: npm run qa:axe
       - name: Upload axe evidence
@@ -38,4 +48,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: axe-p5-r2-${{ github.sha }}
-          path: dist/qa-p5-axe-runtime-report.json
+          path: |
+            dist/qa-p5-axe-runtime-report.json
+            qa-results/ci-canonical.json
