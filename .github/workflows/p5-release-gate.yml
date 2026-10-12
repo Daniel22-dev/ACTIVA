@@ -5,7 +5,7 @@ on:
   push:
     branches: [candidate, main]
   pull_request:
-    branches: [main]
+    branches: [candidate, main]
 
 permissions:
   contents: read
