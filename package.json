@@ -92,7 +92,8 @@
     "test:deploy-source": "node scripts/test-deploy-source.mjs",
     "test:ci-timing": "node scripts/test-ci-timing.mjs",
     "test:ci-canonical": "node scripts/test-ci-canonical.mjs",
-    "test:p2:browser-cache": "node scripts/test-ci-playwright-cache.mjs"
+    "test:p2:browser-cache": "node scripts/test-ci-playwright-cache.mjs",
+    "test:ci-cdp-target": "node scripts/test-qa-cdp-target.mjs"
   },
   "engines": {
     "node": ">=18"
