@@ -120,6 +120,10 @@ jobs:
           node scripts/ci-timing.mjs start release-qa
           npm run qa:release
           node scripts/ci-timing.mjs stop release-qa
+      - name: Refresh P2.3 exact-SHA admission after QA workspace reset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/ci-release-admission.mjs check
       - name: Preserve release QA evidence before later builds
         run: node scripts/ci-evidence.mjs capture release
       - name: Verify GHRAB Platform P3 conformance
