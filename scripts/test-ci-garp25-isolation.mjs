@@ -12,12 +12,11 @@ const cases=[
   ['with-different-parent-sha','b'.repeat(40)]
 ];
 for(const [name,sha] of cases){
- const env={...process.env,
-  GHRAB_SOURCE_REPOSITORY:'Daniel22-dev/ACTIVA',
-  GHRAB_SOURCE_DELTA:'synthetic-live',
-  GHRAB_SOURCE_PACKAGE_SHA256:'c'.repeat(64),
-  GHRAB_BUILDER_ID:'github-actions'};
- if(sha)env.GHRAB_SOURCE_COMMIT=sha;else delete env.GHRAB_SOURCE_COMMIT;
+ const env={...process.env};
+ // A production release exports its SOURCE_COMMIT globally, but never a
+ // forged builder identity. Make the regression model that exact environment.
+ for(const key of ['GHRAB_SOURCE_COMMIT','GHRAB_SOURCE_REPOSITORY','GHRAB_SOURCE_DELTA','GHRAB_SOURCE_PACKAGE_SHA256','GHRAB_BUILDER_ID']) delete env[key];
+ if(sha)env.GHRAB_SOURCE_COMMIT=sha;
  const result=spawnSync(process.execPath,[testScript],{cwd:root,env,encoding:'utf8',timeout:90000,maxBuffer:5*1024*1024});
  assert.equal(result.status,0,name+' should be all PASS: '+result.stderr+'\n'+result.stdout.slice(-3500));
  const json=JSON.parse(result.stdout.trim());
