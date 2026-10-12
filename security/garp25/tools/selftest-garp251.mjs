@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const errors = [];
 const passed = [];
-const run = (s, a) => spawnSync(process.execPath, [path.join(here, s), ...a], { encoding: 'utf8' });
+const run = (s, a, env = process.env) => spawnSync(process.execPath, [path.join(here, s), ...a], { encoding: 'utf8', env });
 const expect = (name, cond) => { if (cond) passed.push(name); else errors.push(name); };
 
 function makeStoredZip(entries){
@@ -134,7 +134,10 @@ try {
   // --- provenance
   const artifact = path.join(t, 'build.zip');
   await writeFile(artifact, 'synthetic-artifact');
-  run('create-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json')]);
+  // A synthetic NO-IDENTITY fixture must not inherit a LIVE release's legitimate source SHA.
+  const noIdentityEnv = { ...process.env };
+  for (const key of ['GHRAB_SOURCE_COMMIT', 'GHRAB_SOURCE_REPOSITORY', 'GHRAB_SOURCE_DELTA', 'GHRAB_SOURCE_PACKAGE_SHA256', 'GHRAB_BUILDER_ID']) delete noIdentityEnv[key];
+  run('create-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json')], noIdentityEnv);
   r = run('verify-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json')]);
   expect('NC-untrusted-local-builder-rejected', r.status !== 0);
   r = run('verify-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json'), '--allow-local-builder']);
