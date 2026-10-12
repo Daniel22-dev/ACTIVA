@@ -56,7 +56,7 @@ jobs:
       - name: Verify pinned browser cache and Chromium smoke before any QA
         env:
           PLAYWRIGHT_CACHE_HIT: ${{ steps.p2-browser-cache.outputs.cache-hit }}
-        run: node scripts/ci-playwright-cache.mjs record
+        run: node scripts/ci-playwright-cache.mjs verify
       - name: Verify P0 reproducibility and race-guard regressions
         run: |
           npm run test:build-determinism
