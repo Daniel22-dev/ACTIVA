@@ -51,6 +51,7 @@ if (process.env.GITHUB_ACTIONS === 'true' || process.env.CI_EVIDENCE_REQUIRED ==
   runNode('scripts/ci-evidence.mjs', ['import', 'p5']);
   if (releaseStage === 'LIVE-PUBLIC-PAGES') runNode('scripts/ci-evidence.mjs', ['import', 'release']);
   runNode('scripts/ci-evidence.mjs', ['import', 'foundation']);
+  runNode('scripts/ci-canonical.mjs', ['emit']);
 }
 
 for (const sourceDir of [path.join(root, 'dist'), path.join(root, 'test-results')]) {
