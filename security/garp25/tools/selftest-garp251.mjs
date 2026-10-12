@@ -134,7 +134,14 @@ try {
   // --- provenance
   const artifact = path.join(t, 'build.zip');
   await writeFile(artifact, 'synthetic-artifact');
-  run('create-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json')]);
+  // This negative fixture must remain identity-free even when the parent CI
+  // process carries an exact GHRAB_SOURCE_COMMIT for the production build.
+  // The provenance verifier itself is deliberately NOT relaxed.
+  const localProvenance = spawnSync(process.execPath, [path.join(here, 'create-build-provenance.mjs'), artifact, path.join(t, 'prov-local.json')], {
+    encoding: 'utf8',
+    env: { ...process.env, GHRAB_SOURCE_COMMIT: '', GHRAB_SOURCE_REPOSITORY: '' }
+  });
+  expect('local-provenance-fixture-created', localProvenance.status === 0);
   r = run('verify-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json')]);
   expect('NC-untrusted-local-builder-rejected', r.status !== 0);
   r = run('verify-build-provenance.mjs', [artifact, path.join(t, 'prov-local.json'), '--allow-local-builder']);
