@@ -34,7 +34,7 @@
     "qa:p4": "npm run qa:p5",
     "qa:p4:ci": "npm run qa:p5:ci",
     "qa:p5": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs && npm run qa:garp27:static && npm run test:manual-pdf:structure",
-    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && npm run verify:studio-manifest && npm run test:studio-dispatch && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs && npm run qa:garp27:static && npm run test:manual-pdf:structure",
+    "qa:p5:ci": "npm run qa:lock && npm run build && npm run qa:garp && npm run verify:platform && npm run qa:quality && npm run qa:browser && npm run qa:runtime && npm run qa:xss && npm run qa:axe && npm run verify:studio-manifest && npm run test:studio-dispatch && AXE_REQUIRED=1 node scripts/qa-p5-release.mjs && node scripts/qa-p5-acceptance.mjs && npm run test:ci-evidence && node scripts/ci-evidence.mjs capture p5 && npm run qa:garp27:static && npm run test:manual-pdf:structure && node scripts/ci-evidence.mjs verify p5",
     "test:p5": "npm run qa:p5",
     "qa:runtime": "node scripts/qa-p5-runtime.mjs",
     "qa:xss": "node scripts/qa-p5-xss-sinks.mjs",
@@ -86,7 +86,8 @@
     "qa:garp27:static": "npm run build:pages && npm run qa:garp27:contracts && npm run qa:garp27:architecture && npm run qa:garp27:policy-mutations && npm run qa:garp27:mutations && npm run qa:garp27:auto-patch",
     "qa:garp27": "npm run qa:garp27:static && npm run garp25:prep-static",
     "qa:garp27:foundation": "node scripts/garp27/foundation-gate.mjs",
-    "test:manual-pdf:structure": "node scripts/qa-manual-pdf-structure.mjs"
+    "test:manual-pdf:structure": "node scripts/qa-manual-pdf-structure.mjs",
+    "test:ci-evidence": "node scripts/test-ci-evidence.mjs"
   },
   "engines": {
     "node": ">=18"
