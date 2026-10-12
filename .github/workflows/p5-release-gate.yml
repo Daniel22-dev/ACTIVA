@@ -32,6 +32,8 @@ jobs:
           node scripts/ci-timing.mjs start npm-ci
           npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
           node scripts/ci-timing.mjs stop npm-ci
+      - name: P2 browser cache contract negative regressions
+        run: npm run test:p2:browser-cache
       - name: Verify pinned audit tools
         run: |
           node -e "const p=require('./node_modules/axe-core/package.json'); if(p.version!=='4.12.1') process.exit(1)"
@@ -118,6 +120,7 @@ jobs:
             qa-results/ci-canonical.json
             qa-results/current/**
             qa-results/ci-timing-p5.json
+            qa-results/ci-playwright-browser.json
             dist-pages/release-integrity.json
             dist-pages/studio-manifest.json
             dist-pages/sbom.cdx.json
