@@ -76,6 +76,8 @@ jobs:
           node scripts/ci-timing.mjs stop npm-ci
       - name: P2 browser cache contract negative regressions
         run: npm run test:p2:browser-cache
+      - name: Verify bounded CDP page target readiness regressions
+        run: npm run test:ci-cdp-target
       - name: Verify pinned Playwright version
         run: node -e "const p=require('./node_modules/playwright/package.json'); if(p.version!=='1.61.1') process.exit(1)"
       # Exact-version, exact-lockfile cache; no fallback/restore keys.
