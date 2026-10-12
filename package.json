@@ -87,7 +87,10 @@
     "qa:garp27": "npm run qa:garp27:static && npm run garp25:prep-static",
     "qa:garp27:foundation": "node scripts/garp27/foundation-gate.mjs",
     "test:manual-pdf:structure": "node scripts/qa-manual-pdf-structure.mjs",
-    "test:ci-evidence": "node scripts/test-ci-evidence.mjs"
+    "test:ci-evidence": "node scripts/test-ci-evidence.mjs",
+    "test:build-determinism": "node scripts/test-build-determinism.mjs",
+    "test:deploy-source": "node scripts/test-deploy-source.mjs",
+    "test:ci-timing": "node scripts/test-ci-timing.mjs"
   },
   "engines": {
     "node": ">=18"
