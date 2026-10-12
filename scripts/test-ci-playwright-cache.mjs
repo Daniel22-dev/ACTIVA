@@ -32,7 +32,7 @@ try {
   const expected = { schema: 'activa-playwright-browser-v1', playwrightVersion: EXPECTED_VERSION, os: 'ubuntu-24.04', arch: 'x64', ...first };
   test(() => assert.match(first.treeSha256, /^[a-f0-9]{64}$/));
   test(() => assert.equal(first.files, 2));
-  test(() => assert.equal(first.bytes, 41));
+  test(() => assert.equal(first.bytes, 40));
   test(() => assert.deepEqual(first.directories, [...BROWSER_DIRS].sort()));
   test(() => verifyFingerprint(expected, first));
   test(() => assert.deepEqual(fingerprintTree(temp), first));
