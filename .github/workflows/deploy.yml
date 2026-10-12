@@ -96,7 +96,7 @@ jobs:
       - name: Verify pinned browser cache and Chromium smoke before any QA
         env:
           PLAYWRIGHT_CACHE_HIT: ${{ steps.p2-browser-cache.outputs.cache-hit }}
-        run: node scripts/ci-playwright-cache.mjs record
+        run: node scripts/ci-playwright-cache.mjs verify
       - name: Run unified error reporter regression
         run: npm run test:reporter
       - name: Run document import regression
