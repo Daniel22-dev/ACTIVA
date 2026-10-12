@@ -109,6 +109,9 @@ jobs:
         env:
           PLAYWRIGHT_CACHE_HIT: ${{ steps.p2-browser-cache.outputs.cache-hit }}
         run: node scripts/ci-playwright-cache.mjs verify
+      - name: Preserve pinned Chromium provenance outside QA workspace
+        shell: bash
+        run: cp qa-results/ci-playwright-browser.json "$RUNNER_TEMP/activa-playwright-provenance.json"
       - name: Run unified error reporter regression
         run: npm run test:reporter
       - name: Run document import regression
@@ -120,6 +123,13 @@ jobs:
           node scripts/ci-timing.mjs start release-qa
           npm run qa:release
           node scripts/ci-timing.mjs stop release-qa
+      - name: Restore pinned Chromium provenance after QA workspace reset
+        shell: bash
+        run: cp "$RUNNER_TEMP/activa-playwright-provenance.json" qa-results/ci-playwright-browser.json
+      - name: Refresh exact-SHA release admission after QA workspace reset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/ci-release-admission.mjs check
       - name: Preserve release QA evidence before later builds
         run: node scripts/ci-evidence.mjs capture release
       - name: Verify GHRAB Platform P3 conformance
